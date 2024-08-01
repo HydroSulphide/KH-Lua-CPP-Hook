@@ -48,6 +48,7 @@ set(SOURCE
     src/ConsoleLib.cpp
     src/DCInstance.cpp
     src/LuaBackend.cpp
+    src/CPPHandler.cpp
     src/config.h
     src/game_info.h
     src/lua_exec.h
@@ -57,6 +58,7 @@ set(SOURCE
     src/DCInstance.h
     src/LuaBackend.h
     src/MemoryLib.h
+    src/CPPHandler.h
 )
 
 add_custom_target(clang-format
@@ -78,11 +80,12 @@ add_dependencies(DBGHELP build-info)
 
 if(MSVC)
     # ZTD_STD_LIBRARY_RANGES is broken currently on MSVC
-    target_compile_options(DBGHELP PRIVATE -W4 -WX -DZTD_STD_LIBRARY_RANGES=0)
+    target_compile_options(DBGHELP PRIVATE /std:c++latest -W4 -WX -DZTD_STD_LIBRARY_RANGES=0)
 else()
     target_compile_options(DBGHELP PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
+target_compile_features(DBGHELP PRIVATE cxx_std_20)
 target_compile_definitions(DBGHELP PRIVATE -DUNICODE -D_UNICODE)
 target_include_directories(DBGHELP PRIVATE
     external/include

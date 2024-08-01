@@ -37,6 +37,9 @@ _deps
 .history
 .ionide
 
+### Visual Studio ###
+.vs
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,cmake
 
 .cache/

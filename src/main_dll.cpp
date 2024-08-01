@@ -25,6 +25,7 @@
 #include "game_info.h"
 #include "lua_exec.h"
 #include "wil_extra.h"
+#include "CPPHandler.h"
 
 // TODO: Remove after init fix.
 #include <thread>
@@ -74,6 +75,7 @@ std::optional<std::uintptr_t> followPointerChain(std::uintptr_t start,
 
 std::uint64_t __cdecl frameHook(void* rcx) {
   ExecuteLUA();
+  OnFrameCPP();
   return frameProc(rcx);
 }
 
