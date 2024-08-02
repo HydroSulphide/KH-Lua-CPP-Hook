@@ -9,11 +9,11 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#include "LuaBackend.h"
-#include "MemoryLib.h"
+#include "lua_backend.h"
+#include "memory_lib.h"
 
-void ResetLUA();
-int EntryLUA(int ProcessID, HANDLE ProcessH, std::uint64_t TargetAddress, std::vector<std::filesystem::path> ScriptPaths);
-void ExecuteLUA();
-bool CheckLUA();
-int VersionLUA();
+void reset_lua();
+int entry_lua(int process_id, HANDLE process_handle, std::uint64_t target_address, std::vector<std::filesystem::path> script_paths);
+void execute_lua();
+bool check_lua();
+int version_lua();

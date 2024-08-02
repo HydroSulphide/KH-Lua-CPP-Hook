@@ -15,5 +15,5 @@ class Config {
 
   public:
 	static Config load(const std::filesystem::path &path);
-	std::optional<std::reference_wrapper<const GameInfo>> gameInfo(const std::u8string &exe) const;
+	std::optional<std::reference_wrapper<const GameInfo>> game_info(const std::u8string &exe) const;
 };

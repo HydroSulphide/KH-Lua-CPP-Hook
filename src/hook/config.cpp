@@ -49,13 +49,13 @@ Config Config::load(const fs::path &path) {
 			paths.emplace_back(*str, *relative);
 		}
 
-		config.infos.emplace(*exe, GameInfo{.baseAddress = base.value_or(0), .scriptPaths = std::move(paths), .gameDocsPathStr = *game_docs});
+		config.infos.emplace(*exe, GameInfo{.base_address = base.value_or(0), .script_paths = std::move(paths), .game_docs_path_string = *game_docs});
 	}
 
 	return config;
 }
 
-std::optional<std::reference_wrapper<const GameInfo>> Config::gameInfo(const std::u8string &exe) const {
+std::optional<std::reference_wrapper<const GameInfo>> Config::game_info(const std::u8string &exe) const {
 	if (auto info = infos.find(exe); info != infos.end()) {
 		return std::cref(info->second);
 	} else {

@@ -21,7 +21,7 @@
 #include <minidumpapiset.h>
 #undef MiniDumpWriteDump
 
-#include "CPPHandler.h"
+#include "cpp_handler.h"
 #include "config.h"
 #include "game_info.h"
 #include "lua_exec.h"
@@ -39,20 +39,20 @@ using DirectInput8CreateProc = HRESULT(WINAPI *)(HINSTANCE hinst, DWORD dwVersio
 
 using GameFrameProc = std::uint64_t(__cdecl *)(void *rcx);
 
-MiniDumpWriteDumpProc writeDumpProc = nullptr;
-DirectInput8CreateProc createProc = nullptr;
+MiniDumpWriteDumpProc write_dump_proc = nullptr;
+DirectInput8CreateProc create_proc = nullptr;
 
-GameFrameProc *frameProcPtr = nullptr;
-GameFrameProc frameProc = nullptr;
+GameFrameProc *frame_proc_ptr = nullptr;
+GameFrameProc frame_proc = nullptr;
 
 std::optional<Config> config;
-std::optional<GameInfo> gameInfo;
+std::optional<GameInfo> game_info;
 
-std::uint64_t moduleAddress = 0;
+std::uint64_t module_address = 0;
 
 template <ranges::bidirectional_range R>
 	requires std::same_as<ranges::range_value_t<R>, std::uintptr_t>
-std::optional<std::uintptr_t> followPointerChain(std::uintptr_t start, const R &offsets) {
+std::optional<std::uintptr_t> follow_pointer_chain(std::uintptr_t start, const R &offsets) {
 	std::uintptr_t current = start;
 
 	for (auto it = ranges::begin(offsets); it != ranges::end(offsets); ++it) {
@@ -69,10 +69,10 @@ std::optional<std::uintptr_t> followPointerChain(std::uintptr_t start, const R &
 	return current;
 }
 
-std::uint64_t __cdecl frameHook(void *rcx) {
-	ExecuteLUA();
-	OnFrameCPP();
-	return frameProc(rcx);
+std::uint64_t __cdecl frame_hook(void *rcx) {
+	execute_lua();
+	on_frame_cpp();
+	return frame_proc(rcx);
 }
 
 LONG WINAPI crashDumpHandler(PEXCEPTION_POINTERS exceptionPointers) {
@@ -85,7 +85,7 @@ LONG WINAPI crashDumpHandler(PEXCEPTION_POINTERS exceptionPointers) {
 		mdei.ExceptionPointers = exceptionPointers;
 		mdei.ClientPointers = TRUE;
 
-		(*writeDumpProc)(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpNormal, &mdei, 0, 0);
+		(*write_dump_proc)(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpNormal, &mdei, 0, 0);
 
 		CloseHandle(file);
 	}
@@ -98,8 +98,8 @@ struct SectionInfo {
 	std::size_t size;
 };
 
-SectionInfo findTextSectionInfo() {
-	const auto basePtr = std::bit_cast<std::uint8_t *>(moduleAddress);
+SectionInfo find_text_section_info() {
+	const auto basePtr = std::bit_cast<std::uint8_t *>(module_address);
 	const auto dosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(basePtr);
 	if (dosHeader->e_magic != IMAGE_DOS_SIGNATURE) {
 		throw std::runtime_error{"DOS header is corrupt"};
@@ -128,12 +128,12 @@ SectionInfo findTextSectionInfo() {
 	return textSection.value();
 }
 
-std::optional<GameFrameProc *> findFrameProc(const SectionInfo &textInfo) {
+std::optional<GameFrameProc *> find_fame_proc(const SectionInfo &textInfo) {
 	constexpr char sig[] = "\x48\x89\x35\xA7\xB6\x69\x00\x48\x8B\xC6";
 	constexpr char mask[] = "\xFF\xFF\xFF\x00\x00\x00\x00\xFF\xFF\xFF";
 	static_assert(sizeof(sig) == sizeof(mask));
 
-	const char *textStart = std::bit_cast<const char *>(moduleAddress + textInfo.offset);
+	const char *textStart = std::bit_cast<const char *>(module_address + textInfo.offset);
 	const char *textEnd = textStart + textInfo.size;
 
 	for (const char *p = textStart; p != textEnd - (sizeof(sig) - 1); p++) {
@@ -163,25 +163,25 @@ std::optional<GameFrameProc *> findFrameProc(const SectionInfo &textInfo) {
 	return std::nullopt;
 }
 
-bool hookGame() {
+bool hook_game() {
 	static_assert(sizeof(std::uint64_t) == sizeof(std::uintptr_t));
 
-	const auto textInfo = findTextSectionInfo();
-	const auto frameProcPtrOpt = findFrameProc(textInfo);
+	const auto textInfo = find_text_section_info();
+	const auto frameProcPtrOpt = find_fame_proc(textInfo);
 
 	if (!frameProcPtrOpt.has_value()) {
 		return false;
 	}
 
-	frameProcPtr = frameProcPtrOpt.value();
-	if (*frameProcPtr == nullptr)
+	frame_proc_ptr = frameProcPtrOpt.value();
+	if (*frame_proc_ptr == nullptr)
 		return false;
 
 	DWORD originalProt = 0;
-	VirtualProtect(frameProcPtr, sizeof(frameProcPtr), PAGE_READWRITE, &originalProt);
-	frameProc = *frameProcPtr;
-	*frameProcPtr = frameHook;
-	VirtualProtect(frameProcPtr, sizeof(frameProcPtr), originalProt, &originalProt);
+	VirtualProtect(frame_proc_ptr, sizeof(frame_proc_ptr), PAGE_READWRITE, &originalProt);
+	frame_proc = *frame_proc_ptr;
+	*frame_proc_ptr = frame_hook;
+	VirtualProtect(frame_proc_ptr, sizeof(frame_proc_ptr), originalProt, &originalProt);
 
 	SetUnhandledExceptionFilter(crashDumpHandler);
 
@@ -200,47 +200,47 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 
 	try {
 		config = Config::load("LuaBackend.toml");
-		auto entry = config->gameInfo(moduleName);
+		auto entry = config->game_info(moduleName);
 		if (entry) {
-			gameInfo = *entry;
+			game_info = *entry;
 		} else {
 			return 0;
 		}
 
-		moduleAddress = (std::uint64_t)GetModuleHandleW(nullptr);
-		std::uint64_t baseAddress = moduleAddress + gameInfo->baseAddress;
+		module_address = (std::uint64_t)GetModuleHandleW(nullptr);
+		std::uint64_t base_address = module_address + game_info->base_address;
 
 		fs::path gameDocsRoot = [&]() {
 			PWSTR docsRootStr;
 			SHGetKnownFolderPath(FOLDERID_Documents, 0, nullptr, &docsRootStr);
 
-			return fs::path{docsRootStr} / gameInfo->gameDocsPathStr;
+			return fs::path{docsRootStr} / game_info->game_docs_path_string;
 		}();
 
-		std::vector<fs::path> scriptPaths;
-		for (const auto &path : gameInfo->scriptPaths) {
+		std::vector<fs::path> script_paths;
+		for (const auto &path : game_info->script_paths) {
 			if (path.relative) {
 				fs::path gameScriptsPath = gameDocsRoot / path.str;
 				if (fs::exists(gameScriptsPath)) {
-					scriptPaths.push_back(gameScriptsPath);
+					script_paths.push_back(gameScriptsPath);
 				}
 			} else {
 				fs::path gameScriptsPath = fs::path{path.str};
 				if (fs::exists(gameScriptsPath)) {
-					scriptPaths.push_back(gameScriptsPath);
+					script_paths.push_back(gameScriptsPath);
 				}
 			}
 		}
 
-		if (!scriptPaths.empty()) {
+		if (!script_paths.empty()) {
 			AllocConsole();
 			SetConsoleOutputCP(CP_UTF8);
 			FILE *f;
 			freopen_s(&f, "CONOUT$", "w", stdout);
 
-			if (EntryLUA(GetCurrentProcessId(), GetCurrentProcess(), baseAddress, std::move(scriptPaths)) == 0) {
+			if (entry_lua(GetCurrentProcessId(), GetCurrentProcess(), base_address, std::move(script_paths)) == 0) {
 				// TODO: Hook after game initialization is done.
-				while (!hookGame()) {
+				while (!hook_game()) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(16));
 				}
 			} else {
@@ -267,12 +267,12 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinstDLL, DWORD fdwReason, [[mayb
 		fs::path dllPath = fs::path{systemDirectoryStr} / L"DBGHELP.dll";
 
 		dbgHelp = LoadLibraryW(dllPath.wstring().c_str());
-		writeDumpProc = (MiniDumpWriteDumpProc)GetProcAddress(dbgHelp, "MiniDumpWriteDump");
+		write_dump_proc = (MiniDumpWriteDumpProc)GetProcAddress(dbgHelp, "MiniDumpWriteDump");
 
 		fs::path dinput8Path = fs::path{systemDirectoryStr} / L"DINPUT8.dll";
 
 		dinput8 = LoadLibraryW(dinput8Path.wstring().c_str());
-		createProc = (DirectInput8CreateProc)GetProcAddress(dinput8, "DirectInput8Create");
+		create_proc = (DirectInput8CreateProc)GetProcAddress(dinput8, "DirectInput8Create");
 
 		if (CreateThread(nullptr, 0, entry, nullptr, 0, nullptr) == nullptr) {
 			return FALSE;
@@ -292,9 +292,9 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinstDLL, DWORD fdwReason, [[mayb
 }
 
 extern "C" __declspec(dllexport) HRESULT WINAPI DirectInput8Create(HINSTANCE hinst, DWORD dwVersion, LPCVOID riidltf, LPVOID *ppvOut, LPVOID punkOuter) {
-	return createProc(hinst, dwVersion, riidltf, ppvOut, punkOuter);
+	return create_proc(hinst, dwVersion, riidltf, ppvOut, punkOuter);
 }
 
 extern "C" __declspec(dllexport) BOOL WINAPI MiniDumpWriteDump(HANDLE hProcess, DWORD ProcessId, HANDLE hFile, MINIDUMP_TYPE DumpType, PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam, PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam, PMINIDUMP_CALLBACK_INFORMATION CallbackParam) {
-	return writeDumpProc(hProcess, ProcessId, hFile, DumpType, ExceptionParam, UserStreamParam, CallbackParam);
+	return write_dump_proc(hProcess, ProcessId, hFile, DumpType, ExceptionParam, UserStreamParam, CallbackParam);
 }

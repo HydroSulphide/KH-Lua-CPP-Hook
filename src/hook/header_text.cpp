@@ -6,7 +6,7 @@
 #include <array>
 #include <cstddef>
 
-template <std::size_t... Len> [[nodiscard]] constexpr static auto generateBlockText(const char (&...lines)[Len]) {
+template <std::size_t... Len> [[nodiscard]] constexpr static auto generate_block_text(const char (&...lines)[Len]) {
 	constexpr std::string_view separator = " ";
 	constexpr std::string_view padding = "=";
 	constexpr std::size_t edge_pad_amount = 3;
@@ -52,9 +52,9 @@ template <std::size_t... Len> [[nodiscard]] constexpr static auto generateBlockT
 	return text;
 }
 
-std::string_view getHeaderText() {
+std::string_view get_header_text() {
 	// clang-format off
-    constexpr static auto headerText = generateBlockText(
+    constexpr static auto header_text = generate_block_text(
         "",
         "LuaBackendHook " HOOK_VERSION,
         "Copyright 2022 - TopazTK | Sirius902",
@@ -64,6 +64,6 @@ std::string_view getHeaderText() {
         ""
     );
 	// clang-format on
-	constexpr static auto headerTextView = std::string_view{headerText.begin(), headerText.end()};
-	return headerTextView;
+	constexpr static auto header_text_view = std::string_view{header_text.begin(), header_text.end()};
+	return header_text_view;
 }

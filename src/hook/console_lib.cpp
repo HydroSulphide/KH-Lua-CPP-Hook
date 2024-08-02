@@ -1,9 +1,9 @@
-#include "ConsoleLib.h"
+#include "console_lib.h"
 
-void ConsoleLib::MessageOutput(const std::string &Text, int MessageType) {
+void ConsoleLib::print_message(const std::string &text, int message_type) {
 	HANDLE _hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	switch (MessageType) {
+	switch (message_type) {
 	case 0:
 		SetConsoleTextAttribute(_hConsole, 11);
 		std::cout << "MESSAGE: ";
@@ -23,5 +23,5 @@ void ConsoleLib::MessageOutput(const std::string &Text, int MessageType) {
 	}
 
 	SetConsoleTextAttribute(_hConsole, 7);
-	std::cout << Text;
+	std::cout << text;
 }

@@ -7,5 +7,5 @@
 #include <windows.h>
 
 namespace ConsoleLib {
-void MessageOutput(const std::string &Text, int MessageType);
+void print_message(const std::string &text, int message_type);
 }; // namespace ConsoleLib

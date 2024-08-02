@@ -3,158 +3,158 @@
 #include <memory>
 #include <utility>
 
-#include "ConsoleLib.h"
-#include "LuaBackend.h"
+#include "console_lib.h"
+#include "lua_backend.h"
 #include "header_text.h"
 
 namespace fs = std::filesystem;
 
-bool keyPressedF1 = false;
-bool keyPressedF2 = false;
-bool keyPressedF3 = false;
+bool _key_Pressed_F1 = false;
+bool _key_Pressed_F2 = false;
+bool _key_Pressed_F3 = false;
 
-static std::vector<fs::path> _scriptPaths;
+static std::vector<fs::path> _script_paths;
 
-static bool _showConsole = true;
-static bool _requestedReset = false;
+static bool _show_console = true;
+static bool _requested_reset = false;
 
 static std::unique_ptr<LuaBackend> _backend;
 
-void ResetLUA() {
+void reset_lua() {
 	std::printf("\n");
-	ConsoleLib::MessageOutput("Reloading...\n\n", 0);
-	_backend = std::make_unique<LuaBackend>(_scriptPaths, MemoryLib::ExecAddress + MemoryLib::BaseAddress);
+	ConsoleLib::print_message("Reloading...\n\n", 0);
+	_backend = std::make_unique<LuaBackend>(_script_paths, MemoryLib::exec_address + MemoryLib::base_address);
 
-	if (_backend->loadedScripts.size() == 0)
-		ConsoleLib::MessageOutput("No scripts found! Reload halted!\n\n", 3);
+	if (_backend->loaded_scripts.size() == 0)
+		ConsoleLib::print_message("No scripts found! Reload halted!\n\n", 3);
 
-	ConsoleLib::MessageOutput("Executing initialization event handlers...\n\n", 0);
+	ConsoleLib::print_message("Executing initialization event handlers...\n\n", 0);
 
-	for (auto &_script : _backend->loadedScripts)
-		if (_script->initFunction) {
-			auto _result = _script->initFunction();
+	for (auto &_script : _backend->loaded_scripts)
+		if (_script->init_function) {
+			auto _result = _script->init_function();
 
 			if (!_result.valid()) {
 				sol::error _err = _result;
-				ConsoleLib::MessageOutput(_err.what(), 3);
+				ConsoleLib::print_message(_err.what(), 3);
 				std::printf("\n\n");
 			}
 		}
 
-	ConsoleLib::MessageOutput("Reload complete!\n\n", 1);
+	ConsoleLib::print_message("Reload complete!\n\n", 1);
 
-	_requestedReset = false;
+	_requested_reset = false;
 }
 
-int EntryLUA(int ProcessID, HANDLE ProcessH, std::uint64_t TargetAddress, std::vector<fs::path> ScriptPaths) {
+int entry_lua(int process_id, HANDLE process_handle, std::uint64_t target_address, std::vector<fs::path> script_paths) {
 	ShowWindow(GetConsoleWindow(), SW_SHOW);
 
-	std::cout << getHeaderText() << '\n';
+	std::cout << get_header_text() << '\n';
 
-	ConsoleLib::MessageOutput("Initializing LuaEngine v5.0...\n\n", 0);
-	_scriptPaths = std::move(ScriptPaths);
+	ConsoleLib::print_message("Initializing LuaEngine v5.0...\n\n", 0);
+	_script_paths = std::move(script_paths);
 
-	MemoryLib::ExternProcess(ProcessID, ProcessH, TargetAddress);
+	MemoryLib::extern_process(process_id, process_handle, target_address);
 
-	_backend = std::make_unique<LuaBackend>(_scriptPaths, MemoryLib::ExecAddress + TargetAddress);
-	_backend->frameLimit = 16;
+	_backend = std::make_unique<LuaBackend>(_script_paths, MemoryLib::exec_address + target_address);
+	_backend->frame_limit = 16;
 
-	if (_backend->loadedScripts.size() == 0) {
-		ConsoleLib::MessageOutput("No scripts were found! Initialization halted!\n\n", 3);
+	if (_backend->loaded_scripts.size() == 0) {
+		ConsoleLib::print_message("No scripts were found! Initialization halted!\n\n", 3);
 		return -1;
 	}
 
-	ConsoleLib::MessageOutput("Executing initialization event handlers...\n\n", 0);
+	ConsoleLib::print_message("Executing initialization event handlers...\n\n", 0);
 
-	for (auto &_script : _backend->loadedScripts)
-		if (_script->initFunction) {
-			auto _result = _script->initFunction();
+	for (auto &_script : _backend->loaded_scripts)
+		if (_script->init_function) {
+			auto _result = _script->init_function();
 
 			if (!_result.valid()) {
 				sol::error _err = _result;
-				ConsoleLib::MessageOutput(_err.what(), 3);
+				ConsoleLib::print_message(_err.what(), 3);
 				std::printf("\n\n");
 			}
 		}
 
-	ConsoleLib::MessageOutput("Initialization complete!\n", 1);
-	ConsoleLib::MessageOutput("Press 'F1' to reload all scripts, press 'F2' to toggle the console, press 'F3' to set execution frequency.\n\n", 0);
+	ConsoleLib::print_message("Initialization complete!\n", 1);
+	ConsoleLib::print_message("Press 'F1' to reload all scripts, press 'F2' to toggle the console, press 'F3' to set execution frequency.\n\n", 0);
 
 	return 0;
 }
 
-void ExecuteLUA() {
-	if (_requestedReset == false) {
+void execute_lua() {
+	if (_requested_reset == false) {
 
 		if (GetKeyState(VK_F3) & 0x8000) {
-			if (!keyPressedF3) {
-				switch (_backend->frameLimit) {
+			if (!_key_Pressed_F3) {
+				switch (_backend->frame_limit) {
 				case 16:
-					_backend->frameLimit = 8;
-					ConsoleLib::MessageOutput("Frequency set to 120Hz.\n", 0);
+					_backend->frame_limit = 8;
+					ConsoleLib::print_message("Frequency set to 120Hz.\n", 0);
 					break;
 				case 8:
-					_backend->frameLimit = 4;
-					ConsoleLib::MessageOutput("Frequency set to 240Hz.\n", 0);
+					_backend->frame_limit = 4;
+					ConsoleLib::print_message("Frequency set to 240Hz.\n", 0);
 					break;
 				case 4:
-					_backend->frameLimit = 16;
-					ConsoleLib::MessageOutput("Frequency set to 60Hz.\n", 0);
+					_backend->frame_limit = 16;
+					ConsoleLib::print_message("Frequency set to 60Hz.\n", 0);
 					break;
 				}
 			}
-			keyPressedF3 = true;
+			_key_Pressed_F3 = true;
 		} else {
-			keyPressedF3 = false;
+			_key_Pressed_F3 = false;
 		}
 
 		if (GetKeyState(VK_F2) & 0x8000) {
-			if (!keyPressedF2) {
-				if (_showConsole) {
+			if (!_key_Pressed_F2) {
+				if (_show_console) {
 					ShowWindow(GetConsoleWindow(), SW_HIDE);
-					_showConsole = false;
+					_show_console = false;
 				}
 
 				else {
 					ShowWindow(GetConsoleWindow(), SW_RESTORE);
-					_showConsole = true;
+					_show_console = true;
 				}
 			}
-			keyPressedF2 = true;
+			_key_Pressed_F2 = true;
 		} else {
-			keyPressedF2 = false;
+			_key_Pressed_F2 = false;
 		}
 
 		if (GetKeyState(VK_F1) & 0x8000) {
-			if (!keyPressedF1) {
-				_requestedReset = true;
+			if (!_key_Pressed_F1) {
+				_requested_reset = true;
 			}
-			keyPressedF1 = true;
+			_key_Pressed_F1 = true;
 		} else {
-			keyPressedF1 = false;
+			_key_Pressed_F1 = false;
 		}
 
-		for (std::size_t i = 0; i < _backend->loadedScripts.size(); i++) {
-			auto &_script = _backend->loadedScripts[i];
+		for (std::size_t i = 0; i < _backend->loaded_scripts.size(); i++) {
+			auto &_script = _backend->loaded_scripts[i];
 
-			if (_script->frameFunction) {
-				auto _result = _script->frameFunction();
+			if (_script->frame_function) {
+				auto _result = _script->frame_function();
 
 				if (!_result.valid()) {
 					sol::error _err = _result;
-					ConsoleLib::MessageOutput(_err.what(), 3);
+					ConsoleLib::print_message(_err.what(), 3);
 					std::printf("\n\n");
 
-					_backend->loadedScripts.erase(_backend->loadedScripts.begin() + i);
+					_backend->loaded_scripts.erase(_backend->loaded_scripts.begin() + i);
 				}
 			}
 		}
 	} else
-		ResetLUA();
+		reset_lua();
 }
 
-bool CheckLUA() {
-	auto _int = MemoryLib::ReadInt(0);
+bool check_lua() {
+	auto _int = MemoryLib::read_int(0);
 
 	if (_int == 0)
 		return false;
@@ -162,6 +162,6 @@ bool CheckLUA() {
 	return true;
 }
 
-int VersionLUA() {
+int version_lua() {
 	return 128;
 }

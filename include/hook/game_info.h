@@ -10,7 +10,7 @@ struct ScriptPath {
 };
 
 struct GameInfo {
-	std::uintptr_t baseAddress;
-	std::vector<ScriptPath> scriptPaths;
-	std::u8string gameDocsPathStr;
+	std::uintptr_t base_address;
+	std::vector<ScriptPath> script_paths;
+	std::u8string game_docs_path_string;
 };
