@@ -12,10 +12,8 @@
 #include "LuaBackend.h"
 #include "MemoryLib.h"
 
-void EnterWait();
 void ResetLUA();
-int EntryLUA(int ProcessID, HANDLE ProcessH, std::uint64_t TargetAddress,
-             std::vector<std::filesystem::path> ScriptPaths);
+int EntryLUA(int ProcessID, HANDLE ProcessH, std::uint64_t TargetAddress, std::vector<std::filesystem::path> ScriptPaths);
 void ExecuteLUA();
 bool CheckLUA();
 int VersionLUA();

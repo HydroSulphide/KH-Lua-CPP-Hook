@@ -1,36 +1,35 @@
 #include "DCInstance.h"
 
-void DCInstance::InitializeRPC(const char* applicationID) {
-  Discord_Initialize(applicationID, NULL, 1, NULL);
+void DCInstance::InitializeRPC(const char *applicationID) {
+	Discord_Initialize(applicationID, NULL, 1, NULL);
 
-  std::memset(&DCInstance::Presence, 0, sizeof(DCInstance::Presence));
+	std::memset(&DCInstance::Presence, 0, sizeof(DCInstance::Presence));
 
-  auto _currTime = std::chrono::system_clock::now().time_since_epoch();
-  auto _secondCast =
-      std::chrono::duration_cast<std::chrono::seconds>(_currTime);
+	auto _currTime = std::chrono::system_clock::now().time_since_epoch();
+	auto _secondCast = std::chrono::duration_cast<std::chrono::seconds>(_currTime);
 
-  DCInstance::Presence.startTimestamp = _secondCast.count();
-  Discord_UpdatePresence(&DCInstance::Presence);
+	DCInstance::Presence.startTimestamp = _secondCast.count();
+	Discord_UpdatePresence(&DCInstance::Presence);
 }
 
-void DCInstance::UpdateDetails(const char* input) {
-  DCInstance::Presence.details = input;
-  Discord_UpdatePresence(&DCInstance::Presence);
+void DCInstance::UpdateDetails(const char *input) {
+	DCInstance::Presence.details = input;
+	Discord_UpdatePresence(&DCInstance::Presence);
 }
 
-void DCInstance::UpdateState(const char* input) {
-  DCInstance::Presence.state = input;
-  Discord_UpdatePresence(&DCInstance::Presence);
+void DCInstance::UpdateState(const char *input) {
+	DCInstance::Presence.state = input;
+	Discord_UpdatePresence(&DCInstance::Presence);
 }
 
-void DCInstance::UpdateLImage(const char* key, const char* text) {
-  DCInstance::Presence.largeImageKey = key;
-  DCInstance::Presence.largeImageText = text;
-  Discord_UpdatePresence(&DCInstance::Presence);
+void DCInstance::UpdateLImage(const char *key, const char *text) {
+	DCInstance::Presence.largeImageKey = key;
+	DCInstance::Presence.largeImageText = text;
+	Discord_UpdatePresence(&DCInstance::Presence);
 }
 
-void DCInstance::UpdateSImage(const char* key, const char* text) {
-  DCInstance::Presence.smallImageKey = key;
-  DCInstance::Presence.smallImageText = text;
-  Discord_UpdatePresence(&DCInstance::Presence);
+void DCInstance::UpdateSImage(const char *key, const char *text) {
+	DCInstance::Presence.smallImageKey = key;
+	DCInstance::Presence.smallImageText = text;
+	Discord_UpdatePresence(&DCInstance::Presence);
 }

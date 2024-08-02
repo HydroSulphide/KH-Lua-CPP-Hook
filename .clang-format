@@ -1,5 +1,16 @@
----
-Language: Cpp
-BasedOnStyle: LLVM
-PointerAlignment: Left
----
+BasedOnStyle: Microsoft
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortCaseLabelsOnASingleLine: true
+ColumnLimit: 1200  # Adjust to fit your preferred line length
+BinPackParameters: true
+BinPackArguments: true
+AllowAllParametersOfDeclarationOnNextLine: false
+PenaltyBreakBeforeFirstCallParameter: 2000
+PenaltyExcessCharacter: 1000
+PenaltyReturnTypeOnItsOwnLine: 2000
+PenaltyBreakString: 1000
+PenaltyBreakAssignment: 2000

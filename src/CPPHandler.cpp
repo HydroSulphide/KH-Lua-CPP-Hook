@@ -5,5 +5,5 @@
 #include <format>
 
 void OnFrameCPP() {
-  ConsoleLib::MessageOutput(std::format("Sora Level: {}\n", MemoryLib::ReadByte(0x2DE9364)), 0);
+	ConsoleLib::MessageOutput(std::format("Sora Level: {}\n", MemoryLib::ReadByte(0x2DE9364)), 0);
 }

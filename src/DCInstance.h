@@ -8,13 +8,13 @@
 #include <chrono>
 
 class DCInstance {
-public:
-  static inline DiscordRichPresence Presence;
+  public:
+	static inline DiscordRichPresence Presence;
 
-  static void InitializeRPC(const char* applicationID);
+	static void InitializeRPC(const char *applicationID);
 
-  static void UpdateDetails(const char* input);
-  static void UpdateState(const char* input);
-  static void UpdateLImage(const char* key, const char* text);
-  static void UpdateSImage(const char* key, const char* text);
+	static void UpdateDetails(const char *input);
+	static void UpdateState(const char *input);
+	static void UpdateLImage(const char *key, const char *text);
+	static void UpdateSImage(const char *key, const char *text);
 };
