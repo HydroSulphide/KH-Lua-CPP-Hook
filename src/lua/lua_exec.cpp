@@ -15,7 +15,7 @@ bool keyPressedF3 = false;
 
 static std::vector<fs::path> _scriptPaths;
 
-static bool _showConsole = false;
+static bool _showConsole = true;
 static bool _requestedReset = false;
 
 static std::unique_ptr<LuaBackend> _backend;
@@ -47,7 +47,7 @@ void ResetLUA() {
 }
 
 int EntryLUA(int ProcessID, HANDLE ProcessH, std::uint64_t TargetAddress, std::vector<fs::path> ScriptPaths) {
-	ShowWindow(GetConsoleWindow(), SW_HIDE);
+	ShowWindow(GetConsoleWindow(), SW_SHOW);
 
 	std::cout << getHeaderText() << '\n';
 

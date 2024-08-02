@@ -41,24 +41,25 @@ FetchContent_MakeAvailable(ztd.text wil tomlplusplus DiscordRPC)
 add_subdirectory(external/subproject/lua544)
 
 set(SOURCE
-    src/main_dll.cpp
-    src/config.cpp
-    src/lua_exec.cpp
-    src/header_text.cpp
-    src/ConsoleLib.cpp
-    src/DCInstance.cpp
-    src/LuaBackend.cpp
-    src/CPPHandler.cpp
-    src/config.h
-    src/game_info.h
-    src/lua_exec.h
-    src/wil_extra.h
-    src/header_text.h
-    src/ConsoleLib.h
-    src/DCInstance.h
-    src/LuaBackend.h
-    src/MemoryLib.h
-    src/CPPHandler.h
+    "src/hook/main_dll.cpp"
+    "src/hook/config.cpp"
+    "src/hook/header_text.cpp"
+    "src/hook/ConsoleLib.cpp"
+    "src/discord/DCInstance.cpp"
+    "src/lua/lua_exec.cpp"
+    "src/lua/LuaBackend.cpp"
+    "src/cpp/CPPHandler.cpp"
+    
+    "include/extra/wil_extra.h"
+    "include/hook/config.h"
+    "include/hook/game_info.h"
+    "include/hook/header_text.h"
+    "include/hook/ConsoleLib.h"
+    "include/hook/MemoryLib.h"
+    "include/discord/DCInstance.h"
+    "include/lua/lua_exec.h"
+    "include/lua/LuaBackend.h"
+    "include/cpp/CPPHandler.h"
 )
 
 add_custom_target(clang-format
@@ -88,6 +89,12 @@ endif()
 target_compile_features(DBGHELP PRIVATE cxx_std_20)
 target_compile_definitions(DBGHELP PRIVATE -DUNICODE -D_UNICODE)
 target_include_directories(DBGHELP PRIVATE
+    include/
+    include/cpp
+    include/lua
+    include/hook
+    include/discord
+    include/extra
     external/include
     external/subproject/lua544
     ${DiscordRPC_SOURCE_DIR}/include
