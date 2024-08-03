@@ -47,8 +47,6 @@ void reset_lua() {
 }
 
 int entry_lua(int process_id, HANDLE process_handle, std::uint64_t target_address, std::vector<fs::path> script_paths) {
-	ShowWindow(GetConsoleWindow(), SW_SHOW);
-
 	std::cout << get_header_text() << '\n';
 
 	ConsoleLib::print_message("Initializing LuaEngine v5.0...\n\n", 0);

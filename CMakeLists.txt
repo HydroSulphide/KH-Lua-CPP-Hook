@@ -45,21 +45,30 @@ set(SOURCE
     "src/hook/config.cpp"
     "src/hook/header_text.cpp"
     "src/hook/console_lib.cpp"
+
     "src/discord/discord_instance.cpp"
+
     "src/lua/lua_exec.cpp"
     "src/lua/lua_backend.cpp"
+
     "src/cpp/cpp_handler.cpp"
+    "src/cpp/api/kh_characters.cpp"
     
     "include/extra/wil_extra.h"
+
     "include/hook/config.h"
     "include/hook/game_info.h"
     "include/hook/header_text.h"
     "include/hook/console_lib.h"
     "include/hook/memory_lib.h"
+
     "include/discord/discord_instance.h"
+
     "include/lua/lua_exec.h"
     "include/lua/lua_backend.h"
+
     "include/cpp/cpp_handler.h"
+    "include/cpp/api/kh_characters.h"
 )
 
 add_custom_target(clang-format
@@ -91,6 +100,8 @@ target_compile_definitions(DBGHELP PRIVATE -DUNICODE -D_UNICODE)
 target_include_directories(DBGHELP PRIVATE
     include/
     include/cpp
+    include/cpp/api
+    include/cpp/events
     include/lua
     include/hook
     include/discord

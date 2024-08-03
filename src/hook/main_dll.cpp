@@ -237,6 +237,10 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 			SetConsoleOutputCP(CP_UTF8);
 			FILE *f;
 			freopen_s(&f, "CONOUT$", "w", stdout);
+			ShowWindow(GetConsoleWindow(), SW_SHOW);
+
+			// Initialize c++ api
+			api_init(base_address , "KHMemoryHook/offsets/kh1/steam.toml");
 
 			if (entry_lua(GetCurrentProcessId(), GetCurrentProcess(), base_address, std::move(script_paths)) == 0) {
 				// TODO: Hook after game initialization is done.
