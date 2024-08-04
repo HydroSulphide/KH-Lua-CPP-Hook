@@ -26,7 +26,7 @@ extern "C" {
 void __cdecl on_init();
 void __cdecl on_frame();
 
-__declspec(dllimport) void print_mod_message(const char *text, MessageType message_type);
+__declspec(dllimport) void print_mod_message(const char *text, MessageType message_type, const char *mod_name);
 
 __declspec(dllimport) CharacterStats *get_sora_character_stats();
 __declspec(dllimport) CharacterStats *get_donald_character_stats();
@@ -38,15 +38,15 @@ __declspec(dllimport) FieldStats *get_goofy_field_stats();
 }
 
 inline void print(const string &text, MessageType message_type = MESSAGE_NONE) {
-	print_mod_message(format("[{}]: {}", mod_name, text).c_str(), message_type);
+	print_mod_message(text.c_str(), message_type, mod_name.c_str());
 }
 
 inline string get_metadata() {
-	return format("[{}]\n\tAuthor: {}\n\tDescription: {}\n\tVersion: {}", mod_name, mod_author, mod_description, mod_version);
+	return format("\n\tAuthor: {}\n\tDescription: {}\n\tVersion: {}", mod_author, mod_description, mod_version);
 }
 
 inline void print_metadata() {
-	print_mod_message(get_metadata().c_str(), MESSAGE_NONE);
+	print_mod_message(get_metadata().c_str(), MESSAGE_NONE, mod_name.c_str());
 }
 
 extern "C" __declspec(dllexport) void __cdecl on_load() {
