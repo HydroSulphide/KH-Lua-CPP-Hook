@@ -4,7 +4,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
-project(LuaBackendHook LANGUAGES CXX)
+project(KH-CPP-Lua-hook LANGUAGES CXX)
 
 set(PROGRAM_VERSION "" CACHE STRING "Program version override")
 
@@ -120,3 +120,17 @@ target_link_libraries(DBGHELP PRIVATE
 )
 
 unset(PROGRAM_VERSION CACHE)
+
+# Create a custom target that always runs
+add_custom_target(
+    RunBatchScript ALL
+    COMMAND ${CMAKE_COMMAND} -E echo "Running batch script to compile mods..."
+    COMMAND ${CMAKE_COMMAND} -E echo "Current Directory: ${CMAKE_SOURCE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH}" cmd /c compile_mods.bat
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Executing compile_mods.bat"
+    VERBATIM
+)
+
+# Make sure this target runs after the DLLs are built
+add_dependencies(RunBatchScript DBGHELP)

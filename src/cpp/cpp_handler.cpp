@@ -6,7 +6,17 @@
 
 #include <toml++/toml.h>
 
-bool api_init(uintptr_t base_address, const std::filesystem::path &path) {
+namespace fs = std::filesystem;
+
+typedef void(__cdecl *OnLoadFunc)();
+typedef void(__cdecl *OnInitFunc)();
+typedef void(__cdecl *OnFrameFunc)();
+
+std::vector<OnFrameFunc> on_frame_funcs;
+std::vector<HMODULE> loaded_mods;
+
+
+bool api_init_cpp(uintptr_t base_address, const std::filesystem::path &path) {
 	auto offsets = toml::parse_file(path.u8string());
 
 	uintptr_t sora_character_stats_address = offsets["character_stats"]["sora"].value_or(0);
@@ -23,6 +33,82 @@ bool api_init(uintptr_t base_address, const std::filesystem::path &path) {
 	return true;
 }
 
+void load_mod_setup_cpp() {
+	std::string setup_path = "KHMemoryHook/kh_mod_setup.dll";
+	std::string file_name = "kh_mod_setup.dll";
+
+	// Load the DLL
+	HMODULE h_mod = LoadLibraryA(setup_path.c_str());
+	if (h_mod) {
+		ConsoleLib::print_message(std::format("{} loaded\n", file_name), MESSAGE_SUCCESS);
+		// Get the address of the on_load function
+		OnLoadFunc on_load = (OnLoadFunc)GetProcAddress(h_mod, "on_load");
+		if (on_load) {
+			on_load();
+		} else {
+			ConsoleLib::print_message(std::format("Failed to find on_load() in {}\n", file_name), MESSAGE_ERROR);
+		}
+
+		// Get the address of the on_init function
+		OnInitFunc on_init = (OnInitFunc)GetProcAddress(h_mod, "on_init");
+		if (on_init) {
+			on_init();
+			ConsoleLib::print_message("Mod Setup successful!\n\n", MESSAGE_SUCCESS);
+		} else {
+			ConsoleLib::print_message(std::format("Failed to find on_init() in {}\n\n", file_name), MESSAGE_ERROR);
+		}
+	} else {
+		ConsoleLib::print_message(std::format("Failed to load {}\n\n", file_name), MESSAGE_ERROR);
+	}
+}
+
+void load_mods_cpp() {
+
+	for (const auto &entry : fs::directory_iterator("mods")) {
+		if (entry.path().extension() == ".dll") {
+			std::string mod_path = entry.path().string();
+			std::string file_name = entry.path().filename().string();
+
+			// Load the DLL
+			HMODULE h_mod = LoadLibraryA(mod_path.c_str());
+			if (h_mod) {
+				ConsoleLib::print_message(std::format("{} loaded\n", file_name), MESSAGE_SUCCESS);
+				// Get the address of the on_load function
+				OnLoadFunc on_load = (OnLoadFunc)GetProcAddress(h_mod, "on_load");
+				if (on_load) {
+					on_load();
+				} else {
+					ConsoleLib::print_message(std::format("Failed to find on_load() in {}\n", file_name), MESSAGE_ERROR);
+				}
+
+				// Get the address of the on_init function
+				OnInitFunc on_init = (OnInitFunc)GetProcAddress(h_mod, "on_init");
+				if (on_init) {
+					on_init();
+					ConsoleLib::print_message(std::format("{} initialized\n", file_name), MESSAGE_SUCCESS);
+				} else {
+					ConsoleLib::print_message(std::format("{} has not implemented event: on_init()\n", file_name), MESSAGE_WARNING);
+				}
+
+				// Store the handle of the loaded module if you want to use it later
+				loaded_mods.push_back(h_mod);
+
+				OnFrameFunc on_frame = (OnFrameFunc)GetProcAddress(h_mod, "on_frame");
+				if (on_frame) {
+					on_frame_funcs.push_back((OnFrameFunc)GetProcAddress(h_mod, "on_frame"));
+					ConsoleLib::print_message(std::format("{} implemented event: on_frame()\n\n", file_name), MESSAGE_SUCCESS);
+				} else {
+					ConsoleLib::print_message(std::format("{} has not implemented event: on_frame()\n\n", file_name), MESSAGE_WARNING);
+				}
+			} else {
+				ConsoleLib::print_message(std::format("Failed to load {}\n\n", mod_path), MESSAGE_ERROR);
+			}
+		}
+	}
+}
+
 void on_frame_cpp() {
-	ConsoleLib::print_message(std::format("Sora Level: {}\n", sora_character_stats->level), MessageType::MESSAGE_NONE);
+	for (const auto &on_frame : on_frame_funcs) {
+		on_frame();
+	}
 }

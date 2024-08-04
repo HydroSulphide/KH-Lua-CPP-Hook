@@ -188,7 +188,27 @@ bool hook_game() {
 	return true;
 }
 
+void initialize_console() {
+	if (!AllocConsole()) {
+		std::cerr << "Failed to allocate console" << std::endl;
+		return;
+	}
+
+	FILE *p_console_output;
+	if (freopen_s(&p_console_output, "CONOUT$", "w", stdout) != 0) {
+		std::cerr << "Failed to redirect stdout" << std::endl;
+	}
+	if (freopen_s(&p_console_output, "CONOUT$", "w", stderr) != 0) {
+		std::cerr << "Failed to redirect stderr" << std::endl;
+	}
+
+	std::cout << "Console initialized" << std::endl;
+	ShowWindow(GetConsoleWindow(), SW_SHOW);
+}
+
 DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
+	initialize_console();
+
 	std::wstring modulePathStr;
 	wil::GetModuleFileNameW(nullptr, modulePathStr);
 
@@ -233,28 +253,24 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 		}
 
 		if (!script_paths.empty()) {
-			AllocConsole();
-			SetConsoleOutputCP(CP_UTF8);
-			FILE *f;
-			freopen_s(&f, "CONOUT$", "w", stdout);
-			ShowWindow(GetConsoleWindow(), SW_SHOW);
-
-			// Initialize c++ api
-			api_init(base_address , "KHMemoryHook/offsets/kh1/steam.toml");
-
 			if (entry_lua(GetCurrentProcessId(), GetCurrentProcess(), base_address, std::move(script_paths)) == 0) {
 				// TODO: Hook after game initialization is done.
 				while (!hook_game()) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(16));
 				}
 			} else {
-				std::cout << "Failed to initialize internal LuaBackend!" << std::endl;
+				std::cout << "Failed to initialize KH-CPP-Lua-hook!" << std::endl;
 			}
+
+			// Initialize c++ api
+			api_init_cpp(base_address, "KHMemoryHook/offsets/kh1/steam.toml");
+			load_mod_setup_cpp();
+			load_mods_cpp();
 		}
 	} catch (std::exception &e) {
 		std::string msg = "entry exception: " + std::string(e.what()) + "\n\nScripts failed to load.";
 		std::wstring wmsg = ztd::text::transcode(msg, ztd::text::compat_utf8, ztd::text::wide_utf16, ztd::text::replacement_handler);
-		MessageBoxW(NULL, wmsg.c_str(), L"LuaBackendHook", MB_ICONERROR | MB_OK);
+		MessageBoxW(NULL, wmsg.c_str(), L"KH-CPP-Lua-hook", MB_ICONERROR | MB_OK);
 	}
 
 	return 0;
