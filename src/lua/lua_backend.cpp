@@ -16,7 +16,7 @@ int LuaBackend::exception_handle(lua_State *lua_state, sol::optional<const std::
 	(void)description;
 
 	const std::exception _ex = *thrown_exception;
-	ConsoleLib::print_message(std::string{_ex.what()} + "\n", 3);
+	print_message(std::string{_ex.what()} + "\n", MESSAGE_ERROR);
 
 	return sol::stack::push(lua_state, _ex.what());
 }
@@ -77,7 +77,7 @@ void LuaBackend::load_scripts(const std::vector<fs::path> &script_paths, std::ui
 			if (_filePath.extension() == ".lua") {
 				_script->lua_state["LUA_NAME"] = _filePath.filename().string();
 
-				ConsoleLib::print_message("Found script: \"" + _filePathStr + "\" Initializing...\n", 0);
+				print_message("Found script: \"" + _filePathStr + "\" Initializing...\n", MESSAGE_DEFAULT);
 
 				auto _result = _script->lua_state.script_file(_filePathStr, &sol::script_pass_on_error);
 
@@ -86,24 +86,24 @@ void LuaBackend::load_scripts(const std::vector<fs::path> &script_paths, std::ui
 
 				if (_result.valid()) {
 					if (!_script->init_function && !_script->frame_function) {
-						ConsoleLib::print_message("No event handlers exist or all of them have errors.\n", 3);
-						ConsoleLib::print_message("Initialization of this script cannot continue...\n", 3);
+						print_message("No event handlers exist or all of them have errors.\n", MESSAGE_ERROR);
+						print_message("Initialization of this script cannot continue...\n", MESSAGE_ERROR);
 						return;
 					}
 
 					if (!_script->init_function)
-						ConsoleLib::print_message("The event handler for initialization either has errors or does not exist.\n", 2);
+						print_message("The event handler for initialization either has errors or does not exist.\n", MESSAGE_WARNING);
 
 					if (!_script->frame_function)
-						ConsoleLib::print_message("The event handler for framedraw either has errors or does not exist.\n", 2);
+						print_message("The event handler for framedraw either has errors or does not exist.\n", MESSAGE_WARNING);
 
-					ConsoleLib::print_message("Initialization of this script was successful!\n\n", 1);
+					print_message("Initialization of this script was successful!\n\n", MESSAGE_SUCCESS);
 
 					loaded_scripts.push_back(std::move(_script));
 				} else {
 					sol::error err = _result;
-					ConsoleLib::print_message(std::string{err.what()} + "\n", 3);
-					ConsoleLib::print_message("Initialization of this script was aborted.\n", 3);
+					print_message(std::string{err.what()} + "\n", MESSAGE_ERROR);
+					print_message("Initialization of this script was aborted.\n", MESSAGE_ERROR);
 				}
 			}
 		}

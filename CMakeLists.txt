@@ -4,7 +4,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
-project(KH-CPP-Lua-hook LANGUAGES CXX)
+project(KH-Lua-CPP-Hook LANGUAGES CXX)
 
 set(PROGRAM_VERSION "" CACHE STRING "Program version override")
 

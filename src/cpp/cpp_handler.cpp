@@ -40,25 +40,25 @@ void load_mod_setup_cpp() {
 	// Load the DLL
 	HMODULE h_mod = LoadLibraryA(setup_path.c_str());
 	if (h_mod) {
-		ConsoleLib::print_message(std::format("{} loaded\n", file_name), MESSAGE_SUCCESS);
+		print_message(std::format("{} loaded", file_name), MESSAGE_SUCCESS);
 		// Get the address of the on_load function
 		OnLoadFunc on_load = (OnLoadFunc)GetProcAddress(h_mod, "on_load");
 		if (on_load) {
 			on_load();
 		} else {
-			ConsoleLib::print_message(std::format("Failed to find on_load() in {}\n", file_name), MESSAGE_ERROR);
+			print_message(std::format("Failed to find on_load() in {}", file_name), MESSAGE_ERROR);
 		}
 
 		// Get the address of the on_init function
 		OnInitFunc on_init = (OnInitFunc)GetProcAddress(h_mod, "on_init");
 		if (on_init) {
 			on_init();
-			ConsoleLib::print_message("Mod Setup successful!\n\n", MESSAGE_SUCCESS);
+			print_message("Mod Setup successful!\n", MESSAGE_SUCCESS);
 		} else {
-			ConsoleLib::print_message(std::format("Failed to find on_init() in {}\n\n", file_name), MESSAGE_ERROR);
+			print_message(std::format("{} has not implemented event: on_init()\n", file_name), MESSAGE_WARNING);
 		}
 	} else {
-		ConsoleLib::print_message(std::format("Failed to load {}\n\n", file_name), MESSAGE_ERROR);
+		print_message(std::format("Failed to load {}\n", file_name), MESSAGE_ERROR);
 	}
 }
 
@@ -72,22 +72,22 @@ void load_mods_cpp() {
 			// Load the DLL
 			HMODULE h_mod = LoadLibraryA(mod_path.c_str());
 			if (h_mod) {
-				ConsoleLib::print_message(std::format("{} loaded\n", file_name), MESSAGE_SUCCESS);
+				print_message(std::format("{} loaded", file_name), MESSAGE_SUCCESS);
 				// Get the address of the on_load function
 				OnLoadFunc on_load = (OnLoadFunc)GetProcAddress(h_mod, "on_load");
 				if (on_load) {
 					on_load();
 				} else {
-					ConsoleLib::print_message(std::format("Failed to find on_load() in {}\n", file_name), MESSAGE_ERROR);
+					print_message(std::format("Failed to find on_load() in {}", file_name), MESSAGE_ERROR);
 				}
 
 				// Get the address of the on_init function
 				OnInitFunc on_init = (OnInitFunc)GetProcAddress(h_mod, "on_init");
 				if (on_init) {
 					on_init();
-					ConsoleLib::print_message(std::format("{} initialized\n", file_name), MESSAGE_SUCCESS);
+					print_message(std::format("{} initialized", file_name), MESSAGE_SUCCESS);
 				} else {
-					ConsoleLib::print_message(std::format("{} has not implemented event: on_init()\n", file_name), MESSAGE_WARNING);
+					print_message(std::format("{} has not implemented event: on_init()", file_name), MESSAGE_WARNING);
 				}
 
 				// Store the handle of the loaded module if you want to use it later
@@ -96,12 +96,12 @@ void load_mods_cpp() {
 				OnFrameFunc on_frame = (OnFrameFunc)GetProcAddress(h_mod, "on_frame");
 				if (on_frame) {
 					on_frame_funcs.push_back((OnFrameFunc)GetProcAddress(h_mod, "on_frame"));
-					ConsoleLib::print_message(std::format("{} implemented event: on_frame()\n\n", file_name), MESSAGE_SUCCESS);
+					print_message(std::format("{} implemented event: on_frame()\n", file_name), MESSAGE_SUCCESS);
 				} else {
-					ConsoleLib::print_message(std::format("{} has not implemented event: on_frame()\n\n", file_name), MESSAGE_WARNING);
+					print_message(std::format("{} has not implemented event: on_frame()\n", file_name), MESSAGE_WARNING);
 				}
 			} else {
-				ConsoleLib::print_message(std::format("Failed to load {}\n\n", mod_path), MESSAGE_ERROR);
+				print_message(std::format("Failed to load {}\n\n", mod_path), MESSAGE_ERROR);
 			}
 		}
 	}

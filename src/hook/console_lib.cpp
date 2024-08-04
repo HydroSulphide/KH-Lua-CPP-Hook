@@ -1,28 +1,34 @@
 #include "console_lib.h"
 
-void ConsoleLib::print_message(const std::string &text, int message_type) {
+void print_message(const std::string &text, MessageType message_type) {
 	HANDLE _console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	switch (message_type) {
-	case 0:
+	case MESSAGE_DEFAULT:
 		SetConsoleTextAttribute(_console_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 		std::cout << "MESSAGE: ";
 		break;
-	case 1:
+	case MESSAGE_SUCCESS:
 		SetConsoleTextAttribute(_console_handle, FOREGROUND_GREEN);
 		std::cout << "SUCCESS: ";
 		break;
-	case 2:
+	case MESSAGE_WARNING:
 		SetConsoleTextAttribute(_console_handle, FOREGROUND_RED | FOREGROUND_GREEN);
 		std::cout << "WARNING: ";
 		break;
-	case 3:
+	case MESSAGE_ERROR:
 		SetConsoleTextAttribute(_console_handle, FOREGROUND_RED);
 		std::cout << "ERROR: ";
 		break;
-	default: SetConsoleTextAttribute(_console_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); break;
+	default: 
+		SetConsoleTextAttribute(_console_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); 
+		break;
 	}
 
 	SetConsoleTextAttribute(_console_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-	std::cout << text;
+	std::cout << text << std::endl;
+}
+
+extern "C" __declspec(dllexport) void print_mod_message(const char *text, MessageType message_type) {
+	print_message(text, message_type);
 }

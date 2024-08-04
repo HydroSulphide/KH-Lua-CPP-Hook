@@ -259,7 +259,7 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(16));
 				}
 			} else {
-				std::cout << "Failed to initialize KH-CPP-Lua-hook!" << std::endl;
+				std::cout << "Failed to initialize KH-Lua-CPP-Hook!" << std::endl;
 			}
 
 			// Initialize c++ api
@@ -270,7 +270,7 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 	} catch (std::exception &e) {
 		std::string msg = "entry exception: " + std::string(e.what()) + "\n\nScripts failed to load.";
 		std::wstring wmsg = ztd::text::transcode(msg, ztd::text::compat_utf8, ztd::text::wide_utf16, ztd::text::replacement_handler);
-		MessageBoxW(NULL, wmsg.c_str(), L"KH-CPP-Lua-hook", MB_ICONERROR | MB_OK);
+		MessageBoxW(NULL, wmsg.c_str(), L"KH-Lua-CPP-Hook", MB_ICONERROR | MB_OK);
 	}
 
 	return 0;

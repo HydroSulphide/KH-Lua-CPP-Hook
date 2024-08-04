@@ -22,13 +22,13 @@ static std::unique_ptr<LuaBackend> _backend;
 
 void reset_lua() {
 	std::printf("\n");
-	ConsoleLib::print_message("Reloading...\n\n", 0);
+	print_message("Reloading...\n\n", MESSAGE_DEFAULT);
 	_backend = std::make_unique<LuaBackend>(_script_paths, MemoryLib::exec_address + MemoryLib::base_address);
 
 	if (_backend->loaded_scripts.size() == 0)
-		ConsoleLib::print_message("No scripts found! Reload halted!\n\n", 3);
+		print_message("No scripts found! Reload halted!\n\n", MESSAGE_ERROR);
 
-	ConsoleLib::print_message("Executing initialization event handlers...\n\n", 0);
+	print_message("Executing initialization event handlers...\n\n", MESSAGE_DEFAULT);
 
 	for (auto &_script : _backend->loaded_scripts)
 		if (_script->init_function) {
@@ -36,12 +36,12 @@ void reset_lua() {
 
 			if (!_result.valid()) {
 				sol::error _err = _result;
-				ConsoleLib::print_message(_err.what(), 3);
+				print_message(_err.what(), MESSAGE_ERROR);
 				std::printf("\n\n");
 			}
 		}
 
-	ConsoleLib::print_message("Reload complete!\n\n", 1);
+	print_message("Reload complete!\n\n", MESSAGE_SUCCESS);
 
 	_requested_reset = false;
 }
@@ -49,7 +49,7 @@ void reset_lua() {
 int entry_lua(int process_id, HANDLE process_handle, std::uint64_t target_address, std::vector<fs::path> script_paths) {
 	std::cout << get_header_text() << '\n';
 
-	ConsoleLib::print_message("Initializing LuaEngine v5.0...\n\n", 0);
+	print_message("Initializing LuaEngine v5.0...\n\n", MESSAGE_DEFAULT);
 	_script_paths = std::move(script_paths);
 
 	MemoryLib::extern_process(process_id, process_handle, target_address);
@@ -58,11 +58,11 @@ int entry_lua(int process_id, HANDLE process_handle, std::uint64_t target_addres
 	_backend->frame_limit = 16;
 
 	if (_backend->loaded_scripts.size() == 0) {
-		ConsoleLib::print_message("No scripts were found! Initialization halted!\n\n", 3);
+		print_message("No scripts were found! Initialization halted!\n\n", MESSAGE_ERROR);
 		return -1;
 	}
 
-	ConsoleLib::print_message("Executing initialization event handlers...\n\n", 0);
+	print_message("Executing initialization event handlers...\n\n", MESSAGE_DEFAULT);
 
 	for (auto &_script : _backend->loaded_scripts)
 		if (_script->init_function) {
@@ -70,13 +70,13 @@ int entry_lua(int process_id, HANDLE process_handle, std::uint64_t target_addres
 
 			if (!_result.valid()) {
 				sol::error _err = _result;
-				ConsoleLib::print_message(_err.what(), 3);
+				print_message(_err.what(), MESSAGE_ERROR);
 				std::printf("\n\n");
 			}
 		}
 
-	ConsoleLib::print_message("Initialization complete!\n", 1);
-	ConsoleLib::print_message("Press 'F1' to reload all scripts, press 'F2' to toggle the console, press 'F3' to set execution frequency.\n\n", 0);
+	print_message("Initialization complete!\n", MESSAGE_SUCCESS);
+	print_message("Press 'F1' to reload all scripts, press 'F2' to toggle the console, press 'F3' to set execution frequency.\n\n", MESSAGE_DEFAULT);
 
 	return 0;
 }
@@ -89,15 +89,15 @@ void execute_lua() {
 				switch (_backend->frame_limit) {
 				case 16:
 					_backend->frame_limit = 8;
-					ConsoleLib::print_message("Frequency set to 120Hz.\n", 0);
+					print_message("Frequency set to 120Hz.\n", MESSAGE_DEFAULT);
 					break;
 				case 8:
 					_backend->frame_limit = 4;
-					ConsoleLib::print_message("Frequency set to 240Hz.\n", 0);
+					print_message("Frequency set to 240Hz.\n", MESSAGE_DEFAULT);
 					break;
 				case 4:
 					_backend->frame_limit = 16;
-					ConsoleLib::print_message("Frequency set to 60Hz.\n", 0);
+					print_message("Frequency set to 60Hz.\n", MESSAGE_DEFAULT);
 					break;
 				}
 			}
@@ -140,7 +140,7 @@ void execute_lua() {
 
 				if (!_result.valid()) {
 					sol::error _err = _result;
-					ConsoleLib::print_message(_err.what(), 3);
+					print_message(_err.what(), MESSAGE_ERROR);
 					std::printf("\n\n");
 
 					_backend->loaded_scripts.erase(_backend->loaded_scripts.begin() + i);

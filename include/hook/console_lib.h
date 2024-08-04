@@ -14,6 +14,5 @@ enum MessageType {
 	MESSAGE_ERROR = 3
 };
 
-namespace ConsoleLib {
-void print_message(const std::string &text, int message_type);
-}; // namespace ConsoleLib
+
+void print_message(const std::string &text, MessageType message_type);
