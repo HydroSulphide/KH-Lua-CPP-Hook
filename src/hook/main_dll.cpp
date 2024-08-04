@@ -26,6 +26,7 @@
 #include "game_info.h"
 #include "lua_exec.h"
 #include "wil_extra.h"
+#include "input.h"
 
 // TODO: Remove after init fix.
 #include <thread>
@@ -266,6 +267,11 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 			api_init_cpp(base_address, "KHMemoryHook/offsets/kh1/steam.toml");
 			load_mod_setup_cpp();
 			load_mods_cpp();
+
+			while (true) {
+				handle_input();
+				std::this_thread::sleep_for(std::chrono::milliseconds(16));
+			}
 		}
 	} catch (std::exception &e) {
 		std::string msg = "entry exception: " + std::string(e.what()) + "\n\nScripts failed to load.";

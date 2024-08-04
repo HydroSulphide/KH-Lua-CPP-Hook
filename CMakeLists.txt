@@ -45,6 +45,7 @@ set(SOURCE
     "src/hook/config.cpp"
     "src/hook/header_text.cpp"
     "src/hook/console_lib.cpp"
+    "src/hook/input.cpp"
 
     "src/discord/discord_instance.cpp"
 
@@ -61,6 +62,7 @@ set(SOURCE
     "include/hook/header_text.h"
     "include/hook/console_lib.h"
     "include/hook/memory_lib.h"
+    "include/hook/input.h"
 
     "include/discord/discord_instance.h"
 
