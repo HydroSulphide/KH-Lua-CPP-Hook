@@ -121,9 +121,9 @@ target_link_libraries(DBGHELP PRIVATE
 
 unset(PROGRAM_VERSION CACHE)
 
-# Create a custom target that always runs
+# Execute compile_mods.bat
 add_custom_target(
-    RunBatchScript ALL
+    RunCompileMods ALL
     COMMAND ${CMAKE_COMMAND} -E echo "Running batch script to compile mods..."
     COMMAND ${CMAKE_COMMAND} -E echo "Current Directory: ${CMAKE_SOURCE_DIR}"
     COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH}" cmd /c compile_mods.bat
@@ -132,5 +132,21 @@ add_custom_target(
     VERBATIM
 )
 
-# Make sure this target runs after the DLLs are built
-add_dependencies(RunBatchScript DBGHELP)
+
+# Execute copy_output_files.bat
+add_custom_target(
+    RunCopyOutput ALL
+    COMMAND ${CMAKE_COMMAND} -E echo "Running batch script to copy compiled mods and DBGHELP.dll to the game directory..."
+    COMMAND ${CMAKE_COMMAND} -E echo "Current Directory: ${CMAKE_SOURCE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH}" cmd /c copy_output_files.bat
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Executing copy_output_files.bat"
+    VERBATIM
+)
+
+# Make sure RunCopyOutput runs after RunCompileMods
+add_dependencies(RunCopyOutput RunCompileMods)
+
+# Make sure these targets run after the DLLs are built
+add_dependencies(RunCompileMods DBGHELP)
+add_dependencies(RunCopyOutput DBGHELP)

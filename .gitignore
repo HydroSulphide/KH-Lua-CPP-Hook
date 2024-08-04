@@ -44,3 +44,4 @@ _deps
 
 .cache/
 build/
+/out/mods
