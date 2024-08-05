@@ -31,9 +31,18 @@ void print_message(const std::string &text, MessageType message_type, const std:
 	}
 
 	SetConsoleTextAttribute(_console_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-	std::cout << text << std::endl;
+	std::cout << text;
+}
+
+void print_message_line(const std::string& text, MessageType message_type, const std::string& mod_name) {
+	print_message(text, message_type, mod_name);
+	std::cout << std::endl;
 }
 
 extern "C" __declspec(dllexport) void print_mod_message(const char *text, MessageType message_type, const char *mod_name) {
 	print_message(text, message_type, mod_name);
+}
+
+extern "C" __declspec(dllexport) void print_mod_message_line(const char *text, MessageType message_type, const char *mod_name) {
+	print_message_line(text, message_type, mod_name);
 }

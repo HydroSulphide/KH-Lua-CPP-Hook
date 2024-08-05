@@ -71,6 +71,7 @@ std::optional<std::uintptr_t> follow_pointer_chain(std::uintptr_t start, const R
 }
 
 std::uint64_t __cdecl frame_hook(void *rcx) {
+	handle_input();
 	execute_lua();
 	on_frame_cpp();
 	return frame_proc(rcx);
@@ -269,7 +270,7 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 			load_mods_cpp();
 
 			while (true) {
-				handle_input();
+				handle_input_console();
 				std::this_thread::sleep_for(std::chrono::milliseconds(16));
 			}
 		}
@@ -282,8 +283,47 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 	return 0;
 }
 
+void RunBatchScript(const std::wstring &scriptPath, const std::wstring &args) {
+	// Build the command line
+	std::wstring commandLine = L"cmd.exe /C \"\"" + scriptPath + L"\" \"" + args + L"\"\"";
+
+	// Set up the STARTUPINFO structure
+	STARTUPINFO si = {sizeof(si)};
+	si.dwFlags = STARTF_USESHOWWINDOW;
+	si.wShowWindow = SW_SHOWMINIMIZED;
+
+	// Set up the PROCESS_INFORMATION structure
+	PROCESS_INFORMATION pi = {0};
+
+	// Convert the command line to a modifiable array of wide characters
+	std::vector<wchar_t> commandBuffer(commandLine.begin(), commandLine.end());
+	commandBuffer.push_back(L'\0'); // Null-terminate the command line
+
+	// Create the process to run the batch script
+	if (!CreateProcess(NULL,				 // No module name (use command line)
+					   commandBuffer.data(), // Command line
+					   NULL,				 // Process handle not inheritable
+					   NULL,				 // Thread handle not inheritable
+					   FALSE,				 // Set handle inheritance to FALSE
+					   CREATE_NEW_CONSOLE,	 // Create a new console window
+					   NULL,				 // Use parent's environment block
+					   NULL,				 // Use parent's starting directory
+					   &si,					 // Pointer to STARTUPINFO structure
+					   &pi					 // Pointer to PROCESS_INFORMATION structure
+					   )) {
+		DWORD errorCode = GetLastError();
+		std::wstring errorMessage = L"CreateProcess failed with error code " + std::to_wstring(errorCode);
+		MessageBoxW(NULL, errorMessage.c_str(), L"Error", MB_OK | MB_ICONERROR);
+		return;
+	}
+
+	// Close process and thread handles
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+}
+
 BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinstDLL, DWORD fdwReason, [[maybe_unused]] LPVOID lpReserved) {
-	static HMODULE dbgHelp = nullptr;
+	static HMODULE dbghelp = nullptr;
 	static HMODULE dinput8 = nullptr;
 
 	switch (fdwReason) {
@@ -292,8 +332,8 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinstDLL, DWORD fdwReason, [[mayb
 		wil::GetSystemDirectoryW(systemDirectoryStr);
 		fs::path dllPath = fs::path{systemDirectoryStr} / L"DBGHELP.dll";
 
-		dbgHelp = LoadLibraryW(dllPath.wstring().c_str());
-		write_dump_proc = (MiniDumpWriteDumpProc)GetProcAddress(dbgHelp, "MiniDumpWriteDump");
+		dbghelp = LoadLibraryW(dllPath.wstring().c_str());
+		write_dump_proc = (MiniDumpWriteDumpProc)GetProcAddress(dbghelp, "MiniDumpWriteDump");
 
 		fs::path dinput8Path = fs::path{systemDirectoryStr} / L"DINPUT8.dll";
 
@@ -303,11 +343,16 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinstDLL, DWORD fdwReason, [[mayb
 		if (CreateThread(nullptr, 0, entry, nullptr, 0, nullptr) == nullptr) {
 			return FALSE;
 		}
-
 		break;
 	}
-	case DLL_PROCESS_DETACH: {
-		FreeLibrary(dbgHelp);
+	case DLL_PROCESS_DETACH: { // Path to the batch script
+		std::wstring batch_script_path = L"KHMemoryHook\\remove_loaded_mods.bat";
+		std::wstring loaded_mods_path = L"KHMemoryHook\\loaded_mods\\";
+
+		// Run the batch script
+		RunBatchScript(batch_script_path, loaded_mods_path);
+
+		FreeLibrary(dbghelp);
 		FreeLibrary(dinput8);
 		break;
 	}

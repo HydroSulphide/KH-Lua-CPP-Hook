@@ -134,8 +134,7 @@ add_custom_target(
     VERBATIM
 )
 
-
-# Execute copy_output_files.bat
+# Execute copy_output_files.ps1
 add_custom_target(
     RunCopyOutput ALL
     COMMAND ${CMAKE_COMMAND} -E echo "Running batch script to copy compiled mods and DBGHELP.dll to the game directory..."

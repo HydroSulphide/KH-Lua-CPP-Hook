@@ -6,6 +6,6 @@ string mod_author = "HydroSulphide";
 string mod_description = "This is a setup mod, that is loaded and executed before any other mod.";
 string mod_version = "0.1";
 
-extern "C" __declspec(dllexport) void __cdecl on_init() {
-	print("Initializing Mod Setup ...");
+KH_MOD on_init() {
+	print_line("Initializing Mod Setup ...");
 }

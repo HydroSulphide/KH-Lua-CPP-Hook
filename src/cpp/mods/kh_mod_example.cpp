@@ -6,10 +6,10 @@ string mod_author = "HydroSulphide";
 string mod_description = "This is a description of Example Mod.";
 string mod_version = "1.0.0";
 
-extern "C" __declspec(dllexport) void __cdecl on_init() {
-	print("on_init()");
+KH_MOD on_init() {
+	print_line("on_init()");
 }
 
- extern "C" __declspec(dllexport) void __cdecl on_frame() {
-     print("on_frame()");
- }
+KH_MOD on_frame() {
+	print_line("on_frame()");
+}

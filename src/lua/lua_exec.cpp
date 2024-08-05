@@ -4,9 +4,9 @@
 #include <utility>
 
 #include "console_lib.h"
-#include "lua_backend.h"
 #include "header_text.h"
 #include "input.h"
+#include "lua_backend.h"
 
 namespace fs = std::filesystem;
 
@@ -14,7 +14,7 @@ static std::vector<fs::path> script_paths;
 
 extern std::unique_ptr<LuaBackend> lua_backend = nullptr;
 
-void reset_lua() {
+void reload_mods_lua() {
 	std::printf("\n");
 	print_message("Reloading...\n\n", MESSAGE_DEFAULT);
 	lua_backend = std::make_unique<LuaBackend>(script_paths, MemoryLib::exec_address + MemoryLib::base_address);
@@ -74,20 +74,18 @@ int entry_lua(int process_id, HANDLE process_handle, std::uint64_t target_addres
 }
 
 void execute_lua() {
-	if (requested_reset == false) {
-		for (std::size_t i = 0; i < lua_backend->loaded_scripts.size(); i++) {
-			auto &script = lua_backend->loaded_scripts[i];
+	for (std::size_t i = 0; i < lua_backend->loaded_scripts.size(); i++) {
+		auto &script = lua_backend->loaded_scripts[i];
 
-			if (script->frame_function) {
-				auto result = script->frame_function();
+		if (script->frame_function) {
+			auto result = script->frame_function();
 
-				if (!result.valid()) {
-					sol::error err = result;
-					print_message(err.what(), MESSAGE_ERROR);
-					std::printf("\n\n");
+			if (!result.valid()) {
+				sol::error err = result;
+				print_message(err.what(), MESSAGE_ERROR);
+				std::printf("\n\n");
 
-					lua_backend->loaded_scripts.erase(lua_backend->loaded_scripts.begin() + i);
-				}
+				lua_backend->loaded_scripts.erase(lua_backend->loaded_scripts.begin() + i);
 			}
 		}
 	}
