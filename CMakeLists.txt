@@ -71,24 +71,6 @@ set(SOURCE
     "include/cpp/api/kh_characters.h"
 )
 
-set(ASM_SOURCES
-    ${CMAKE_SOURCE_DIR}/src/asm/hook.asm
-)
-
-set(ASM_OBJECTS)
-
-foreach(ASM_FILE ${ASM_SOURCES})
-    get_filename_component(ASM_NAME ${ASM_FILE} NAME_WE)
-    set(ASM_OBJECT "${CMAKE_BINARY_DIR}/${ASM_NAME}.obj")
-    add_custom_command(
-        OUTPUT ${ASM_OBJECT}
-        COMMAND ml64 /c /Fo${ASM_OBJECT} ${ASM_FILE}
-        DEPENDS ${ASM_FILE}
-        COMMENT "Assembling ${ASM_FILE}"
-    )
-    list(APPEND ASM_OBJECTS ${ASM_OBJECT})
-endforeach()
-
 add_custom_target(clang-format
     COMMAND clang-format -i -style=file ${SOURCE}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -103,7 +85,7 @@ add_custom_target(build-info
     VERBATIM
 )
 
-add_library(DBGHELP SHARED ${SOURCE} ${ASM_OBJECTS})
+add_library(DBGHELP SHARED ${SOURCE})
 add_dependencies(DBGHELP build-info)
 
 if(MSVC)

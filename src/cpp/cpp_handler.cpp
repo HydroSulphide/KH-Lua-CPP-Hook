@@ -104,9 +104,9 @@ void InstallHook(uintptr_t base_address) {
 	VirtualProtect((void *)targetAddress, 2, PAGE_EXECUTE_READWRITE, &oldProtect);
 	*reinterpret_cast<BYTE *>(targetAddress) = int3;
 	*reinterpret_cast<BYTE *>(targetAddress + 1) = popRax;
-	//for (size_t i = 2; i < originalBytes.size(); i++) {
-	//	*reinterpret_cast<BYTE *>(targetAddress + i) = 0x90;
-	//}
+	for (size_t i = 2; i < originalBytes.size(); i++) {
+		*reinterpret_cast<BYTE *>(targetAddress + i) = 0x90;
+	}
 	VirtualProtect((void *)targetAddress, 2, oldProtect, &oldProtect);
 
 	std::cout << "Hook installed at address: " << std::hex << targetAddress << std::endl;
