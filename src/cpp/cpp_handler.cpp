@@ -18,50 +18,63 @@ const std::string loaded_mods_path = "KHMemoryHook/loaded_mods";
 std::vector<OnFrameFunc> on_frame_funcs;
 std::vector<HMODULE> loaded_mods;
 
-typedef void (*OriginalFunctionType)();
-OriginalFunctionType trampoline = nullptr;
-std::vector<BYTE> originalBytes(7); // Size for a 7-byte instruction
-bool codeExecuted = false;
+
+
+
+// Store original instruction bytes
+std::vector<BYTE> originalBytes(7); // Adjust size as needed
+uintptr_t trampolineAddress = 0;
+size_t trampolineSize = 0;
 
 void customCodeLogic() {
-	std::cout << "CustomCode executed" << std::endl;
-	// Additional custom logic here
+	std::cout << "Custom code executed." << std::endl;
 }
 
-void RestoreOriginalBytes(uintptr_t targetAddress) {
-	DWORD oldProtect;
-	VirtualProtect((void *)targetAddress, originalBytes.size(), PAGE_EXECUTE_READWRITE, &oldProtect);
-	std::cout << "Restoring original bytes at: " << std::hex << targetAddress << std::endl;
-	for (size_t i = 0; i < originalBytes.size(); ++i) {
-		std::cout << "Byte " << i << ": " << std::hex << std::setw(2) << std::setfill('0') << (int)originalBytes[i] << " ";
+// Create a trampoline holding the original instruction and a jump to the next instruction
+void CreateTrampoline(uintptr_t originalAddress) {
+	size_t originalSize = originalBytes.size();
+
+	// Allocate memory for the trampoline
+	trampolineSize = originalSize + 12; // MOV + JMP
+	trampolineAddress = reinterpret_cast<uintptr_t>(VirtualAlloc(nullptr, trampolineSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE));
+
+	if (!trampolineAddress) {
+		std::cerr << "Failed to allocate memory for the trampoline." << std::endl;
+		return;
 	}
-	std::cout << std::endl;
-	memcpy((void *)targetAddress, originalBytes.data(), originalBytes.size());
-	VirtualProtect((void *)targetAddress, originalBytes.size(), oldProtect, &oldProtect);
+
+	// Copy the original instruction to the trampoline
+	memcpy(reinterpret_cast<void *>(trampolineAddress), originalBytes.data(), originalSize);
+
+	BYTE *trampolineCode = reinterpret_cast<BYTE *>(trampolineAddress + originalSize);
+
+	// Save RAX
+	trampolineCode[0] = 0x50; // PUSH RAX
+
+	// MOV RAX, <jumpAddress>
+	trampolineCode[1] = 0x48;
+	trampolineCode[2] = 0xB8;
+	uintptr_t jumpAddress = originalAddress + 1; // Jump to POP RAX (INT 3 + POP RAX)
+	*reinterpret_cast<uintptr_t *>(trampolineCode + 3) = jumpAddress;
+
+	// JMP RAX
+	trampolineCode[11] = 0xFF;
+	trampolineCode[12] = 0xE0;
+
+	std::cout << "Trampoline address: " << std::hex << trampolineAddress << std::endl;
+	std::cout << "Jump address: " << std::hex << jumpAddress << std::endl;
 }
 
 LONG WINAPI CustomCodeHandler(EXCEPTION_POINTERS *pExceptionInfo) {
 	if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_BREAKPOINT) {
-		std::cout << "Exception Code: " << std::hex << pExceptionInfo->ExceptionRecord->ExceptionCode << std::endl;
-		std::cout << "RIP (before): " << std::hex << pExceptionInfo->ContextRecord->Rip << std::endl;
+		std::cout << "Breakpoint hit at address: " << std::hex << pExceptionInfo->ContextRecord->Rip << std::endl;
 
-		// Call your custom logic
+		// Execute custom code
 		customCodeLogic();
 
-		// Set the flag to indicate code has been executed
-		codeExecuted = true;
+		// Set RIP to the trampoline address
+		pExceptionInfo->ContextRecord->Rip = trampolineAddress;
 
-		// Restore the original bytes
-		RestoreOriginalBytes((uintptr_t)pExceptionInfo->ContextRecord->Rip);
-
-		// Adjust RIP to continue after the original instruction
-		// The original instruction is 7 bytes long
-		// pExceptionInfo->ContextRecord->Rip = pExceptionInfo->ContextRecord->Rip + originalBytes.size();
-
-		// Print adjusted RIP
-		std::cout << "RIP (after adjustment): " << std::hex << pExceptionInfo->ContextRecord->Rip << std::endl;
-
-		// Continue execution
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
 
@@ -71,19 +84,12 @@ LONG WINAPI CustomCodeHandler(EXCEPTION_POINTERS *pExceptionInfo) {
 void InstallHook(uintptr_t base_address) {
 	uintptr_t targetAddress = base_address + 0x2A467E; // Address to hook
 
-	// Save the original bytes (full instruction)
+	// Save the original bytes
 	DWORD oldProtect;
 	VirtualProtect((void *)targetAddress, originalBytes.size(), PAGE_EXECUTE_READWRITE, &oldProtect);
 	memcpy(originalBytes.data(), (void *)targetAddress, originalBytes.size());
 
 	std::cout << "Original bytes at address: " << std::hex << targetAddress << std::endl;
-	for (size_t i = 0; i < originalBytes.size(); ++i) {
-		std::cout << "Byte " << i << ": " << std::hex << std::setw(2) << std::setfill('0') << (int)originalBytes[i] << " ";
-	}
-	std::cout << std::endl;
-
-	// Save the original function address
-	trampoline = (OriginalFunctionType)targetAddress;
 
 	// Install the exception handler
 	HANDLE handler = AddVectoredExceptionHandler(1, CustomCodeHandler);
@@ -92,14 +98,27 @@ void InstallHook(uintptr_t base_address) {
 		return;
 	}
 
-	// Overwrite the target address with an interrupt to trigger the exception handler
-	BYTE int3 = 0xCC; // INT 3 instruction
-	VirtualProtect((void *)targetAddress, 1, PAGE_EXECUTE_READWRITE, &oldProtect);
-	*((BYTE *)targetAddress) = int3;
-	VirtualProtect((void *)targetAddress, 1, oldProtect, &oldProtect);
+	// Overwrite the target address with INT 3 and POP RAX
+	BYTE int3 = 0xCC;	// INT 3 instruction
+	BYTE popRax = 0x58; // POP RAX instruction
+	VirtualProtect((void *)targetAddress, 2, PAGE_EXECUTE_READWRITE, &oldProtect);
+	*reinterpret_cast<BYTE *>(targetAddress) = int3;
+	*reinterpret_cast<BYTE *>(targetAddress + 1) = popRax;
+	//for (size_t i = 2; i < originalBytes.size(); i++) {
+	//	*reinterpret_cast<BYTE *>(targetAddress + i) = 0x90;
+	//}
+	VirtualProtect((void *)targetAddress, 2, oldProtect, &oldProtect);
 
 	std::cout << "Hook installed at address: " << std::hex << targetAddress << std::endl;
+
+	CreateTrampoline(targetAddress);
 }
+
+
+
+
+
+
 
 bool api_init_cpp(uintptr_t base_address, const std::filesystem::path &path) {
 	auto offsets = toml::parse_file(path.u8string());

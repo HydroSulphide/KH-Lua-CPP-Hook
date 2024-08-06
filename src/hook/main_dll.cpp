@@ -265,6 +265,7 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 			}
 
 			// Initialize c++ api
+			std::cout << "Base Address: " << std::hex << base_address << std::endl;
 			api_init_cpp(base_address, "KHMemoryHook/offsets/kh1/steam.toml");
 			load_mod_setup_cpp();
 			load_mods_cpp();
