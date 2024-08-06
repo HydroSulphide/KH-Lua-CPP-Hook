@@ -4,7 +4,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 
-project(KH-Lua-CPP-Hook LANGUAGES CXX)
+project(KH-Lua-CPP-Hook LANGUAGES CXX ASM)
 
 set(PROGRAM_VERSION "" CACHE STRING "Program version override")
 
@@ -28,8 +28,6 @@ FetchContent_Declare(tomlplusplus
     GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
     GIT_TAG        d8fa9a1fddc90254cac2366dde23f0b613bc1280)
 
-# Disable DiscordRPC from running clang-format to work around issue with
-# its .clang-format file.
 set(CLANG_FORMAT_CMD "")
 
 FetchContent_Declare(DiscordRPC
@@ -73,6 +71,24 @@ set(SOURCE
     "include/cpp/api/kh_characters.h"
 )
 
+set(ASM_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/asm/hook.asm
+)
+
+set(ASM_OBJECTS)
+
+foreach(ASM_FILE ${ASM_SOURCES})
+    get_filename_component(ASM_NAME ${ASM_FILE} NAME_WE)
+    set(ASM_OBJECT "${CMAKE_BINARY_DIR}/${ASM_NAME}.obj")
+    add_custom_command(
+        OUTPUT ${ASM_OBJECT}
+        COMMAND ml64 /c /Fo${ASM_OBJECT} ${ASM_FILE}
+        DEPENDS ${ASM_FILE}
+        COMMENT "Assembling ${ASM_FILE}"
+    )
+    list(APPEND ASM_OBJECTS ${ASM_OBJECT})
+endforeach()
+
 add_custom_target(clang-format
     COMMAND clang-format -i -style=file ${SOURCE}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -87,11 +103,10 @@ add_custom_target(build-info
     VERBATIM
 )
 
-add_library(DBGHELP SHARED ${SOURCE})
+add_library(DBGHELP SHARED ${SOURCE} ${ASM_OBJECTS})
 add_dependencies(DBGHELP build-info)
 
 if(MSVC)
-    # ZTD_STD_LIBRARY_RANGES is broken currently on MSVC
     target_compile_options(DBGHELP PRIVATE /std:c++latest -W4 -WX -DZTD_STD_LIBRARY_RANGES=0)
 else()
     target_compile_options(DBGHELP PRIVATE -Wall -Wextra -Wpedantic)
@@ -123,7 +138,6 @@ target_link_libraries(DBGHELP PRIVATE
 
 unset(PROGRAM_VERSION CACHE)
 
-# Execute compile_mods.bat
 add_custom_target(
     RunCompileMods ALL
     COMMAND ${CMAKE_COMMAND} -E echo "Running batch script to compile mods..."
@@ -134,7 +148,6 @@ add_custom_target(
     VERBATIM
 )
 
-# Execute copy_output_files.ps1
 add_custom_target(
     RunCopyOutput ALL
     COMMAND ${CMAKE_COMMAND} -E echo "Running batch script to copy compiled mods and DBGHELP.dll to the game directory..."
@@ -145,9 +158,6 @@ add_custom_target(
     VERBATIM
 )
 
-# Make sure RunCopyOutput runs after RunCompileMods
 add_dependencies(RunCopyOutput RunCompileMods)
-
-# Make sure these targets run after the DLLs are built
 add_dependencies(RunCompileMods DBGHELP)
 add_dependencies(RunCopyOutput DBGHELP)
