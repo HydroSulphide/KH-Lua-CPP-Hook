@@ -18,7 +18,7 @@ include(FetchContent)
 
 FetchContent_Declare(ztd.text
     GIT_REPOSITORY https://github.com/soasis/text.git
-    GIT_TAG        bba2e9207bb6e697a2bcf44b7e72e2b733153cab)
+    GIT_TAG        ad27c3e4aff20a935098d4435b8e78a04a2b926d)
 
 FetchContent_Declare(wil
     GIT_REPOSITORY https://github.com/microsoft/wil.git
@@ -51,7 +51,8 @@ set(SOURCE
     "src/lua/lua_backend.cpp"
 
     "src/cpp/cpp_handler.cpp"
-    "src/cpp/api/kh_characters.cpp"
+    "src/cpp/api/kh_characters.cpp"   
+    "src/cpp/events/event_hook.cpp" 
     
     "include/extra/wil_extra.h"
 
@@ -69,6 +70,7 @@ set(SOURCE
 
     "include/cpp/cpp_handler.h"
     "include/cpp/api/kh_characters.h"
+    "include/cpp/events/event_hook.h"
 )
 
 add_custom_target(clang-format

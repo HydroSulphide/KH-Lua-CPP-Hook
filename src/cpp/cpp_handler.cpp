@@ -1,11 +1,10 @@
 #include "cpp_handler.h"
 #include "console_lib.h"
+#include "event_hook.h"
 #include "kh_characters.h"
 
-#include <format>
-#include <windows.h>
-
 #include <toml++/toml.h>
+#include <unordered_map>
 
 namespace fs = std::filesystem;
 
@@ -18,123 +17,57 @@ const std::string loaded_mods_path = "KHMemoryHook/loaded_mods";
 std::vector<OnFrameFunc> on_frame_funcs;
 std::vector<HMODULE> loaded_mods;
 
-
-
-
-// Store original instruction bytes
-std::vector<BYTE> originalBytes(7); // Adjust size as needed
-uintptr_t trampolineAddress = 0;
-size_t trampolineSize = 0;
-
-void customCodeLogic() {
-	std::cout << "Custom code executed." << std::endl;
+void on_get_reward(CONTEXT *ctx) {
+	print_message_line(std::format("on_get_reward(): treasure_id: 0x{:X}", ctx->Rcx), MESSAGE_NONE);
 }
 
-// Create a trampoline holding the original instruction and a jump to the next instruction
-void CreateTrampoline(uintptr_t originalAddress) {
-	size_t originalSize = originalBytes.size();
-
-	// Allocate memory for the trampoline
-	trampolineSize = originalSize + 12; // MOV + JMP
-	trampolineAddress = reinterpret_cast<uintptr_t>(VirtualAlloc(nullptr, trampolineSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE));
-
-	if (!trampolineAddress) {
-		std::cerr << "Failed to allocate memory for the trampoline." << std::endl;
-		return;
-	}
-
-	// Copy the original instruction to the trampoline
-	memcpy(reinterpret_cast<void *>(trampolineAddress), originalBytes.data(), originalSize);
-
-	BYTE *trampolineCode = reinterpret_cast<BYTE *>(trampolineAddress + originalSize);
-
-	// Save RAX
-	trampolineCode[0] = 0x50; // PUSH RAX
-
-	// MOV RAX, <jumpAddress>
-	trampolineCode[1] = 0x48;
-	trampolineCode[2] = 0xB8;
-	uintptr_t jumpAddress = originalAddress + 1; // Jump to POP RAX (INT 3 + POP RAX)
-	*reinterpret_cast<uintptr_t *>(trampolineCode + 3) = jumpAddress;
-
-	// JMP RAX
-	trampolineCode[11] = 0xFF;
-	trampolineCode[12] = 0xE0;
-
-	std::cout << "Trampoline address: " << std::hex << trampolineAddress << std::endl;
-	std::cout << "Jump address: " << std::hex << jumpAddress << std::endl;
+void on_hit([[maybe_unused]] CONTEXT *ctx) {
+	print_message_line("on_hit()", MESSAGE_NONE);
 }
 
-LONG WINAPI CustomCodeHandler(EXCEPTION_POINTERS *pExceptionInfo) {
-	if (pExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_BREAKPOINT) {
-		std::cout << "Breakpoint hit at address: " << std::hex << pExceptionInfo->ContextRecord->Rip << std::endl;
-
-		// Execute custom code
-		customCodeLogic();
-
-		// Set RIP to the trampoline address
-		pExceptionInfo->ContextRecord->Rip = trampolineAddress;
-
-		return EXCEPTION_CONTINUE_EXECUTION;
-	}
-
-	return EXCEPTION_CONTINUE_SEARCH;
-}
-
-void InstallHook(uintptr_t base_address) {
-	uintptr_t targetAddress = base_address + 0x2A467E; // Address to hook
-
-	// Save the original bytes
-	DWORD oldProtect;
-	VirtualProtect((void *)targetAddress, originalBytes.size(), PAGE_EXECUTE_READWRITE, &oldProtect);
-	memcpy(originalBytes.data(), (void *)targetAddress, originalBytes.size());
-
-	std::cout << "Original bytes at address: " << std::hex << targetAddress << std::endl;
-
-	// Install the exception handler
-	HANDLE handler = AddVectoredExceptionHandler(1, CustomCodeHandler);
-	if (!handler) {
-		std::cerr << "Failed to add vectored exception handler." << std::endl;
-		return;
-	}
-
-	// Overwrite the target address with INT 3 and POP RAX
-	BYTE int3 = 0xCC;	// INT 3 instruction
-	BYTE popRax = 0x58; // POP RAX instruction
-	VirtualProtect((void *)targetAddress, 2, PAGE_EXECUTE_READWRITE, &oldProtect);
-	*reinterpret_cast<BYTE *>(targetAddress) = int3;
-	*reinterpret_cast<BYTE *>(targetAddress + 1) = popRax;
-	for (size_t i = 2; i < originalBytes.size(); i++) {
-		*reinterpret_cast<BYTE *>(targetAddress + i) = 0x90;
-	}
-	VirtualProtect((void *)targetAddress, 2, oldProtect, &oldProtect);
-
-	std::cout << "Hook installed at address: " << std::hex << targetAddress << std::endl;
-
-	CreateTrampoline(targetAddress);
-}
-
-
-
-
-
-
+// Function pointer map to associate event names with functions
+std::unordered_map<std::string, void (*)(CONTEXT *)> function_map = {{"on_hit", on_hit}, {"on_get_reward", on_get_reward}};
 
 bool api_init_cpp(uintptr_t base_address, const std::filesystem::path &path) {
-	auto offsets = toml::parse_file(path.u8string());
+	try {
+		// Parse the TOML file
+		auto offsets = toml::parse_file(path.u8string());
 
-	uintptr_t sora_character_stats_address = offsets["character_stats"]["sora"].value_or(0);
-	uintptr_t donald_character_stats_address = offsets["character_stats"]["donald"].value_or(0);
-	uintptr_t goofy_character_stats_address = offsets["character_stats"]["goofy"].value_or(0);
+		uintptr_t sora_character_stats_address = offsets["character_stats"]["sora"].value_or(0);
+		uintptr_t donald_character_stats_address = offsets["character_stats"]["donald"].value_or(0);
+		uintptr_t goofy_character_stats_address = offsets["character_stats"]["goofy"].value_or(0);
 
-	uintptr_t sora_field_stats_address = offsets["field_stats"]["sora"].value_or(0);
-	uintptr_t donald_field_stats_address = offsets["field_stats"]["donald"].value_or(0);
-	uintptr_t goofy_field_stats_address = offsets["field_stats"]["goofy"].value_or(0);
+		uintptr_t sora_field_stats_address = offsets["field_stats"]["sora"].value_or(0);
+		uintptr_t donald_field_stats_address = offsets["field_stats"]["donald"].value_or(0);
+		uintptr_t goofy_field_stats_address = offsets["field_stats"]["goofy"].value_or(0);
 
-	character_stats_init(base_address, sora_character_stats_address, donald_character_stats_address, goofy_character_stats_address);
-	field_stats_init(base_address, sora_field_stats_address, donald_field_stats_address, goofy_field_stats_address);
+		character_stats_init(base_address, sora_character_stats_address, donald_character_stats_address, goofy_character_stats_address);
+		field_stats_init(base_address, sora_field_stats_address, donald_field_stats_address, goofy_field_stats_address);
 
-	InstallHook(base_address);
+		// Access the events section
+		auto events = offsets["events"];
+
+		// Iterate over each event in the events section
+		for (const auto &[event_name, event_info] : *events.as_table()) {
+			auto event_info_table = event_info.as_table();
+			auto address = event_info_table->at("address").value_or<int64_t>(0); // Ensure the address is of type int64_t
+			auto size = event_info_table->at("size").value_or<int64_t>(0);		 // Ensure the size is of type int64_t
+
+			std::string event_name_str = std::string{event_name.str()};
+			// Look up the function based on the event name
+			auto it = function_map.find(event_name_str);
+			if (it != function_map.end()) {
+				void (*custom_logic)(CONTEXT *) = it->second;
+				install_event_hook(base_address, static_cast<uint32_t>(address), static_cast<size_t>(size), custom_logic);
+			} else {
+				print_message_line(std::format("No custom logic found for event: {}", event_name_str), MESSAGE_ERROR);
+			}
+		}
+
+	} catch (const std::exception &e) {
+		print_message_line(std::format("Error parsing TOML file: {}", e.what()), MESSAGE_ERROR);
+		return false;
+	}
 
 	return true;
 }
