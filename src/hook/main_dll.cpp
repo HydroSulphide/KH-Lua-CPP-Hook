@@ -74,6 +74,7 @@ std::uint64_t __cdecl frame_hook(void *rcx) {
 	handle_input();
 	execute_lua();
 	on_frame_cpp();
+	update_loaded_gameobjects();
 	return frame_proc(rcx);
 }
 

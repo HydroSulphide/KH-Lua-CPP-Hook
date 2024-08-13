@@ -47,6 +47,8 @@ extern CharacterStats *donald_sharacter_stats;
 extern CharacterStats *goofy_character_stats;
 
 struct FieldStats {
+	uint8_t unknown_1[108];
+
 	uint32_t current_hp;
 	uint32_t max_hp;
 	uint32_t current_mp;
@@ -54,18 +56,18 @@ struct FieldStats {
 	uint32_t strength;
 	uint32_t defense;
 
-	uint8_t unknown_1[44];
+	uint8_t unknown_2[44];
 
 	uint32_t fire_resistance;
 	uint32_t ice_resistance;
 	uint32_t thunder_resistance;
 	uint32_t dark_resistance;
 
-	uint8_t unknown_2[16];
+	uint8_t unknown_3[16];
 
 	uint32_t unknown_resistance;
 
-	uint8_t unknown_3[38];
+	uint8_t unknown_4[38];
 
 	uint32_t max_ap;
 };

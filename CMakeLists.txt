@@ -53,6 +53,8 @@ set(SOURCE
     "src/cpp/cpp_handler.cpp"
     "src/cpp/api/kh_characters.cpp"   
     "src/cpp/events/event_hook.cpp" 
+    "src/cpp/events/kh_events.cpp"
+    "src/cpp/api/kh_gameobject.cpp"
     
     "include/extra/wil_extra.h"
 
@@ -71,6 +73,8 @@ set(SOURCE
     "include/cpp/cpp_handler.h"
     "include/cpp/api/kh_characters.h"
     "include/cpp/events/event_hook.h"
+    "include/cpp/events/kh_events.h"
+    "include/cpp/api/kh_gameobject.h"
 )
 
 add_custom_target(clang-format

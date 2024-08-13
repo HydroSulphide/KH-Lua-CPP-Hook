@@ -46,6 +46,7 @@ class MemoryLib {
   public:
 	static inline std::uint64_t exec_address;
 	static inline std::uint64_t base_address;
+	static inline uintptr_t *base_4to8;
 	static inline DWORD p_identifier = 0;
 	static inline HANDLE p_handle = NULL;
 	static inline std::wstring p_name;
@@ -301,5 +302,18 @@ class MemoryLib {
 	static inline std::uint64_t get_pointer_absolute(std::uint64_t address, std::uint64_t Offset) {
 		std::uint64_t _temp = read_long_absolute(address);
 		return _temp + Offset;
+	}
+
+	static inline uintptr_t get_4to8_pointer(uint32_t offset) {
+
+		uint32_t offset_after_bit_reset = offset & (~(1 << 31)); // alternative: offset & 0x7FFFFFFF
+
+		uint32_t offset_after_bit_shift = offset_after_bit_reset >> 0x19;
+
+		uintptr_t pointerAddress = *(base_4to8 + 8 * offset_after_bit_shift);
+		uintptr_t pointer;
+		ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(pointerAddress), &pointer, sizeof(pointer), &pointer);
+
+		return pointer | (offset & 0x1FFFFFF);
 	}
 };
