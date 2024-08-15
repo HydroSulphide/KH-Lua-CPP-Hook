@@ -3,5 +3,7 @@
 #include <format>
 
 std::string KHGameObject::to_string() {
-	return std::format("KHGameObject:\n\tName: {}", actor->name);
+	if (!actor)
+		return "KHGameObject: No valid actor!";
+	return std::format("KHGameObject:\n\tName: {}", std::string(actor->name, 16));
 }

@@ -46,7 +46,7 @@ class MemoryLib {
   public:
 	static inline std::uint64_t exec_address;
 	static inline std::uint64_t base_address;
-	static inline uintptr_t *base_4to8;
+	static inline std::uint64_t *base_4to8;
 	static inline DWORD p_identifier = 0;
 	static inline HANDLE p_handle = NULL;
 	static inline std::wstring p_name;
@@ -304,16 +304,13 @@ class MemoryLib {
 		return _temp + Offset;
 	}
 
-	static inline uintptr_t get_4to8_pointer(uint32_t offset) {
+	static inline std::uint64_t get_4to8_pointer(uint32_t offset) {
+		std::uint32_t offset_after_bit_reset = offset & (~(1 << 31)); // alternative: offset & 0x7FFFFFFF
 
-		uint32_t offset_after_bit_reset = offset & (~(1 << 31)); // alternative: offset & 0x7FFFFFFF
+		std::uint32_t offset_after_bit_shift = offset_after_bit_reset >> 0x19;
 
-		uint32_t offset_after_bit_shift = offset_after_bit_reset >> 0x19;
+		std::uint64_t pointer_address = *(base_4to8 + offset_after_bit_shift);
 
-		uintptr_t pointerAddress = *(base_4to8 + 8 * offset_after_bit_shift);
-		uintptr_t pointer;
-		ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(pointerAddress), &pointer, sizeof(pointer), &pointer);
-
-		return pointer | (offset & 0x1FFFFFF);
+		return pointer_address | (offset & 0x1FFFFFF);
 	}
 };

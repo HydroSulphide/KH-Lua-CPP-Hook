@@ -50,6 +50,7 @@ std::optional<Config> config;
 std::optional<GameInfo> game_info;
 
 std::uint64_t module_address = 0;
+std::uint64_t base_address = 0;
 
 template <ranges::bidirectional_range R>
 	requires std::same_as<ranges::range_value_t<R>, std::uintptr_t>
@@ -231,7 +232,7 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 		}
 
 		module_address = (std::uint64_t)GetModuleHandleW(nullptr);
-		std::uint64_t base_address = module_address + game_info->base_address;
+		base_address = module_address + game_info->base_address;
 
 		fs::path gameDocsRoot = [&]() {
 			PWSTR docsRootStr;

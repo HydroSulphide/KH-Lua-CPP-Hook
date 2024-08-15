@@ -1,11 +1,12 @@
 #include "cpp_handler.h"
 #include "console_lib.h"
-#include "memory_lib.h"
 #include "event_hook.h"
 #include "kh_characters.h"
 #include "kh_events.h"
 #include "kh_gameobject.h"
+#include "memory_lib.h"
 
+#include <format>
 #include <toml++/toml.h>
 #include <unordered_map>
 
@@ -20,27 +21,40 @@ const std::string loaded_mods_path = "KHMemoryHook/loaded_mods";
 std::vector<OnFrameFunc> on_frame_funcs;
 std::vector<HMODULE> loaded_mods;
 
-
 std::vector<KHGameObject> loaded_gameobjects;
-uintptr_t *loaded_gameobjects_start_pointer;
+uint64_t *loaded_gameobjects_start_pointer;
 
 void update_loaded_gameobjects() {
 	loaded_gameobjects.clear();
-	for (size_t i = 0; i < 20; i++) {
-		uintptr_t gameobject_pointer = static_cast<uintptr_t>(*(loaded_gameobjects_start_pointer + 8 * i));
-		if (gameobject_pointer != 0) {
-			KHGameObject gameobject;
-			gameobject.entity = reinterpret_cast<Entity *>(gameobject_pointer);
-			uintptr_t actor_pointer = MemoryLib::get_4to8_pointer(gameobject.entity->actor_pointer);
-			gameobject.actor = reinterpret_cast<Actor *>(actor_pointer);
+	for (size_t i = 0; i < 30; i++) {
+		uint64_t gameobject_address = *(loaded_gameobjects_start_pointer + i);
+		//print_message_line(std::format("Gameobject {}: 0x{:X}", i, gameobject_address), MESSAGE_NONE);
 
-			loaded_gameobjects.push_back(gameobject);
-			print_message_line(gameobject.to_string(), MESSAGE_NONE);
+		if (gameobject_address != 0) {
+			KHGameObject gameobject;
+			gameobject.entity = reinterpret_cast<Entity *>(gameobject_address);
+
+			uint64_t actor_pointer = MemoryLib::get_4to8_pointer(gameobject.entity->actor_pointer);
+			if (actor_pointer != 0xFFFFFFFFFFFFFFFF) {
+				gameobject.actor = reinterpret_cast<Actor *>(actor_pointer);
+				//print_message_line(std::format("Gameobject {}: Name: {}", i, std::string(gameobject.actor->name, 16)), MESSAGE_NONE);
+			}
+
+			uint64_t stat_page_pointer = MemoryLib::get_4to8_pointer(gameobject.entity->stat_page_pointer);
+			//print_message_line(std::format("Gameobject {}: StatPage Pointer: 0x{:X}", i, stat_page_pointer), MESSAGE_NONE);
+			gameobject.stat_page = reinterpret_cast<StatPage *>(stat_page_pointer);
+
+			//print_message_line(std::format("Gameobject {}: PartyStatPage Pointer: 0x{:X}", i, gameobject.stat_page->party_stat_page_pointer), MESSAGE_NONE);
+			if (gameobject.stat_page->party_stat_page_pointer != 0) {
+				gameobject.party_stat_page = reinterpret_cast<PartyStatPage *>(gameobject.stat_page->party_stat_page_pointer);
+			}
+
+			print_message_line(gameobject.to_string());
 		}
 	}
 }
 
-bool api_init_cpp(uintptr_t base_address, const std::filesystem::path &path) {
+bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 	try {
 		auto offsets = toml::parse_file(path.u8string());
 
@@ -57,9 +71,11 @@ bool api_init_cpp(uintptr_t base_address, const std::filesystem::path &path) {
 
 		MemoryLib::base_4to8 = reinterpret_cast<uintptr_t *>(base_address + offsets["memory"]["base_4to8"].value_or(0));
 
-		loaded_gameobjects_start_pointer = reinterpret_cast<uintptr_t *>(base_address + offsets["scene"]["loaded_gameobjects"].value_or(0));
+		uint64_t loaded_gameobjects_address = base_address + offsets["scene"]["loaded_gameobjects"].value_or(0);
+		print_message_line(std::format("Loaded GameObjects Address: 0x{:X}", loaded_gameobjects_address), MESSAGE_NONE);
+		loaded_gameobjects_start_pointer = reinterpret_cast<uint64_t *>(loaded_gameobjects_address);
 
-		//Install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit);
+		// Install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit);
 		install_event_hook(base_address, offsets["events"]["on_get_reward"]["address"].value_or(0), offsets["events"]["on_get_reward"]["size"].value_or(0), on_get_reward);
 
 	} catch (const std::exception &e) {

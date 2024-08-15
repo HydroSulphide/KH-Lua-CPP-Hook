@@ -113,7 +113,7 @@ struct Actor {
 
 	uint32_t movable;					// 0x18
 
-	uint8_t unknown_2[0x26];
+	uint8_t unknown_2[0x2C];
 
 	uint32_t treasure_chest_ID;			// 0x48
 
@@ -228,6 +228,8 @@ class KHGameObject {
 	Actor *actor;
 	StatPage *stat_page;
 	PartyStatPage *party_stat_page;
+
+	KHGameObject() : entity(nullptr), actor(nullptr), stat_page(nullptr), party_stat_page(nullptr) {}
 
 	std::string to_string();
 };

@@ -15,5 +15,5 @@ enum MessageType {
 };
 
 
-void print_message(const std::string &text, MessageType message_type, const std::string &mod_name = "");
-void print_message_line(const std::string &text, MessageType message_type, const std::string &mod_name = "");
+void print_message(const std::string &text, MessageType message_type = MESSAGE_NONE, const std::string &mod_name = "");
+void print_message_line(const std::string &text, MessageType message_type = MESSAGE_NONE, const std::string &mod_name = "");
