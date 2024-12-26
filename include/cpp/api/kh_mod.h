@@ -27,6 +27,8 @@ extern "C" {
 
 void __cdecl on_init();
 void __cdecl on_frame();
+void __cdecl on_get_reward(DWORD64 reward_id);
+void __cdecl on_get_hit();
 
 __declspec(dllimport) void print_mod_message(const char *text, MessageType message_type, const char *mod_name);
 __declspec(dllimport) void print_mod_message_line(const char *text, MessageType message_type, const char *mod_name);

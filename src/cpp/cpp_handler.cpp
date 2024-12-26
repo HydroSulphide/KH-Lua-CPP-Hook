@@ -2,7 +2,6 @@
 #include "console_lib.h"
 #include "event_hook.h"
 #include "kh_characters.h"
-#include "kh_events.h"
 #include "kh_gameobject.h"
 #include "memory_lib.h"
 
@@ -16,9 +15,15 @@ typedef void(__cdecl *OnLoadFunc)();
 typedef void(__cdecl *OnInitFunc)();
 typedef void(__cdecl *OnFrameFunc)();
 
+typedef void(__cdecl *OnGetHitFunc)();
+typedef void(__cdecl *OnGetRewardFunc)(DWORD64 treasure_id);
+
 const std::string loaded_mods_path = "KHMemoryHook/loaded_mods";
 
 std::vector<OnFrameFunc> on_frame_funcs;
+std::vector<OnGetHitFunc> on_get_hit_funcs;
+std::vector<OnGetRewardFunc> on_get_reward_funcs;
+
 std::vector<HMODULE> loaded_mods;
 
 std::vector<KHGameObject> loaded_gameobjects;
@@ -28,14 +33,34 @@ void update_loaded_gameobjects() {
 	loaded_gameobjects.clear();
 	for (size_t i = 0; i < 30; i++) {
 		uint64_t gameobject_address = *(loaded_gameobjects_start_pointer + i);
-		//print_message_line(std::format("Gameobject {}: 0x{:X}", i, gameobject_address), MESSAGE_NONE);
 
 		if (gameobject_address != 0) {
 			KHGameObject gameobject(gameobject_address);
 			loaded_gameobjects.push_back(gameobject);
-			print_message_line(gameobject.to_string());
+			
+			//print_message_line(gameobject.to_string());
 		}
 	}
+}
+
+void on_frame_cpp() {
+	for (const auto &on_frame : on_frame_funcs) {
+		on_frame();
+	}
+}
+
+void on_get_reward_cpp(CONTEXT *ctx) {
+	for (const auto &on_get_reward : on_get_reward_funcs) {
+		on_get_reward(ctx->Rcx);
+	}
+	// print_message_line(std::format("on_get_reward(): treasure_id: 0x{:X}", ctx->Rcx), MESSAGE_NONE);
+}
+
+void on_get_hit_cpp([[maybe_unused]] CONTEXT *ctx) {
+	for (const auto &on_get_hit : on_get_hit_funcs) {
+		on_get_hit();
+	}
+	// print_message_line("on_get_hit()", MESSAGE_NONE);
 }
 
 bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
@@ -59,8 +84,8 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		print_message_line(std::format("Loaded GameObjects Address: 0x{:X}", loaded_gameobjects_address), MESSAGE_NONE);
 		loaded_gameobjects_start_pointer = reinterpret_cast<uint64_t *>(loaded_gameobjects_address);
 
-		// Install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit);
-		install_event_hook(base_address, offsets["events"]["on_get_reward"]["address"].value_or(0), offsets["events"]["on_get_reward"]["size"].value_or(0), on_get_reward);
+		install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
+		install_event_hook(base_address, offsets["events"]["on_get_reward"]["address"].value_or(0), offsets["events"]["on_get_reward"]["size"].value_or(0), on_get_reward_cpp);
 
 	} catch (const std::exception &e) {
 		print_message_line(std::format("Error parsing TOML file: {}", e.what()), MESSAGE_ERROR);
@@ -145,6 +170,22 @@ void load_mods_cpp() {
 					print_message_line(std::format("{} has not implemented event: on_frame()\n", file_name), MESSAGE_WARNING);
 				}
 
+				OnGetHitFunc on_get_hit = (OnGetHitFunc)GetProcAddress(h_mod, "on_get_hit");
+				if (on_get_hit) {
+					on_get_hit_funcs.push_back((OnGetHitFunc)GetProcAddress(h_mod, "on_get_hit"));
+					print_message_line(std::format("{} implemented event: on_get_hit()\n", file_name), MESSAGE_SUCCESS);
+				} else {
+					print_message_line(std::format("{} has not implemented event: on_get_hit()\n", file_name), MESSAGE_WARNING);
+				}
+
+				OnGetRewardFunc on_get_reward = (OnGetRewardFunc)GetProcAddress(h_mod, "on_get_reward");
+				if (on_get_reward) {
+					on_get_reward_funcs.push_back((OnGetRewardFunc)GetProcAddress(h_mod, "on_get_reward"));
+					print_message_line(std::format("{} implemented event: on_get_reward()\n", file_name), MESSAGE_SUCCESS);
+				} else {
+					print_message_line(std::format("{} has not implemented event: on_get_reward()\n", file_name), MESSAGE_WARNING);
+				}
+
 				// Store the handle of the loaded module if you want to use it later
 				loaded_mods.push_back(h_mod);
 			} else {
@@ -202,10 +243,4 @@ void reload_mods_cpp() {
 	load_mod_setup_cpp();
 	load_mods_cpp();
 	print_message_line("Reload c++ complete\n", MESSAGE_SUCCESS);
-}
-
-void on_frame_cpp() {
-	for (const auto &on_frame : on_frame_funcs) {
-		on_frame();
-	}
 }

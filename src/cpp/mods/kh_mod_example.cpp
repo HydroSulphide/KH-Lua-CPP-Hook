@@ -13,3 +13,11 @@ KH_MOD on_init() {
 KH_MOD on_frame() {
 	print_line("on_frame()");
 }
+
+KH_MOD on_get_reward(DWORD64 reward_id) {
+	print_line("on_get_reward()");
+}
+
+KH_MOD on_get_hit() {
+	print_line("on_get_hit()");
+}
