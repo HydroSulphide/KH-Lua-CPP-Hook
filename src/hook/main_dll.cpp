@@ -9,7 +9,6 @@
 #include <string_view>
 #include <unordered_map>
 #include <vector>
-#include <ztd/text.hpp>
 
 #define WIN32_LEAN_AND_MEAN
 #include <shlobj.h>
@@ -170,22 +169,22 @@ std::optional<GameFrameProc *> find_fame_proc(const SectionInfo &textInfo) {
 bool hook_game() {
 	static_assert(sizeof(std::uint64_t) == sizeof(std::uintptr_t));
 
-	const auto textInfo = find_text_section_info();
-	const auto frameProcPtrOpt = find_fame_proc(textInfo);
+	const auto text_info = find_text_section_info();
+	const auto frame_proc_ptr_opt = find_fame_proc(text_info);
 
-	if (!frameProcPtrOpt.has_value()) {
+	if (!frame_proc_ptr_opt.has_value()) {
 		return false;
 	}
 
-	frame_proc_ptr = frameProcPtrOpt.value();
+	frame_proc_ptr = frame_proc_ptr_opt.value();
 	if (*frame_proc_ptr == nullptr)
 		return false;
 
-	DWORD originalProt = 0;
-	VirtualProtect(frame_proc_ptr, sizeof(frame_proc_ptr), PAGE_READWRITE, &originalProt);
+	DWORD original_protect = 0;
+	VirtualProtect(frame_proc_ptr, sizeof(frame_proc_ptr), PAGE_READWRITE, &original_protect);
 	frame_proc = *frame_proc_ptr;
 	*frame_proc_ptr = frame_hook;
-	VirtualProtect(frame_proc_ptr, sizeof(frame_proc_ptr), originalProt, &originalProt);
+	VirtualProtect(frame_proc_ptr, sizeof(frame_proc_ptr), original_protect, &original_protect);
 
 	SetUnhandledExceptionFilter(crashDumpHandler);
 
@@ -213,18 +212,27 @@ void initialize_console() {
 DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 	initialize_console();
 
-	std::wstring modulePathStr;
-	wil::GetModuleFileNameW(nullptr, modulePathStr);
+	std::wstring module_path_str;
+	wil::GetModuleFileNameW(nullptr, module_path_str);
 
-	fs::path modulePath = fs::path{modulePathStr};
-	fs::path moduleDir = modulePath.parent_path();
-	std::wstring moduleNameW = modulePath.filename();
+	fs::path module_path = fs::path{module_path_str};
+	fs::path module_dir = module_path.parent_path();
+	std::wstring module_name_w = module_path.filename();
 
-	std::u8string moduleName = ztd::text::transcode(moduleNameW, ztd::text::wide_utf16, ztd::text::utf8, ztd::text::replacement_handler);
+	std::u8string module_name;
+
+	int buffer_size = WideCharToMultiByte(CP_UTF8, 0, module_name_w.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	if (buffer_size > 0) {
+		std::string utf8Str(buffer_size, 0);
+		WideCharToMultiByte(CP_UTF8, 0, module_name_w.c_str(), -1, utf8Str.data(), buffer_size, nullptr, nullptr);
+		module_name = reinterpret_cast<const char8_t *>(utf8Str.c_str());
+	} else {
+		module_name = u8"";
+	}
 
 	try {
 		config = Config::load("LuaBackend.toml");
-		auto entry = config->game_info(moduleName);
+		auto entry = config->game_info(module_name);
 		if (entry) {
 			game_info = *entry;
 		} else {
@@ -234,17 +242,17 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 		module_address = (std::uint64_t)GetModuleHandleW(nullptr);
 		base_address = module_address + game_info->base_address;
 
-		fs::path gameDocsRoot = [&]() {
-			PWSTR docsRootStr;
-			SHGetKnownFolderPath(FOLDERID_Documents, 0, nullptr, &docsRootStr);
+		fs::path game_docs_root = [&]() {
+			PWSTR docs_root_str;
+			SHGetKnownFolderPath(FOLDERID_Documents, 0, nullptr, &docs_root_str);
 
-			return fs::path{docsRootStr} / game_info->game_docs_path_string;
+			return fs::path{docs_root_str} / game_info->game_docs_path_string;
 		}();
 
 		std::vector<fs::path> script_paths;
 		for (const auto &path : game_info->script_paths) {
 			if (path.relative) {
-				fs::path gameScriptsPath = gameDocsRoot / path.str;
+				fs::path gameScriptsPath = game_docs_root / path.str;
 				if (fs::exists(gameScriptsPath)) {
 					script_paths.push_back(gameScriptsPath);
 				}
@@ -279,14 +287,22 @@ DWORD WINAPI entry([[maybe_unused]] LPVOID lpParameter) {
 		}
 	} catch (std::exception &e) {
 		std::string msg = "entry exception: " + std::string(e.what()) + "\n\nScripts failed to load.";
-		std::wstring wmsg = ztd::text::transcode(msg, ztd::text::compat_utf8, ztd::text::wide_utf16, ztd::text::replacement_handler);
+		std::wstring wmsg;
+
+		buffer_size = MultiByteToWideChar(CP_UTF8, 0, msg.c_str(), -1, nullptr, 0);
+		if (buffer_size > 0) {
+			wmsg.resize(buffer_size - 1);
+			MultiByteToWideChar(CP_UTF8, 0, msg.c_str(), -1, wmsg.data(), buffer_size);
+		} else {
+			wmsg = L"";
+		}
 		MessageBoxW(NULL, wmsg.c_str(), L"KH-Lua-CPP-Hook", MB_ICONERROR | MB_OK);
 	}
 
 	return 0;
 }
 
-void RunBatchScript(const std::wstring &scriptPath, const std::wstring &args) {
+void run_batch_script(const std::wstring &scriptPath, const std::wstring &args) {
 	// Build the command line
 	std::wstring commandLine = L"cmd.exe /C \"\"" + scriptPath + L"\" \"" + args + L"\"\"";
 
@@ -331,16 +347,16 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinstDLL, DWORD fdwReason, [[mayb
 
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH: {
-		std::wstring systemDirectoryStr;
-		wil::GetSystemDirectoryW(systemDirectoryStr);
-		fs::path dllPath = fs::path{systemDirectoryStr} / L"DBGHELP.dll";
+		std::wstring system_directory_str;
+		wil::GetSystemDirectoryW(system_directory_str);
+		fs::path dll_path = fs::path{system_directory_str} / L"DBGHELP.dll";
 
-		dbghelp = LoadLibraryW(dllPath.wstring().c_str());
+		dbghelp = LoadLibraryW(dll_path.wstring().c_str());
 		write_dump_proc = (MiniDumpWriteDumpProc)GetProcAddress(dbghelp, "MiniDumpWriteDump");
 
-		fs::path dinput8Path = fs::path{systemDirectoryStr} / L"DINPUT8.dll";
+		fs::path dinput8_path = fs::path{system_directory_str} / L"DINPUT8.dll";
 
-		dinput8 = LoadLibraryW(dinput8Path.wstring().c_str());
+		dinput8 = LoadLibraryW(dinput8_path.wstring().c_str());
 		create_proc = (DirectInput8CreateProc)GetProcAddress(dinput8, "DirectInput8Create");
 
 		if (CreateThread(nullptr, 0, entry, nullptr, 0, nullptr) == nullptr) {
@@ -353,7 +369,7 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinstDLL, DWORD fdwReason, [[mayb
 		std::wstring loaded_mods_path = L"KHMemoryHook\\loaded_mods\\";
 
 		// Run the batch script
-		RunBatchScript(batch_script_path, loaded_mods_path);
+		run_batch_script(batch_script_path, loaded_mods_path);
 
 		FreeLibrary(dbghelp);
 		FreeLibrary(dinput8);

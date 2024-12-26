@@ -50,8 +50,7 @@ int entry_lua(int process_id, HANDLE process_handle, std::uint64_t target_addres
 	lua_backend->frame_limit = 16;
 
 	if (lua_backend->loaded_scripts.size() == 0) {
-		print_message("No scripts were found! Initialization halted!\n\n", MESSAGE_ERROR);
-		return -1;
+		print_message("No scripts were found!\n\n", MESSAGE_ERROR);
 	}
 
 	print_message("Executing initialization event handlers...\n\n", MESSAGE_DEFAULT);

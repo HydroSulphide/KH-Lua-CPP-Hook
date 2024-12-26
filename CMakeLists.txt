@@ -16,10 +16,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(FetchContent)
 
-FetchContent_Declare(ztd.text
-    GIT_REPOSITORY https://github.com/soasis/text.git
-    GIT_TAG        ad27c3e4aff20a935098d4435b8e78a04a2b926d)
-
+# FetchContent for dependencies
 FetchContent_Declare(wil
     GIT_REPOSITORY https://github.com/microsoft/wil.git
     GIT_TAG        8501377980a52d98d1b51d04f60f571a7f0dc3db)
@@ -28,14 +25,20 @@ FetchContent_Declare(tomlplusplus
     GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
     GIT_TAG        d8fa9a1fddc90254cac2366dde23f0b613bc1280)
 
-set(CLANG_FORMAT_CMD "")
-
 FetchContent_Declare(DiscordRPC
     GIT_REPOSITORY https://github.com/discord/discord-rpc.git
     GIT_TAG        963aa9f3e5ce81a4682c6ca3d136cddda614db33)
 
-FetchContent_MakeAvailable(ztd.text wil tomlplusplus DiscordRPC)
+FetchContent_Declare(rapidjson
+    GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
+    GIT_TAG        master
+)
 
+FetchContent_MakeAvailable(wil tomlplusplus DiscordRPC rapidjson)
+target_include_directories(discord-rpc PRIVATE ${rapidjson_SOURCE_DIR}/include)
+
+
+# Lua subproject
 add_subdirectory(external/subproject/lua544)
 
 set(SOURCE
@@ -114,10 +117,10 @@ target_include_directories(DBGHELP PRIVATE
     external/include
     external/subproject/lua544
     ${DiscordRPC_SOURCE_DIR}/include
+    ${rapidjson_SOURCE_DIR}/include  # Add RapidJSON include directory
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 target_link_libraries(DBGHELP PRIVATE
-    ztd.text
     WIL
     tomlplusplus::tomlplusplus
     lua54
