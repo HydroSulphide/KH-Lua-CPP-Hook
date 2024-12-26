@@ -31,24 +31,8 @@ void update_loaded_gameobjects() {
 		//print_message_line(std::format("Gameobject {}: 0x{:X}", i, gameobject_address), MESSAGE_NONE);
 
 		if (gameobject_address != 0) {
-			KHGameObject gameobject;
-			gameobject.entity = reinterpret_cast<Entity *>(gameobject_address);
-
-			uint64_t actor_pointer = MemoryLib::get_4to8_pointer(gameobject.entity->actor_pointer);
-			if (actor_pointer != 0xFFFFFFFFFFFFFFFF) {
-				gameobject.actor = reinterpret_cast<Actor *>(actor_pointer);
-				//print_message_line(std::format("Gameobject {}: Name: {}", i, std::string(gameobject.actor->name, 16)), MESSAGE_NONE);
-			}
-
-			uint64_t stat_page_pointer = MemoryLib::get_4to8_pointer(gameobject.entity->stat_page_pointer);
-			//print_message_line(std::format("Gameobject {}: StatPage Pointer: 0x{:X}", i, stat_page_pointer), MESSAGE_NONE);
-			gameobject.stat_page = reinterpret_cast<StatPage *>(stat_page_pointer);
-
-			//print_message_line(std::format("Gameobject {}: PartyStatPage Pointer: 0x{:X}", i, gameobject.stat_page->party_stat_page_pointer), MESSAGE_NONE);
-			if (gameobject.stat_page->party_stat_page_pointer != 0) {
-				gameobject.party_stat_page = reinterpret_cast<PartyStatPage *>(gameobject.stat_page->party_stat_page_pointer);
-			}
-
+			KHGameObject gameobject(gameobject_address);
+			loaded_gameobjects.push_back(gameobject);
 			print_message_line(gameobject.to_string());
 		}
 	}

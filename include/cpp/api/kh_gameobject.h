@@ -230,6 +230,7 @@ class KHGameObject {
 	PartyStatPage *party_stat_page;
 
 	KHGameObject() : entity(nullptr), actor(nullptr), stat_page(nullptr), party_stat_page(nullptr) {}
+	KHGameObject(uint64_t gameobject_address);
 
 	std::string to_string();
 };

@@ -7,12 +7,12 @@
 #include <utility>
 
 #define WIN32_LEAN_AND_MEAN
-#include <psapi.h>
-#include <shlobj.h>
+#include <windows.h>
+//#include <psapi.h>
+//#include <shlobj.h>
 #include <tlhelp32.h>
 #include <wil/stl.h>
 #include <wil/win32_helpers.h>
-#include <windows.h>
 
 #include "wil_extra.h"
 
