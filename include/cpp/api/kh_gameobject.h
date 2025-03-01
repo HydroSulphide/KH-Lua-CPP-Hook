@@ -19,7 +19,7 @@ struct Matrix4x4 {
 };
 
 // size: 0x4B0
-struct Entity {
+struct GameObject {
 	uint8_t unknown_1[0x4];
 
 	uint32_t event_ID;					//0x4
@@ -181,8 +181,6 @@ struct StatPage {
 
 // size: 0x74
 struct PartyStatPage {
-	uint8_t unknown_1[4];
-
 	uint8_t level;						// 0x4
 	uint8_t current_hp;					// 0x5
 	uint8_t max_hp;						// 0x6
@@ -192,18 +190,18 @@ struct PartyStatPage {
 	uint8_t strength;					// 0xA
 	uint8_t defense;					// 0xB
 
-	uint8_t unknown_2[0x10];
+	uint8_t unknown_1[0x10];
 
 	uint8_t max_accessories;			// 0x1C	
 	uint8_t accessory_slots[8];			// 0x1D
 	uint8_t max_items;					// 0x25
 	uint8_t item_slots[8];				// 0x26
 
-	uint8_t unknown_3[0x8];
+	uint8_t unknown_2[0x8];
 
 	uint8_t equipped_weapon;			// 0x36
 
-	uint8_t unknown_4[0x9];
+	uint8_t unknown_3[0x9];
 
 	uint32_t experience;				// 0x40
 	uint8_t ability_slots[48];			// 0x44
@@ -222,15 +220,24 @@ struct PartyStatPage {
 	};
 };
 
-class KHGameObject {
-  public:
-	Entity *entity;
+struct KHGameObject {
+	GameObject *gameobject;
 	Actor *actor;
 	StatPage *stat_page;
 	PartyStatPage *party_stat_page;
-
-	KHGameObject() : entity(nullptr), actor(nullptr), stat_page(nullptr), party_stat_page(nullptr) {}
-	KHGameObject(uint64_t gameobject_address);
-
-	std::string to_string();
 };
+
+KHGameObject *kh_gameobject_init(uint64_t gameobject_address);
+
+//class KHGameObject {
+//  public:
+//	GameObject *gameobject;
+//	Actor *actor;
+//	StatPage *stat_page;
+//	PartyStatPage *party_stat_page;
+//
+//	KHGameObject() : gameobject(nullptr), actor(nullptr), stat_page(nullptr), party_stat_page(nullptr) {}
+//	KHGameObject(uint64_t gameobject_address);
+//
+//	std::string to_string();
+//};

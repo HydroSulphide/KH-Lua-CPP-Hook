@@ -9,10 +9,16 @@ size_t max_loaded_gameobjects = 30;
 
 class KHScene {
   public:
-	std::vector<KHGameObject> loaded_gameobjects;
+	std::vector<KHGameObject*> loaded_gameobjects;
 
 	void update_loaded_gameobjects();
 	std::string to_string();
-};
 
-KHScene current_scene;
+	KHGameObject *get_sora();
+
+	KHScene() : loaded_gameobjects(std::vector<KHGameObject *>{}), sora(nullptr) {}
+
+  private:
+	KHGameObject *sora;
+	uint64 sora_address;
+};

@@ -54,10 +54,10 @@ set(SOURCE
     "src/lua/lua_backend.cpp"
 
     "src/cpp/cpp_handler.cpp"
-    "src/cpp/api/kh_characters.cpp"   
     "src/cpp/events/event_hook.cpp" 
     
     "src/cpp/api/kh_gameobject.cpp"
+    "src/cpp/api/kh_interface.cpp"
     
     "include/extra/wil_extra.h"
 
@@ -74,10 +74,10 @@ set(SOURCE
     "include/lua/lua_backend.h"
 
     "include/cpp/cpp_handler.h"
-    "include/cpp/api/kh_characters.h"
     "include/cpp/events/event_hook.h"
     
     "include/cpp/api/kh_gameobject.h"
+    "include/cpp/api/kh_interface.h" 
 )
 
 add_custom_target(clang-format

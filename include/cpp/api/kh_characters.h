@@ -73,9 +73,9 @@ struct FieldStats {
 };
 
 extern FieldStats *sora_field_stats;
-extern FieldStats *donald_field_stats;
-extern FieldStats *goofy_field_stats;
+//extern FieldStats *donald_field_stats;
+//extern FieldStats *goofy_field_stats;
 
-void character_stats_init(uintptr_t base_address, uintptr_t offset_sora, uintptr_t offset_donald, uintptr_t offset_goofy);
+void character_stats_init(uintptr_t base_address, uintptr_t offset_sora);//, uintptr_t offset_donald, uintptr_t offset_goofy);
 
-void field_stats_init(uintptr_t base_address, uintptr_t offset_sora, uintptr_t offset_donald, uintptr_t offset_goofy);
+void field_stats_init(uintptr_t base_address, uintptr_t offset_sora);//, uintptr_t offset_donald, uintptr_t offset_goofy);

@@ -1,9 +1,9 @@
 #include "cpp_handler.h"
 #include "console_lib.h"
 #include "event_hook.h"
-#include "kh_characters.h"
-#include "kh_gameobject.h"
 #include "memory_lib.h"
+
+#include "kh_interface.h"
 
 #include <format>
 #include <toml++/toml.h>
@@ -26,27 +26,44 @@ std::vector<OnGetRewardFunc> on_get_reward_funcs;
 
 std::vector<HMODULE> loaded_mods;
 
-std::vector<KHGameObject> loaded_gameobjects;
-uint64_t *loaded_gameobjects_start_pointer;
+//uintptr_t sora_address;
+//KHGameObject *sora = nullptr;
+//std::vector<KHGameObject*> loaded_gameobjects;
+//uint64_t *loaded_gameobjects_start_pointer;
 
-void update_loaded_gameobjects() {
-	loaded_gameobjects.clear();
-	for (size_t i = 0; i < 30; i++) {
-		uint64_t gameobject_address = *(loaded_gameobjects_start_pointer + i);
+//KHGameObject *get_sora() {
+//	return sora;
+//}
 
-		if (gameobject_address != 0) {
-			KHGameObject gameobject(gameobject_address);
-			loaded_gameobjects.push_back(gameobject);
-			
-			//print_message_line(gameobject.to_string());
-		}
-	}
-}
+//std::vector<KHGameObject*> get_loaded_gameobjects() {
+//	return loaded_gameobjects;
+//}
+
+//void update_loaded_gameobjects() {
+//	loaded_gameobjects.clear();
+//	for (size_t i = 0; i < 30; i++) {
+//		uint64_t gameobject_address = *(loaded_gameobjects_start_pointer + i);
+//
+//		if (gameobject_address != 0) {
+//			KHGameObject gameobject = KHGameObject(gameobject_address);
+//			KHGameObject *gameobject_ptr = &gameobject;
+//			loaded_gameobjects.push_back(gameobject_ptr);
+//			
+//			//print_message_line(gameobject_ptr->to_string());
+//
+//			if (strcmp(gameobject_ptr->actor->name, "SORA\0\0\0\0\0\0\0\0\0\0\0") == 0) {//std::string(gameobject_ptr->actor->name).compare(std::string("SORA")) == 0) {
+//				sora = gameobject_ptr;
+//				print_message_line("Sora loaded!");
+//			}
+//		}
+//	}
+//}
 
 void on_frame_cpp() {
 	for (const auto &on_frame : on_frame_funcs) {
 		on_frame();
 	}
+	update_loaded_gameobjects();
 }
 
 void on_get_reward_cpp(CONTEXT *ctx) {
@@ -67,16 +84,6 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 	try {
 		auto offsets = toml::parse_file(path.u8string());
 
-		uintptr_t sora_character_stats_address = offsets["character_stats"]["sora"].value_or(0);
-		uintptr_t donald_character_stats_address = offsets["character_stats"]["donald"].value_or(0);
-		uintptr_t goofy_character_stats_address = offsets["character_stats"]["goofy"].value_or(0);
-
-		uintptr_t sora_field_stats_address = offsets["entity_stats"]["sora"].value_or(0);
-		uintptr_t donald_field_stats_address = offsets["entity_stats"]["donald"].value_or(0);
-		uintptr_t goofy_field_stats_address = offsets["entity_stats"]["goofy"].value_or(0);
-
-		character_stats_init(base_address, sora_character_stats_address, donald_character_stats_address, goofy_character_stats_address);
-		field_stats_init(base_address, sora_field_stats_address, donald_field_stats_address, goofy_field_stats_address);
 
 		MemoryLib::base_4to8 = reinterpret_cast<uintptr_t *>(base_address + offsets["memory"]["base_4to8"].value_or(0));
 
@@ -84,8 +91,9 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		print_message_line(std::format("Loaded GameObjects Address: 0x{:X}", loaded_gameobjects_address), MESSAGE_NONE);
 		loaded_gameobjects_start_pointer = reinterpret_cast<uint64_t *>(loaded_gameobjects_address);
 
-		install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
-		install_event_hook(base_address, offsets["events"]["on_get_reward"]["address"].value_or(0), offsets["events"]["on_get_reward"]["size"].value_or(0), on_get_reward_cpp);
+		
+		//install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
+		//install_event_hook(base_address, offsets["events"]["on_get_reward"]["address"].value_or(0), offsets["events"]["on_get_reward"]["size"].value_or(0), on_get_reward_cpp);
 
 	} catch (const std::exception &e) {
 		print_message_line(std::format("Error parsing TOML file: {}", e.what()), MESSAGE_ERROR);

@@ -1,14 +1,12 @@
-[static_entities]
+[static_gameobjects]
 sora = 0x2D372A0
 
-[static_party_stat_page]
-sora = 0x2DE9364
-
-[static_stat_page]
-sora = 0x2D5CC10
-
-[stat_page]
-first_stat_page_pointer = 0x2D5CB10
+#[static_party_stat_page]
+#sora = 0x2DE9360
+#[static_stat_page]
+#sora = 0x2D5CC10
+#[stat_page]
+#first_stat_page_pointer = 0x2D5CB10
 
 [shared_stats]
 munny = 0x2DFF77C

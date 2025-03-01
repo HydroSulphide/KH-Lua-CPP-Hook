@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-#include "kh_characters.h"
+#include "kh_interface.h"
 
 using namespace std;
 
@@ -33,13 +33,11 @@ void __cdecl on_get_hit();
 __declspec(dllimport) void print_mod_message(const char *text, MessageType message_type, const char *mod_name);
 __declspec(dllimport) void print_mod_message_line(const char *text, MessageType message_type, const char *mod_name);
 
-__declspec(dllimport) CharacterStats *get_sora_character_stats();
-__declspec(dllimport) CharacterStats *get_donald_character_stats();
-__declspec(dllimport) CharacterStats *get_goofy_character_stats();
-
-__declspec(dllimport) FieldStats *get_sora_field_stats();
-__declspec(dllimport) FieldStats *get_donald_field_stats();
-__declspec(dllimport) FieldStats *get_goofy_field_stats();
+__declspec(dllimport) KHGameObject *get_sora();
+__declspec(dllimport) uintptr_t get_object_addr();
+__declspec(dllimport) uintptr_t get_actor_addr();
+__declspec(dllimport) uintptr_t get_stat_page_addr();
+__declspec(dllimport) uintptr_t get_party_stat_page_addr();
 }
 
 inline void print(const string &text, MessageType message_type = MESSAGE_NONE) {
