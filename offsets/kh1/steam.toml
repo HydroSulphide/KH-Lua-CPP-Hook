@@ -1,0 +1,29 @@
+[static_entities]
+sora = 0x2D372A0
+
+[static_party_stat_page]
+sora = 0x2DE9364
+
+[static_stat_page]
+sora = 0x2D5CC10
+
+[stat_page]
+first_stat_page_pointer = 0x2D5CB10
+
+[shared_stats]
+munny = 0x2DFF77C
+ability_slots = 0x2DE98F9
+
+[scene]
+loaded_gameobjects = 0x2D5AB20
+
+[events]
+on_get_hit = { address = 0x2A4692, size = 5 } # r8 = character_stats_pointer, rbx = new_hp_value     # rdi = stat_page_pointer
+on_get_reward = { address = 0x2B55E6, size = 3 } # rcx = reward_id
+
+[memory]
+base_4to8 = 0x2EE3980
+# on_open_chest = 0x284B94 # [rbx = item_id]
+# on_open_chest_size = 3
+# on_open_chest_successful = 0xD429F
+# on_open_chest_successful_size = 4

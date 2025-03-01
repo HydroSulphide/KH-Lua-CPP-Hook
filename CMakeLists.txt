@@ -117,7 +117,7 @@ target_include_directories(DBGHELP PRIVATE
     external/include
     external/subproject/lua544
     ${DiscordRPC_SOURCE_DIR}/include
-    ${rapidjson_SOURCE_DIR}/include  # Add RapidJSON include directory
+    ${rapidjson_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 target_link_libraries(DBGHELP PRIVATE
