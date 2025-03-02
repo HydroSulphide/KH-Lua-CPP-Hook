@@ -227,7 +227,7 @@ struct KHGameObject {
 	PartyStatPage *party_stat_page;
 };
 
-//KHGameObject *kh_gameobject_init(uint64_t gameobject_address);
+KHGameObject *kh_gameobject_init(uint64_t gameobject_address);
 
 //class KHGameObject {
 //  public:

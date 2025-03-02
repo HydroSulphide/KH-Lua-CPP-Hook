@@ -39,7 +39,7 @@ void print_message_line(const std::string& text, MessageType message_type, const
 	std::cout << std::endl;
 }
 
-extern "C" __declspec(dllexport) void print_mod_message(const char *text, MessageType message_type, const char *mod_name) {
+__declspec(dllexport) void print_mod_message(const char *text, MessageType message_type, const char *mod_name) {
 	print_message(text, message_type, mod_name);
 }
 

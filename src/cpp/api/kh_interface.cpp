@@ -6,15 +6,31 @@
 uintptr_t *loaded_gameobjects_start_pointer;
 size_t max_loaded_gameobjects = 30;
 
-uintptr_t loaded_gameobject_addresses[30];
+std::vector<KHGameObject*> loaded_gameobjects;
+KHGameObject *sora;
 
 
 void update_loaded_gameobject_addresses() {
-	for (size_t i = 0; i < max_loaded_gameobjects; i++) {
-		loaded_gameobject_addresses[i] = *(loaded_gameobjects_start_pointer + i);
+	loaded_gameobjects.clear();
+
+	for (size_t i = 0; i < 30; i++) {
+		uint64_t gameobject_address = *(loaded_gameobjects_start_pointer + i);
+		if (gameobject_address != 0) {
+			KHGameObject *gameobject_ptr = kh_gameobject_init(gameobject_address);
+			loaded_gameobjects.push_back(gameobject_ptr);
+
+			if (gameobject_ptr->actor && (strcmp(gameobject_ptr->actor->name, "SORA\0\0\0\0\0\0\0\0\0\0\0") == 0)) { // std::string(gameobject_ptr->actor->name).compare(std::string("SORA")) == 0) {
+				sora = gameobject_ptr;
+			}
+		}
 	}
 }
 
-extern "C" __declspec(dllexport) uintptr_t* get_loaded_gameobject_addresses() {
-	return loaded_gameobject_addresses;
+extern "C" __declspec(dllexport) KHGameObject **get_loaded_gameobjects(size_t *count) {
+	*count = loaded_gameobjects.size();
+	return loaded_gameobjects.data();
+}
+
+extern "C" __declspec(dllexport) KHGameObject* __cdecl get_sora() {
+	return sora;
 }

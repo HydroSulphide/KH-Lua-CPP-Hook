@@ -11,5 +11,5 @@ KH_MOD on_init() {
 }
 
 KH_MOD on_frame() {
-	update_loaded_gameobjects();
+
 }

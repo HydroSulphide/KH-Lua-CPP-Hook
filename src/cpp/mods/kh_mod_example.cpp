@@ -11,15 +11,22 @@ KH_MOD on_init() {
 }
 
 KH_MOD on_frame() {
-	update_loaded_gameobjects();
-
 	KHGameObject *sora = get_sora();
-	if (sora) {
-		sora->party_stat_page->current_hp = 18;
-		sora->stat_page->current_hp = 18;
+
+	if (sora && sora->party_stat_page) {
 		print_line(std::format("SORA HP: {:d}", sora->party_stat_page->current_hp));
+	}
+
+	size_t loaded_gameobjects_count;
+	KHGameObject **loaded_gameobjects = get_loaded_gameobjects(&loaded_gameobjects_count);
+
+	if (loaded_gameobjects_count > 0) {
+		for (int i = 0; i < loaded_gameobjects_count; i++) {
+			if (loaded_gameobjects[i]->actor)
+				print_line(std::format("Object {:d}: {}", i, std::string(loaded_gameobjects[i]->actor->name, 16)));
+		}
 	} else {
-		print_line("SORA not found!");
+		print_line("No loaded game objects found.");
 	}
 }
 
