@@ -60,10 +60,10 @@ std::vector<HMODULE> loaded_mods;
 //}
 
 void on_frame_cpp() {
+	update_loaded_gameobject_addresses();
 	for (const auto &on_frame : on_frame_funcs) {
 		on_frame();
 	}
-	update_loaded_gameobjects();
 }
 
 void on_get_reward_cpp(CONTEXT *ctx) {
@@ -127,9 +127,18 @@ void load_mod_setup_cpp() {
 		OnInitFunc on_init = (OnInitFunc)GetProcAddress(h_mod, "on_init");
 		if (on_init) {
 			on_init();
-			print_message_line("Mod Setup successful!\n", MESSAGE_SUCCESS);
+			print_message_line("Mod Setup (on_init) successful!\n", MESSAGE_SUCCESS);
 		} else {
 			print_message_line(std::format("{} has not implemented event: on_init()\n", file_name), MESSAGE_WARNING);
+		}
+
+		// Get the address of the on_frame function
+		OnFrameFunc on_frame = (OnFrameFunc)GetProcAddress(h_mod, "on_frame");
+		if (on_frame) {
+			on_frame_funcs.push_back((OnFrameFunc)GetProcAddress(h_mod, "on_frame"));
+			print_message_line("Mod Setup (on_frame) successful!\n", MESSAGE_SUCCESS);
+		} else {
+			print_message_line(std::format("{} has not implemented event: on_frame()\n", file_name), MESSAGE_WARNING);
 		}
 
 		// Store the handle of the loaded module if you want to use it later

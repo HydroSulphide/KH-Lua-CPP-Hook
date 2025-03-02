@@ -5,7 +5,7 @@
 
 #include <format>
 
-KHGameObject* kh_gameobject_init(uint64_t gameobject_address) {
+extern "C" __declspec(dllexport) KHGameObject *kh_gameobject_init(uint64_t gameobject_address) {
 	KHGameObject *kh_gameobject = new KHGameObject;
 	kh_gameobject->gameobject = reinterpret_cast<GameObject *>(gameobject_address);
 	uint64_t actor_pointer = MemoryLib::get_4to8_pointer(kh_gameobject->gameobject->actor_pointer);

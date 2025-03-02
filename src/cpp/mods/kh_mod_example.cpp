@@ -11,13 +11,15 @@ KH_MOD on_init() {
 }
 
 KH_MOD on_frame() {
-	KHGameObject *sora = new KHGameObject;
-	if (get_object_addr() != 0) {
-		sora->gameobject = reinterpret_cast<GameObject *>(get_object_addr());
-		sora->actor = reinterpret_cast<Actor *>(get_actor_addr());
-		sora->stat_page = reinterpret_cast<StatPage *>(get_stat_page_addr());
-		sora->party_stat_page = reinterpret_cast<PartyStatPage *>(get_party_stat_page_addr());
+	update_loaded_gameobjects();
+
+	KHGameObject *sora = get_sora();
+	if (sora) {
+		sora->party_stat_page->current_hp = 18;
+		sora->stat_page->current_hp = 18;
 		print_line(std::format("SORA HP: {:d}", sora->party_stat_page->current_hp));
+	} else {
+		print_line("SORA not found!");
 	}
 }
 
