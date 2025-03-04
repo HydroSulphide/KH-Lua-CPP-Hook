@@ -26,39 +26,6 @@ std::vector<OnGetRewardFunc> on_get_reward_funcs;
 
 std::vector<HMODULE> loaded_mods;
 
-//uintptr_t sora_address;
-//KHGameObject *sora = nullptr;
-//std::vector<KHGameObject*> loaded_gameobjects;
-//uint64_t *loaded_gameobjects_start_pointer;
-
-//KHGameObject *get_sora() {
-//	return sora;
-//}
-
-//std::vector<KHGameObject*> get_loaded_gameobjects() {
-//	return loaded_gameobjects;
-//}
-
-//void update_loaded_gameobjects() {
-//	loaded_gameobjects.clear();
-//	for (size_t i = 0; i < 30; i++) {
-//		uint64_t gameobject_address = *(loaded_gameobjects_start_pointer + i);
-//
-//		if (gameobject_address != 0) {
-//			KHGameObject gameobject = KHGameObject(gameobject_address);
-//			KHGameObject *gameobject_ptr = &gameobject;
-//			loaded_gameobjects.push_back(gameobject_ptr);
-//			
-//			//print_message_line(gameobject_ptr->to_string());
-//
-//			if (strcmp(gameobject_ptr->actor->name, "SORA\0\0\0\0\0\0\0\0\0\0\0") == 0) {//std::string(gameobject_ptr->actor->name).compare(std::string("SORA")) == 0) {
-//				sora = gameobject_ptr;
-//				print_message_line("Sora loaded!");
-//			}
-//		}
-//	}
-//}
-
 void on_frame_cpp() {
 	update_loaded_gameobject_addresses();
 	for (const auto &on_frame : on_frame_funcs) {
@@ -92,7 +59,7 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		loaded_gameobjects_start_pointer = reinterpret_cast<uint64_t *>(loaded_gameobjects_address);
 
 		
-		//install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
+		install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
 		//install_event_hook(base_address, offsets["events"]["on_get_reward"]["address"].value_or(0), offsets["events"]["on_get_reward"]["size"].value_or(0), on_get_reward_cpp);
 
 	} catch (const std::exception &e) {
@@ -253,6 +220,8 @@ void unload_mods_cpp() {
 	print_message_line("Successfully unloaded c++ mod libraries\n", MESSAGE_SUCCESS);
 	loaded_mods.clear();
 	on_frame_funcs.clear();
+	on_get_hit_funcs.clear();
+	on_get_reward_funcs.clear();
 }
 
 void reload_mods_cpp() {

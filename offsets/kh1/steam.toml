@@ -16,7 +16,7 @@ ability_slots = 0x2DE98F9
 loaded_gameobjects = 0x2D5AB20
 
 [events]
-on_get_hit = { address = 0x2A4692, size = 5 } # r8 = character_stats_pointer, rbx = new_hp_value     # rdi = stat_page_pointer
+on_get_hit = { address = 0x2A49C5, size = 3 } # rbx = new current_hp, rsi = gameobject_address, rax = party_stat_page_address, rdi = stat_page_address, 255 - r14 = damage, rdx = 4to8Base
 on_get_reward = { address = 0x2B55E6, size = 3 } # rcx = reward_id
 
 [memory]

@@ -4,7 +4,7 @@
 #include <format>
 
 uintptr_t *loaded_gameobjects_start_pointer;
-size_t max_loaded_gameobjects = 30;
+size_t max_loaded_gameobjects = 35;
 
 std::vector<KHGameObject*> loaded_gameobjects;
 KHGameObject *sora;
@@ -13,7 +13,7 @@ KHGameObject *sora;
 void update_loaded_gameobject_addresses() {
 	loaded_gameobjects.clear();
 
-	for (size_t i = 0; i < 30; i++) {
+	for (size_t i = 0; i < max_loaded_gameobjects; i++) {
 		uint64_t gameobject_address = *(loaded_gameobjects_start_pointer + i);
 		if (gameobject_address != 0) {
 			KHGameObject *gameobject_ptr = kh_gameobject_init(gameobject_address);

@@ -9,7 +9,3 @@ string mod_version = "0.1";
 KH_MOD on_init() {
 	print_line("Initializing Mod Setup ...");
 }
-
-KH_MOD on_frame() {
-
-}

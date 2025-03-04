@@ -17,23 +17,23 @@ KH_MOD on_frame() {
 		print_line(std::format("SORA HP: {:d}", sora->party_stat_page->current_hp));
 	}
 
-	size_t loaded_gameobjects_count;
-	KHGameObject **loaded_gameobjects = get_loaded_gameobjects(&loaded_gameobjects_count);
+	//size_t loaded_gameobjects_count;
+	//KHGameObject **loaded_gameobjects = get_loaded_gameobjects(&loaded_gameobjects_count);
 
-	if (loaded_gameobjects_count > 0) {
-		for (int i = 0; i < loaded_gameobjects_count; i++) {
-			if (loaded_gameobjects[i]->actor)
-				print_line(std::format("Object {:d}: {}", i, std::string(loaded_gameobjects[i]->actor->name, 16)));
-		}
-	} else {
-		print_line("No loaded game objects found.");
-	}
+	//if (loaded_gameobjects_count > 0) {
+	//	for (int i = 0; i < loaded_gameobjects_count; i++) {
+	//		if (loaded_gameobjects[i]->actor)
+	//			print_line(std::format("Object {:d} (0x{:X}): {}", i, reinterpret_cast<uintptr_t>(loaded_gameobjects[i]->gameobject), std::string(loaded_gameobjects[i]->actor->name, 16)));
+	//	}
+	//} else {
+	//	print_line("No loaded game objects found.");
+	//}
 }
 
 //KH_MOD on_get_reward(DWORD64 reward_id) {
 //	print_line("on_get_reward()");// std::format("on_get_reward(): reward_id: 0x{:X}", reward_id));
 //}
 
-//KH_MOD on_get_hit() {
-//	print_line("on_get_hit()");
-//}
+KH_MOD on_get_hit() {
+	print_line("on_get_hit()");
+}
