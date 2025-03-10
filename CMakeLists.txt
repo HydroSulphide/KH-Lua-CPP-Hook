@@ -78,7 +78,7 @@ set(SOURCE
     
     "include/cpp/api/kh_gameobject.h"
     "include/cpp/api/kh_interface.h" 
- )
+  )
 
 add_custom_target(clang-format
     COMMAND clang-format -i -style=file ${SOURCE}
