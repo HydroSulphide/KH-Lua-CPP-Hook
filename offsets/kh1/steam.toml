@@ -5,8 +5,11 @@
 #[stat_page]
 #first_stat_page_pointer = 0x2D5CB10
 
-[shared_stats]
-ability_slots = 0x2DE98F9
+[party]
+shared_abilities = 0x2DE98F9
+magic_tiers = 0x2DE97F2
+exp_multiplier = 0x2D5CB00
+lvlup_tables = 0x2D267FE
 
 [inventory]
 item_stock = 0x2DE97F9

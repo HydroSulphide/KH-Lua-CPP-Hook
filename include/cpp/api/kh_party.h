@@ -63,15 +63,19 @@ struct KHMagicTiers {
 	uint8_t aero;
 };
 
+// >= 0x08: AbilityID
+enum KHLevelUpStat {
+	LVLUP_NONE,
+	LVLUP_MAX_HP,
+	LVLUP_MAX_MP,
+	LVLUP_MAX_AP,
+	LVLUP_STRENGTH,
+	LVLUP_DEFENSE,
+	LVLUP_MAX_ITEMS,
+	LVLUP_MAX_ACCESSORIES,
+};
+
 struct KHLevelUpStatTable {
-	// 0x01: Max HP
-	// 0x02: Max MP
-	// 0x03: Max AP
-	// 0x04: Strength
-	// 0x05: Defense
-	// 0x06: Max Items
-	// 0x07: Max Accessories
-	// >= 0x08: AbilityID 
 	uint8_t lvl_0;
 	uint8_t lvl_1;
 	uint8_t lvl_2;
@@ -175,9 +179,8 @@ struct KHLevelUpStatTable {
 	uint8_t lvl_100;
 };
 
+// exp needed to get to this level (relative to current level)
 struct KHLevelUpExpTable {
-	// exp needed to get to this level
-	uint16_t lvl_0;
 	uint16_t lvl_1;
 	uint16_t lvl_2;
 	uint16_t lvl_3;
@@ -283,6 +286,7 @@ struct KHLevelUpExpTable {
 struct KHParty {
 	KHSharedAbilities *shared_abilities;
 	KHMagicTiers *magic_tiers;
+	float *exp_multiplier;
 	
 	KHLevelUpStatTable *sora_lvlup_table;
 	KHLevelUpStatTable *sora_lvlup_table_bonus_sword;
@@ -323,6 +327,4 @@ struct KHParty {
 	KHLevelUpStatTable *beast_lvlup_table;
 	KHLevelUpStatTable *beast_lvlup_table_bonus;
 	KHLevelUpExpTable *beast_lvlup_exp_table;
-
-	float *exp_multiplier;
 };

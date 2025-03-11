@@ -78,6 +78,7 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		loaded_gameobjects_start_pointer = reinterpret_cast<uint64_t *>(loaded_gameobjects_address);
 
 		init_kh_inventory(base_address + offsets["inventory"]["item_stock"].value_or(0), base_address + offsets["inventory"]["gummi_stock"].value_or(0), base_address + offsets["inventory"]["munny"].value_or(0));
+		init_kh_party(base_address + offsets["party"]["shared_abilities"].value_or(0), base_address + offsets["party"]["magic_tiers"].value_or(0), base_address + offsets["party"]["exp_multiplier"].value_or(0), base_address + offsets["party"]["lvlup_tables"].value_or(0));
 		
 		install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
 		install_event_hook(base_address, offsets["events"]["on_attack"]["address"].value_or(0), offsets["events"]["on_attack"]["size"].value_or(0), on_attack_cpp);

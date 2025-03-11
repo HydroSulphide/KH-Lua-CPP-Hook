@@ -11,9 +11,42 @@ KH_MOD on_init() {
 }
 
 KH_MOD on_frame() {
-	KHInventory *inventory = get_inventory();
-	print_line(std::format("Inventory:\n\tMunny: {:d}\n\tPotion: {:d}\n\tCure G: {:d}", *(inventory->munny), inventory->item_stock->potion, inventory->gummi_stock->cure_g));
-	*(inventory->munny) = 99999;
+	//KHInventory *inventory = get_inventory();
+	//print_line(std::format("Inventory:\n\tMunny: {:d}\n\tPotion: {:d}\n\tCure G: {:d}", *(inventory->munny), inventory->item_stock->potion, inventory->gummi_stock->cure_g));
+	//*(inventory->munny) = 99999;
+
+	//KHParty *party = get_party();
+	//print_line(std::format("Beast EXP from Level 62 to Level 63: {:d}", party->beast_lvlup_exp_table->lvl_63));
+	//
+	//party->shared_abilities->slot_1 = 0x1C;
+	//party->shared_abilities->slot_2 = 0x1C;
+	//party->shared_abilities->slot_3 = 0x1C;
+	//party->shared_abilities->slot_4 = 0x1C;
+	//party->shared_abilities->slot_5 = 0x1C;
+	//
+	//party->magic_tiers->fire = 1;
+	//party->magic_tiers->blizzard = 2;
+	//party->magic_tiers->thunder = 3;
+	//party->magic_tiers->cure = 1;
+	//party->magic_tiers->gravity = 2;
+	//party->magic_tiers->stop = 3;
+	//party->magic_tiers->aero = 1;
+	//
+	//*(party->exp_multiplier) = 2;
+	//
+	//party->sora_lvlup_exp_table_midday->lvl_62 = 17000;
+	//party->donald_lvlup_exp_table->lvl_62 = 17200;
+	//party->goofy_lvlup_exp_table->lvl_64 = 12000;
+	//party->beast_lvlup_exp_table->lvl_63 = 18300;
+	//
+	//party->sora_lvlup_table->lvl_62 = LVLUP_MAX_MP;
+	//party->sora_lvlup_table_bonus_sword->lvl_62 = LVLUP_MAX_MP;
+	//party->donald_lvlup_table->lvl_62 = LVLUP_MAX_HP;
+	//party->donald_lvlup_table_bonus->lvl_62 = LVLUP_MAX_ACCESSORIES;
+	//party->goofy_lvlup_table->lvl_64 = LVLUP_MAX_ITEMS;
+	//party->goofy_lvlup_table_bonus->lvl_64 = LVLUP_MAX_ACCESSORIES;
+	//party->beast_lvlup_table->lvl_63 = LVLUP_STRENGTH;
+	//party->beast_lvlup_table_bonus->lvl_63 = LVLUP_STRENGTH;
 
 
 	//KHGameObject *sora = get_sora();
