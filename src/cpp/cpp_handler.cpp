@@ -4,6 +4,7 @@
 #include "memory_lib.h"
 
 #include "kh_interface.h"
+#include "kh_gameobject.h"
 
 #include <format>
 #include <toml++/toml.h>
@@ -20,12 +21,6 @@ typedef void(__cdecl *OnAttackFunc)(KHGameObject *gameobject);
 typedef void(__cdecl *OnGetRewardFunc)(DWORD64 treasure_id);
 
 const std::string loaded_mods_path = "KHMemoryHook/loaded_mods";
-
-//std::vector<OnFrameFunc> on_frame_funcs;
-//std::vector<OnGetHitFunc> on_get_hit_funcs;
-//std::vector<OnGetRewardFunc> on_get_reward_funcs;
-//
-//std::vector<HMODULE> loaded_mods;
 
 struct KHMod {
 	HMODULE module;
@@ -56,7 +51,8 @@ void on_get_reward_cpp(CONTEXT *ctx) {
 void on_get_hit_cpp(CONTEXT *ctx) {
 	for (const auto &mod : loaded_mods) {
 		if (mod.on_get_hit) {
-			mod.on_get_hit(kh_gameobject_init(static_cast<uint64_t>(ctx->Rsi)));
+			// TODO: search in loaded_gameobjects and return existing object (memory leak)
+			mod.on_get_hit(init_kh_gameobject(static_cast<uint64_t>(ctx->Rsi)));
 		}
 	}
 }
@@ -64,7 +60,8 @@ void on_get_hit_cpp(CONTEXT *ctx) {
 void on_attack_cpp(CONTEXT *ctx) {
 	for (const auto &mod : loaded_mods) {
 		if (mod.on_attack) {
-			mod.on_attack(kh_gameobject_init(static_cast<uint64_t>(ctx->Rcx)));
+			// TODO: search in loaded_gameobjects and return existing object (memory leak)
+			mod.on_attack(init_kh_gameobject(static_cast<uint64_t>(ctx->Rcx)));
 		}
 	}
 }
@@ -80,6 +77,7 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		print_message_line(std::format("Loaded GameObjects Address: 0x{:X}", loaded_gameobjects_address), MESSAGE_NONE);
 		loaded_gameobjects_start_pointer = reinterpret_cast<uint64_t *>(loaded_gameobjects_address);
 
+		init_kh_inventory(base_address + offsets["inventory"]["item_stock"].value_or(0), base_address + offsets["inventory"]["gummi_stock"].value_or(0), base_address + offsets["inventory"]["munny"].value_or(0));
 		
 		install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
 		install_event_hook(base_address, offsets["events"]["on_attack"]["address"].value_or(0), offsets["events"]["on_attack"]["size"].value_or(0), on_attack_cpp);

@@ -34,4 +34,8 @@ copy /Y "remove_loaded_mods.bat" "%DEST_DIR_SETUP%"
 echo Copying DBGHELP.dll to %DEST_DIR_DBGHELP%
 copy /Y "%SOURCE_DIR_DBGHELP%\DBGHELP.dll" "%DEST_DIR_DBGHELP%"
 
+:: Additional copy of offsets directory
+echo Copying offsets directory to %DEST_DIR_SETUP%
+robocopy "offsets" "%DEST_DIR_SETUP%\offsets" /E /NFL /NDL /NJH /NJS /NC /NS
+
 pause

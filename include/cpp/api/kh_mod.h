@@ -9,6 +9,7 @@
 
 #include "kh_interface.h"
 #include "kh_gameobject.h"
+#include "kh_inventory.h"
 
 using namespace std;
 
@@ -38,6 +39,7 @@ __declspec(dllimport) void print_mod_message_line(const char *text, MessageType 
 
 __declspec(dllimport) KHGameObject **get_loaded_gameobjects(size_t *count);
 __declspec(dllimport) KHGameObject *get_sora();
+__declspec(dllimport) KHInventory *get_inventory();
 }
 
 inline void print(const string &text, MessageType message_type = MESSAGE_NONE) {

@@ -159,10 +159,10 @@ struct KHItemStock {
 	uint8_t camping_set;		// 0x8F
 	uint8_t cottage;			// 0x90
 
-	uint8_t unused_12;
-	uint8_t unused_13;
 	uint8_t unused_14;
 	uint8_t unused_15;
+	uint8_t unused_16;
+	uint8_t unused_17;
 
 	uint8_t ansems_report_11;	// 0x95
 	uint8_t ansems_report_12;	// 0x96
@@ -248,7 +248,7 @@ struct KHItemStock {
 	uint8_t hero_license;		// 0xE6
 	uint8_t pretty_stone;		// 0xE7
 
-	uint8_t unused_16;
+	uint8_t unused_18;
 
 	uint8_t lucid_shard;		// 0xE9
 	uint8_t lucid_gem;			// 0xEA

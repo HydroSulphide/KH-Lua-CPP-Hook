@@ -29,6 +29,9 @@ for %%f in (%SRC_DIR%\*.cpp) do (
         echo Failed to compile %%f
     ) else (
         echo Successfully compiled %%f into !dll_name!
+        
+        :: Delete intermediate files
+        del "!base_name!.obj" "!base_name!.lib" "!base_name!.exp"
     )
 )
 
