@@ -11,10 +11,14 @@ KH_MOD on_init() {
 }
 
 KH_MOD on_frame() {
+	// TEST INVENTORY:
 	//KHInventory *inventory = get_inventory();
 	//print_line(std::format("Inventory:\n\tMunny: {:d}\n\tPotion: {:d}\n\tCure G: {:d}", *(inventory->munny), inventory->item_stock->potion, inventory->gummi_stock->cure_g));
 	//*(inventory->munny) = 99999;
 
+
+
+	// TEST PARTY:
 	//KHParty *party = get_party();
 	//print_line(std::format("Beast EXP from Level 62 to Level 63: {:d}", party->beast_lvlup_exp_table->lvl_63));
 	//
@@ -49,47 +53,71 @@ KH_MOD on_frame() {
 	//party->beast_lvlup_table_bonus->lvl_63 = LVLUP_STRENGTH;
 
 	
-	KHGameObject *sora = get_sora();
-	if (sora) {
-		print_line("sora loaded!");
-	}
-	KHGameObject *donald = get_donald();
-	if (donald) {
-		print_line("donald loaded!");
-	}
-	KHGameObject *goofy = get_goofy();
-	if (goofy) {
-		print_line("goofy loaded!");
-	}
-	KHGameObject *tarzan = get_tarzan();
-	if (tarzan) {
-		print_line("tarzan loaded!");
-	}
-	KHGameObject *aladdin = get_aladdin();
-	if (aladdin) {
-		print_line("aladdin loaded!");
-	}
-	KHGameObject *ariel = get_ariel();
-	if (ariel) {
-		print_line("ariel loaded!");
-	}
-	KHGameObject *jack = get_jack();
-	if (jack) {
-		print_line("jack loaded!");
-	}
-	KHGameObject *peter_pan = get_peter_pan();
-	if (peter_pan) {
-		print_line("peter_pan loaded!");
-	}
-	KHGameObject *beast = get_beast();
-	if (beast) {
-		print_line("beast loaded!");
-	}
-	//if (sora && sora->object && sora->battle_stats && sora->attributes) {
-	//	print_line(std::format("SORA HP: {:d}", sora->attributes->current_hp));
+	// TEST LOADED PARTY MEMBERS:
+	//KHGameObject *sora = get_sora();
+	//if (sora) {
+	//	sora->battle_stats->current_mp = 5;
+	//	sora->attributes->current_mp = 5;
+	//	print_line(std::format("sora (0x{:X}) loaded!", reinterpret_cast<uint64_t>(sora->attributes)));
+	//}
+	//KHGameObject *donald = get_donald();
+	//if (donald) {
+	//	donald->battle_stats->current_mp = 3;
+	//	donald->attributes->current_mp = 3;
+	//	print_line(std::format("donald (0x{:X}) loaded!", reinterpret_cast<uint64_t>(donald->attributes)));
+	//}
+	//KHGameObject *goofy = get_goofy();
+	//if (goofy) {
+	//	goofy->battle_stats->current_hp = 10;
+	//	goofy->attributes->current_hp = 10;
+	//	print_line(std::format("goofy (0x{:X}) loaded!", reinterpret_cast<uint64_t>(goofy->attributes)));
+	//}
+	//KHGameObject *tarzan = get_tarzan();
+	//if (tarzan) {
+	//	tarzan->battle_stats->current_mp = 1;
+	//	tarzan->attributes->current_mp = 1;
+	//	print_line(std::format("tarzan (0x{:X}) loaded!", reinterpret_cast<uint64_t>(tarzan->attributes)));
+	//}
+	//KHGameObject *aladdin = get_aladdin();
+	//if (aladdin) {
+	//	aladdin->battle_stats->current_mp = 1;
+	//	aladdin->attributes->current_mp = 1;
+	//	print_line(std::format("aladdin (0x{:X}) loaded!", reinterpret_cast<uint64_t>(aladdin->attributes)));
+	//}
+	//KHGameObject *ariel = get_ariel();
+	//if (ariel) {
+	//	ariel->battle_stats->current_mp = 1;
+	//	ariel->attributes->current_mp = 1;
+	//	print_line(std::format("ariel (0x{:X}) loaded!", reinterpret_cast<uint64_t>(ariel->attributes)));
+	//}
+	//KHGameObject *jack = get_jack();
+	//if (jack) {
+	//	jack->battle_stats->current_mp = 2;
+	//	jack->attributes->current_mp = 3;
+	//	print_line(std::format("jack (0x{:X}) loaded!", reinterpret_cast<uint64_t>(jack->attributes)));
+	//}
+	//KHGameObject *peter_pan = get_peter_pan();
+	//if (peter_pan) {
+	//	peter_pan->battle_stats->current_mp = 1;
+	//	peter_pan->attributes->current_mp = 1;
+	//	print_line(std::format("peter_pan (0x{:X}) loaded!", reinterpret_cast<uint64_t>(peter_pan->attributes)));
+	//}
+	//KHGameObject *beast = get_beast();
+	//if (beast) {
+	//	beast->battle_stats->current_mp = 1;
+	//	beast->attributes->current_mp = 1;
+	//	print_line(std::format("beast (0x{:X}) loaded!", reinterpret_cast<uint64_t>(beast->attributes)));
 	//}
 
 
+
+	// TEST ATTRIBUTES:
+	//KHAttributes *sora_attributes = get_sora_attributes();
+	//print_line(format("SORA HP: {:d}", sora_attributes->current_hp));
+
+
+
+	// TEST LOADED GAMEOBJECTS:
 	//size_t loaded_gameobjects_count;
 	//KHGameObject** loaded_gameobjects = get_loaded_gameobjects(&loaded_gameobjects_count);
 	//if (loaded_gameobjects_count > 0) {

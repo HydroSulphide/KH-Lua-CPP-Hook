@@ -22,6 +22,16 @@ KHGameObject *jack;
 KHGameObject *peter_pan;
 KHGameObject *beast;
 
+KHAttributes *sora_attributes;
+KHAttributes *donald_attributes;
+KHAttributes *goofy_attributes;
+KHAttributes *tarzan_attributes;
+KHAttributes *aladdin_attributes;
+KHAttributes *ariel_attributes;
+KHAttributes *jack_attributes;
+KHAttributes *peter_pan_attributes;
+KHAttributes *beast_attributes;
+
 KHInventory *inventory;
 
 void update_loaded_gameobject_addresses() {
@@ -172,6 +182,18 @@ void init_kh_party(uint64_t shared_abilities_address, uint64_t magic_tiers_addre
 	};
 }
 
+void init_kh_attributes(uint64_t sora_attr_addr, uint64_t donald_attr_addr, uint64_t goofy_attr_addr, uint64_t tarzan_attr_addr, uint64_t aladdin_attr_addr, uint64_t ariel_attr_addr, uint64_t jack_attr_addr, uint64_t peter_pan_attr_addr, uint64_t beast_attr_addr) {
+	sora_attributes = reinterpret_cast<KHAttributes *>(sora_attr_addr);
+	donald_attributes = reinterpret_cast<KHAttributes *>(donald_attr_addr);
+	goofy_attributes = reinterpret_cast<KHAttributes *>(goofy_attr_addr);
+	tarzan_attributes = reinterpret_cast<KHAttributes *>(tarzan_attr_addr);
+	aladdin_attributes = reinterpret_cast<KHAttributes *>(aladdin_attr_addr);
+	ariel_attributes = reinterpret_cast<KHAttributes *>(ariel_attr_addr);
+	jack_attributes = reinterpret_cast<KHAttributes *>(jack_attr_addr);
+	peter_pan_attributes = reinterpret_cast<KHAttributes *>(peter_pan_attr_addr);
+	beast_attributes = reinterpret_cast<KHAttributes *>(beast_attr_addr);
+}
+
 extern "C" __declspec(dllexport) KHGameObject **get_loaded_gameobjects(size_t *count) {
 	*count = loaded_gameobjects.size();
 	return loaded_gameobjects.data();
@@ -215,6 +237,42 @@ extern "C" __declspec(dllexport) KHGameObject *__cdecl get_peter_pan() {
 
 extern "C" __declspec(dllexport) KHGameObject *__cdecl get_beast() {
 	return beast;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_sora_attributes() {
+	return sora_attributes;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_donald_attributes() {
+	return donald_attributes;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_goofy_attributes() {
+	return goofy_attributes;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_tarzan_attributes() {
+	return tarzan_attributes;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_aladdin_attributes() {
+	return aladdin_attributes;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_ariel_attributes() {
+	return ariel_attributes;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_jack_attributes() {
+	return jack_attributes;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_peter_pan_attributes() {
+	return peter_pan_attributes;
+}
+
+extern "C" __declspec(dllexport) KHAttributes *__cdecl get_beast_attributes() {
+	return beast_attributes;
 }
 
 extern "C" __declspec(dllexport) KHInventory *__cdecl get_inventory() {

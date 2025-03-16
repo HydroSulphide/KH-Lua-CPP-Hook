@@ -79,9 +79,10 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 
 		init_kh_inventory(base_address + offsets["inventory"]["item_stock"].value_or(0), base_address + offsets["inventory"]["gummi_stock"].value_or(0), base_address + offsets["inventory"]["munny"].value_or(0));
 		init_kh_party(base_address + offsets["party"]["shared_abilities"].value_or(0), base_address + offsets["party"]["magic_tiers"].value_or(0), base_address + offsets["party"]["exp_multiplier"].value_or(0), base_address + offsets["party"]["lvlup_tables"].value_or(0));
-		
-		install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
-		install_event_hook(base_address, offsets["events"]["on_attack"]["address"].value_or(0), offsets["events"]["on_attack"]["size"].value_or(0), on_attack_cpp);
+		init_kh_attributes(base_address + offsets["attributes"]["sora"].value_or(0), base_address + offsets["attributes"]["donald"].value_or(0), base_address + offsets["attributes"]["goofy"].value_or(0), base_address + offsets["attributes"]["tarzan"].value_or(0), base_address + offsets["attributes"]["aladdin"].value_or(0), base_address + offsets["attributes"]["ariel"].value_or(0), base_address + offsets["attributes"]["jack"].value_or(0), base_address + offsets["attributes"]["peter_pan"].value_or(0), base_address + offsets["attributes"]["beast"].value_or(0));
+
+		//install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
+		//install_event_hook(base_address, offsets["events"]["on_attack"]["address"].value_or(0), offsets["events"]["on_attack"]["size"].value_or(0), on_attack_cpp);
 		//install_event_hook(base_address, offsets["events"]["on_get_reward"]["address"].value_or(0), offsets["events"]["on_get_reward"]["size"].value_or(0), on_get_reward_cpp);
 
 	} catch (const std::exception &e) {

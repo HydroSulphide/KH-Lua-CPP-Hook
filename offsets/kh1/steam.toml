@@ -5,6 +5,19 @@
 #[stat_page]
 #first_stat_page_pointer = 0x2D5CB10
 
+# character attributes size: 0x74
+[attributes]
+sora = 0x2DE9364
+donald = 0x2DE93D8
+goofy = 0x2DE944C
+tarzan = 0x2DE94C0
+#unknown = 0x2DE9534
+aladdin = 0x2DE95A8
+ariel = 0x2DE961C
+jack = 0x2DE9690
+peter_pan = 0x2DE9704
+beast = 0x2DE9778
+
 [party]
 shared_abilities = 0x2DE98F9
 magic_tiers = 0x2DE97F2
