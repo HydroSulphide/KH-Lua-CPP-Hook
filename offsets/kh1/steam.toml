@@ -21,7 +21,7 @@ stats = 0x2D24798
 names = 0x2D23014 # 4to8 Pointer
 
 [scene]
-loaded_gameobjects = 0x2D5AB20
+loaded_gameobjects = 0x2D59D30
 
 [events]
 on_attack = { address = 0x2B2DC0, size = 5 } # rbx = command_stats_pointer, rcx = gameobject_address

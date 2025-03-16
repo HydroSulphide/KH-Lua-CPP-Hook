@@ -39,9 +39,17 @@ __declspec(dllimport) void print_mod_message(const char *text, MessageType messa
 __declspec(dllimport) void print_mod_message_line(const char *text, MessageType message_type, const char *mod_name);
 
 __declspec(dllimport) KHGameObject **get_loaded_gameobjects(size_t *count);
-__declspec(dllimport) KHGameObject *get_sora();
-__declspec(dllimport) KHInventory *get_inventory();
 __declspec(dllimport) KHParty *get_party();
+__declspec(dllimport) KHGameObject *get_sora();
+__declspec(dllimport) KHGameObject *get_donald();
+__declspec(dllimport) KHGameObject *get_goofy();
+__declspec(dllimport) KHGameObject *get_tarzan();
+__declspec(dllimport) KHGameObject *get_aladdin();
+__declspec(dllimport) KHGameObject *get_ariel();
+__declspec(dllimport) KHGameObject *get_jack();
+__declspec(dllimport) KHGameObject *get_peter_pan();
+__declspec(dllimport) KHGameObject *get_beast();
+__declspec(dllimport) KHInventory *get_inventory();
 }
 
 inline void print(const string &text, MessageType message_type = MESSAGE_NONE) {

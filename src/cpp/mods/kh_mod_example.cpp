@@ -48,16 +48,46 @@ KH_MOD on_frame() {
 	//party->beast_lvlup_table->lvl_63 = LVLUP_STRENGTH;
 	//party->beast_lvlup_table_bonus->lvl_63 = LVLUP_STRENGTH;
 
-
+	
 	KHGameObject *sora = get_sora();
 	if (sora) {
-		print_line("SORA loaded!");
-	} else {
-		print_line("SORA not loaded!");
+		print_line("sora loaded!");
 	}
-	if (sora && sora->object && sora->battle_stats && sora->attributes) {
-		print_line(std::format("SORA HP: {:d}", sora->attributes->current_hp));
+	KHGameObject *donald = get_donald();
+	if (donald) {
+		print_line("donald loaded!");
 	}
+	KHGameObject *goofy = get_goofy();
+	if (goofy) {
+		print_line("goofy loaded!");
+	}
+	KHGameObject *tarzan = get_tarzan();
+	if (tarzan) {
+		print_line("tarzan loaded!");
+	}
+	KHGameObject *aladdin = get_aladdin();
+	if (aladdin) {
+		print_line("aladdin loaded!");
+	}
+	KHGameObject *ariel = get_ariel();
+	if (ariel) {
+		print_line("ariel loaded!");
+	}
+	KHGameObject *jack = get_jack();
+	if (jack) {
+		print_line("jack loaded!");
+	}
+	KHGameObject *peter_pan = get_peter_pan();
+	if (peter_pan) {
+		print_line("peter_pan loaded!");
+	}
+	KHGameObject *beast = get_beast();
+	if (beast) {
+		print_line("beast loaded!");
+	}
+	//if (sora && sora->object && sora->battle_stats && sora->attributes) {
+	//	print_line(std::format("SORA HP: {:d}", sora->attributes->current_hp));
+	//}
 
 
 	//size_t loaded_gameobjects_count;
@@ -74,6 +104,8 @@ KH_MOD on_frame() {
 	//			//} else if (strcmp(loaded_gameobjects[i]->actor->name, "WAKKA\0\0\0\0\0\0\0\0\0\0") == 0) {
 	//			//	print_line(std::format("Object {:d} (0x{:X}): {}", i, reinterpret_cast<uintptr_t>(loaded_gameobjects[i]->gameobject), std::string(loaded_gameobjects[i]->actor->name, 16)));
 	//			//}
+	//		} else {
+	//			print_line(std::format("Object {:d} (0x{:X}): No Model found!", i, reinterpret_cast<uintptr_t>(loaded_gameobjects[i]->object)));
 	//		}
 	//	}
 	//} else {
