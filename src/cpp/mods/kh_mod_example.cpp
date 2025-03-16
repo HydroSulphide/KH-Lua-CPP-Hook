@@ -49,18 +49,23 @@ KH_MOD on_frame() {
 	//party->beast_lvlup_table_bonus->lvl_63 = LVLUP_STRENGTH;
 
 
-	//KHGameObject *sora = get_sora();
-	//if (sora && sora->party_stat_page) {
-	//	print_line(std::format("SORA HP: {:d}", sora->party_stat_page->current_hp));
-	//}
+	KHGameObject *sora = get_sora();
+	if (sora) {
+		print_line("SORA loaded!");
+	} else {
+		print_line("SORA not loaded!");
+	}
+	if (sora && sora->object && sora->battle_stats && sora->attributes) {
+		print_line(std::format("SORA HP: {:d}", sora->attributes->current_hp));
+	}
 
 
 	//size_t loaded_gameobjects_count;
 	//KHGameObject** loaded_gameobjects = get_loaded_gameobjects(&loaded_gameobjects_count);
 	//if (loaded_gameobjects_count > 0) {
 	//	for (int i = 0; i < loaded_gameobjects_count; i++) {
-	//		if (loaded_gameobjects[i]->actor) {
-	//			print_line(std::format("Object {:d} (0x{:X}): {}", i, reinterpret_cast<uintptr_t>(loaded_gameobjects[i]->gameobject), std::string(loaded_gameobjects[i]->actor->name, 16)));
+	//		if (loaded_gameobjects[i]->model) {
+	//			print_line(std::format("Object {:d} (0x{:X}): {}", i, reinterpret_cast<uintptr_t>(loaded_gameobjects[i]->object), std::string(loaded_gameobjects[i]->model->name, 16)));
 	//			//if (strcmp(loaded_gameobjects[i]->actor->name, "SORA\0\0\0\0\0\0\0\0\0\0\0") == 0) {
 	//			//	print_line(std::format("Object {:d} (0x{:X}): {}", i, reinterpret_cast<uintptr_t>(loaded_gameobjects[i]->gameobject), std::string(loaded_gameobjects[i]->actor->name, 16)));
 	//			//	print_line(std::format("\tActor: 0x{:X}", reinterpret_cast<uintptr_t>(loaded_gameobjects[i]->actor)));

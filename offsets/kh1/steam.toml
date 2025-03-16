@@ -16,6 +16,10 @@ item_stock = 0x2DE97F9
 gummi_stock = 0x2DF51D8
 munny = 0x2DFF77C
 
+[item]
+stats = 0x2D24798
+names = 0x2D23014 # 4to8 Pointer
+
 [scene]
 loaded_gameobjects = 0x2D5AB20
 

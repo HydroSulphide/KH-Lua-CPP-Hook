@@ -19,7 +19,7 @@ struct Matrix4x4 {
 };
 
 // size: 0x4B0
-struct GameObject {
+struct KHObject {
 	uint8_t unknown_1[0x4];
 
 	uint32_t event_ID;					//0x4
@@ -35,7 +35,7 @@ struct GameObject {
 
 	uint8_t unknown_4[0x1C];
 
-	uint32_t stat_page_pointer;			//0x6C
+	uint32_t battle_stats_pointer;		//0x6C
 
 	uint8_t unknown_5[0x30];
 
@@ -47,7 +47,7 @@ struct GameObject {
 
 	uint8_t unknown_7[0x20];
 
-	uint32_t actor_pointer;				// 0x130
+	uint32_t model_pointer;				// 0x130
 	
 	uint32_t unknown_pointer_1;			// 0x134
 	uint32_t unknown_pointer_2;			// 0x138
@@ -108,7 +108,7 @@ struct GameObject {
 };
 
 // size: 0x78
-struct Actor {
+struct KHModel {
 	uint8_t unknown_1[0x18];
 
 	uint32_t movable;					// 0x18
@@ -126,7 +126,7 @@ struct Actor {
 };
 
 // size: 0x100
-struct StatPage {
+struct KHBattleStats {
 	uint8_t unknown_1[0x4];
 
 	float walk_speed;					// 0x4
@@ -170,7 +170,7 @@ struct StatPage {
 
 	uint8_t unknown_9[0x8];
 
-	uint64_t party_stat_page_pointer;	// 0xC8 
+	uint64_t attributes_pointer;		// 0xC8 
 
 	uint8_t unknown_10[0x14];
 
@@ -180,7 +180,7 @@ struct StatPage {
 };
 
 // size: 0x74
-struct PartyStatPage {
+struct KHAttributes {
 	uint8_t level;						// 0x4
 	uint8_t current_hp;					// 0x5
 	uint8_t max_hp;						// 0x6
@@ -221,23 +221,10 @@ struct PartyStatPage {
 };
 
 struct KHGameObject {
-	GameObject *gameobject;
-	Actor *actor;
-	StatPage *stat_page;
-	PartyStatPage *party_stat_page;
+	KHObject *object;
+	KHModel *model;
+	KHBattleStats *battle_stats;
+	KHAttributes *attributes;
 };
 
 KHGameObject *init_kh_gameobject(uint64_t gameobject_address);
-
-//class KHGameObject {
-//  public:
-//	GameObject *gameobject;
-//	Actor *actor;
-//	StatPage *stat_page;
-//	PartyStatPage *party_stat_page;
-//
-//	KHGameObject() : gameobject(nullptr), actor(nullptr), stat_page(nullptr), party_stat_page(nullptr) {}
-//	KHGameObject(uint64_t gameobject_address);
-//
-//	std::string to_string();
-//};

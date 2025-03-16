@@ -20,13 +20,15 @@ void update_loaded_gameobject_addresses() {
 		delete obj;
 	loaded_gameobjects.clear();
 
+	sora = nullptr;
+
 	for (size_t i = 0; i < max_loaded_gameobjects; i++) {
 		uint64_t gameobject_address = *(loaded_gameobjects_start_pointer + i);
 		if (gameobject_address != 0) {
 			KHGameObject *gameobject_ptr = init_kh_gameobject(gameobject_address);
 			loaded_gameobjects.push_back(gameobject_ptr);
 
-			if (gameobject_ptr->actor && (strcmp(gameobject_ptr->actor->name, "SORA\0\0\0\0\0\0\0\0\0\0\0") == 0)) { // std::string(gameobject_ptr->actor->name).compare(std::string("SORA")) == 0) {
+			if (gameobject_ptr->model && (strcmp(gameobject_ptr->model->name, "SORA\0\0\0\0\0\0\0\0\0\0\0") == 0)) { // std::string(gameobject_ptr->actor->name).compare(std::string("SORA")) == 0) {
 				sora = gameobject_ptr;
 			}
 		}
