@@ -307,7 +307,13 @@ void set_new_string(const wchar_t *new_string, int old_string_length, uint8_t *s
 	std::wstring new_wstring = new_string ? new_string : L"";
 	std::string new_kh_string = to_kh_string(new_wstring);
 
+	auto it = std::find_if(string_repoints.begin(), string_repoints.end(), [string_address](const KHStringRepoint &repoint) { return repoint.old_address == reinterpret_cast<uint64_t>(string_address); });
+
 	if (new_wstring.size() <= old_string_length) {
+		if (it != string_repoints.end()) {
+			string_repoints.erase(it);
+		}
+
 		for (int i = 0; i < old_string_length; i++) {
 			if (i < new_wstring.size()) {
 				*(string_address + i) = new_kh_string[i];
@@ -316,13 +322,10 @@ void set_new_string(const wchar_t *new_string, int old_string_length, uint8_t *s
 			}
 		}
 	} else {
-		for (auto &repoint : string_repoints) {
-			if (repoint.old_address == reinterpret_cast<uint64_t>(string_address)) {
-				repoint.new_string = new_kh_string;
-				return;
-			}
+		if (it != string_repoints.end()) {
+			it->new_string = new_kh_string;
+			return;
 		}
-
 		KHStringRepoint new_repoint = KHStringRepoint{reinterpret_cast<uint64_t>(string_address), new_kh_string};
 		string_repoints.push_back(new_repoint);
 	}
