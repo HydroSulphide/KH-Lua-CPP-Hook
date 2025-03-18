@@ -206,7 +206,7 @@ loaded_gameobjects = 0x2D59D30
 on_attack = { address = 0x2B2DC0, size = 5 } # rbx = command_stats_pointer, rcx = gameobject_address
 on_get_hit = { address = 0x2A49C5, size = 3 } # rbx = new current_hp, rsi = gameobject_address, rax = party_stat_page_address, rdi = stat_page_address, 255 - r14 = damage, rdx = 4to8Base
 on_get_reward = { address = 0x2B55E6, size = 3 } # rcx = reward_id
-on_get_char = { address = 0x2EBF10, size = 3 } # rsi = char_address
+on_get_string = { address = 0x2EBD0D, size = 3} # rsi = string_address
 
 [memory]
 base_4to8 = 0x2EE3980

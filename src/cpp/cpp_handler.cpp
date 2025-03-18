@@ -110,7 +110,7 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 
 		
 
-		install_event_hook(base_address, offsets["events"]["on_get_char"]["address"].value_or(0), offsets["events"]["on_get_char"]["size"].value_or(0), on_get_char_cpp);
+		install_event_hook(base_address, offsets["events"]["on_get_string"]["address"].value_or(0), offsets["events"]["on_get_string"]["size"].value_or(0), on_get_char_cpp);
 		
 		//install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
 		//install_event_hook(base_address, offsets["events"]["on_attack"]["address"].value_or(0), offsets["events"]["on_attack"]["size"].value_or(0), on_attack_cpp);
