@@ -2,6 +2,8 @@
 #include "kh_gameobject.h"
 #include "kh_party.h"
 #include "kh_inventory.h"
+#include "kh_gummi.h"
+#include "kh_font.h"
 #include "console_lib.h"
 
 #include <format>
@@ -33,6 +35,10 @@ KHAttributes *peter_pan_attributes;
 KHAttributes *beast_attributes;
 
 KHInventory *inventory;
+
+std::vector<KHGummi> gummis;
+
+std::vector<KHStringRepoint> string_repoints;
 
 void update_loaded_gameobject_addresses() {
 	for (KHGameObject *obj : loaded_gameobjects)
@@ -194,6 +200,20 @@ void init_kh_attributes(uint64_t sora_attr_addr, uint64_t donald_attr_addr, uint
 	beast_attributes = reinterpret_cast<KHAttributes *>(beast_attr_addr);
 }
 
+void init_kh_gummis(std::vector<TOMLKHGummi> gummis_toml_data) {
+	gummis.clear();
+	for (const auto &gummi_toml_data : gummis_toml_data) {
+		KHGummi gummi {
+			reinterpret_cast<KHGummiStats *>(gummi_toml_data.stats_address),
+			reinterpret_cast<uint8_t *>(gummi_toml_data.name_address),
+			gummi_toml_data.name_length,
+			reinterpret_cast<uint8_t *>(gummi_toml_data.description_address),
+			gummi_toml_data.description_length
+		};
+		gummis.push_back(gummi);
+	}
+}
+
 extern "C" __declspec(dllexport) KHGameObject **get_loaded_gameobjects(size_t *count) {
 	*count = loaded_gameobjects.size();
 	return loaded_gameobjects.data();
@@ -277,4 +297,41 @@ extern "C" __declspec(dllexport) KHAttributes *__cdecl get_beast_attributes() {
 
 extern "C" __declspec(dllexport) KHInventory *__cdecl get_inventory() {
 	return inventory;
+}
+
+extern "C" __declspec(dllexport) KHGummi *__cdecl get_gummis() {
+	return gummis.data();
+}
+
+void set_new_string(const wchar_t *new_string, int old_string_length, uint8_t *string_address) {
+	std::wstring new_wstring = new_string ? new_string : L"";
+	std::string new_kh_string = to_kh_string(new_wstring);
+
+	if (new_wstring.size() <= old_string_length) {
+		for (int i = 0; i < old_string_length; i++) {
+			if (i < new_wstring.size()) {
+				*(string_address + i) = new_kh_string[i];
+			} else {
+				*(string_address + i) = 0x00;
+			}
+		}
+	} else {
+		for (auto &repoint : string_repoints) {
+			if (repoint.old_address == reinterpret_cast<uint64_t>(string_address)) {
+				repoint.new_string = new_kh_string;
+				return;
+			}
+		}
+
+		KHStringRepoint new_repoint = KHStringRepoint{reinterpret_cast<uint64_t>(string_address), new_kh_string};
+		string_repoints.push_back(new_repoint);
+	}
+}
+
+extern "C" __declspec(dllexport) void set_gummi_name(KHGummi *gummi, const wchar_t *new_name) {
+	set_new_string(new_name, gummi->name_length, gummi->name_address);
+}
+
+extern "C" __declspec(dllexport) void set_gummi_description(KHGummi *gummi, const wchar_t *new_desc) {
+	set_new_string(new_desc, gummi->description_length, gummi->description_address);
 }

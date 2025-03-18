@@ -5,6 +5,7 @@
 
 #include "kh_interface.h"
 #include "kh_gameobject.h"
+#include "kh_font.h"
 
 #include <format>
 #include <toml++/toml.h>
@@ -66,6 +67,14 @@ void on_attack_cpp(CONTEXT *ctx) {
 	}
 }
 
+void on_get_char_cpp(CONTEXT *ctx) {
+	for (const auto &repoint : string_repoints) {
+		if (ctx->Rsi == repoint.old_address) {
+			ctx->Rsi = (uint64_t)repoint.new_string.c_str();
+		}
+	}
+}
+
 bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 	try {
 		auto offsets = toml::parse_file(path.u8string());
@@ -81,6 +90,28 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		init_kh_party(base_address + offsets["party"]["shared_abilities"].value_or(0), base_address + offsets["party"]["magic_tiers"].value_or(0), base_address + offsets["party"]["exp_multiplier"].value_or(0), base_address + offsets["party"]["lvlup_tables"].value_or(0));
 		init_kh_attributes(base_address + offsets["attributes"]["sora"].value_or(0), base_address + offsets["attributes"]["donald"].value_or(0), base_address + offsets["attributes"]["goofy"].value_or(0), base_address + offsets["attributes"]["tarzan"].value_or(0), base_address + offsets["attributes"]["aladdin"].value_or(0), base_address + offsets["attributes"]["ariel"].value_or(0), base_address + offsets["attributes"]["jack"].value_or(0), base_address + offsets["attributes"]["peter_pan"].value_or(0), base_address + offsets["attributes"]["beast"].value_or(0));
 
+		std::vector<TOMLKHGummi> gummis_toml_data;
+		if (auto gummi_entries = offsets["items"]["gummis"].as_array()) {
+			for (const auto &value : *gummi_entries) {
+				const toml::table &entry_table = *value.as_table();
+
+				TOMLKHGummi gummi_toml_data = {
+					base_address + entry_table["stats_address"].value_or(0),
+					base_address + entry_table["name_address"].value_or(0),
+					entry_table["name_length"].value_or(0),
+					base_address + entry_table["desc_address"].value_or(0),
+					entry_table["desc_length"].value_or(0)
+				};
+
+				gummis_toml_data.push_back(gummi_toml_data);
+			}
+		}
+		init_kh_gummis(gummis_toml_data);
+
+		
+
+		install_event_hook(base_address, offsets["events"]["on_get_char"]["address"].value_or(0), offsets["events"]["on_get_char"]["size"].value_or(0), on_get_char_cpp);
+		
 		//install_event_hook(base_address, offsets["events"]["on_get_hit"]["address"].value_or(0), offsets["events"]["on_get_hit"]["size"].value_or(0), on_get_hit_cpp);
 		//install_event_hook(base_address, offsets["events"]["on_attack"]["address"].value_or(0), offsets["events"]["on_attack"]["size"].value_or(0), on_attack_cpp);
 		//install_event_hook(base_address, offsets["events"]["on_get_reward"]["address"].value_or(0), offsets["events"]["on_get_reward"]["size"].value_or(0), on_get_reward_cpp);

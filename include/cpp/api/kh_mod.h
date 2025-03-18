@@ -11,6 +11,8 @@
 #include "kh_gameobject.h"
 #include "kh_inventory.h"
 #include "kh_party.h"
+#include "kh_gummi.h"
+#include "kh_font.h"
 
 using namespace std;
 
@@ -63,6 +65,9 @@ __declspec(dllimport) KHAttributes *get_peter_pan_attributes();
 __declspec(dllimport) KHAttributes *get_beast_attributes();
 
 __declspec(dllimport) KHInventory *get_inventory();
+__declspec(dllimport) KHGummi *get_gummis();
+__declspec(dllimport) void set_gummi_name(KHGummi *gummi, const wchar_t *new_name);
+__declspec(dllimport) void set_gummi_description(KHGummi *gummi, const wchar_t *new_desc);
 }
 
 inline void print(const string &text, MessageType message_type = MESSAGE_NONE) {

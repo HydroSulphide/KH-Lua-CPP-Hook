@@ -58,6 +58,7 @@ set(SOURCE
     
     "src/cpp/api/kh_gameobject.cpp"
     "src/cpp/api/kh_interface.cpp"
+    "src/cpp/api/kh_font.cpp"
     
     "include/extra/wil_extra.h"
 
@@ -80,7 +81,9 @@ set(SOURCE
     "include/cpp/api/kh_interface.h" 
     "include/cpp/api/kh_inventory.h"
     "include/cpp/api/kh_party.h"
-)
+    "include/cpp/api/kh_gummi.h"
+    "include/cpp/api/kh_font.h"
+ )
 
 add_custom_target(clang-format
     COMMAND clang-format -i -style=file ${SOURCE}

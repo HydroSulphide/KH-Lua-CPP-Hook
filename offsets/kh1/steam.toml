@@ -29,9 +29,175 @@ item_stock = 0x2DE97F9
 gummi_stock = 0x2DF51D8
 munny = 0x2DFF77C
 
-[item]
+[items]
 stats = 0x2D24798
 names = 0x2D23014 # 4to8 Pointer
+curaga_g_name = 0x2698227
+gummis = [
+	{ stats_address = 0x50F440, name_address = 0x2698220, name_length = 6, desc_address = 0x26986C7, desc_length = 38 }, # CURE_G
+	{ stats_address = 0x50F45C, name_address = 0x2698227, name_length = 8, desc_address = 0x26986EE, desc_length = 32 }, # CURAGA_G
+	{ stats_address = 0x50F478, name_address = 0x2698230, name_length = 6, desc_address = 0x269870F, desc_length = 35 }, # LIFE_G
+	{ stats_address = 0x50F494, name_address = 0x2698237, name_length = 11, desc_address = 0x2698733, desc_length = 39 }, # FULL_LIFE_G
+	{ stats_address = 0x50F4B0, name_address = 0x2698243, name_length = 6, desc_address = 0x269875B, desc_length = 31 }, # FIRE_G
+	{ stats_address = 0x50F4CC, name_address = 0x269824A, name_length = 6, desc_address = 0x269877B, desc_length = 26 }, # FIRA_G
+	{ stats_address = 0x50F4E8, name_address = 0x2698251, name_length = 8, desc_address = 0x2698796, desc_length = 27 }, # FIRAGA_G
+	{ stats_address = 0x50F504, name_address = 0x269825A, name_length = 7, desc_address = 0x26987B2, desc_length = 28 }, # FLARE_G
+	{ stats_address = 0x50F520, name_address = 0x2698262, name_length = 6, desc_address = 0x26987CF, desc_length = 29 }, # HOLY_G
+	{ stats_address = 0x50F53C, name_address = 0x2698269, name_length = 10, desc_address = 0x26987ED, desc_length = 37 }, # PROTECT_G_1
+	{ stats_address = 0x50F558, name_address = 0x2698274, name_length = 10, desc_address = 0x2698813, desc_length = 37 }, # PROTECT_G_2
+	{ stats_address = 0x50F574, name_address = 0x269827F, name_length = 10, desc_address = 0x2698839, desc_length = 37 }, # PROTECT_G_3
+	{ stats_address = 0x50F590, name_address = 0x269828A, name_length = 10, desc_address = 0x269885F, desc_length = 37 }, # PROTECT_G_4
+	{ stats_address = 0x50F5AC, name_address = 0x2698295, name_length = 10, desc_address = 0x2698885, desc_length = 37 }, # PROTECT_G_5
+	{ stats_address = 0x50F5C8, name_address = 0x26982A0, name_length = 10, desc_address = 0x26988AB, desc_length = 37 }, # PROTECT_G_6
+	{ stats_address = 0x50F5E4, name_address = 0x26982AB, name_length = 10, desc_address = 0x26988D1, desc_length = 37 }, # PROTECT_G_7
+	{ stats_address = 0x50F600, name_address = 0x26982B6, name_length = 10, desc_address = 0x26988F7, desc_length = 37 }, # PROTECT_G_8
+	{ stats_address = 0x50F61C, name_address = 0x26982C1, name_length = 8, desc_address = 0x269891D, desc_length = 28 }, # SHELL_G_1
+	{ stats_address = 0x50F638, name_address = 0x26982CA, name_length = 8, desc_address = 0x269893A, desc_length = 28 }, # SHELL_G_2
+	{ stats_address = 0x50F654, name_address = 0x26982D3, name_length = 8, desc_address = 0x2698957, desc_length = 28 }, # SHELL_G_3
+	{ stats_address = 0x50F670, name_address = 0x26982DC, name_length = 8, desc_address = 0x2698974, desc_length = 28 }, # SHELL_G_4
+	{ stats_address = 0x50F68C, name_address = 0x26982E5, name_length = 8, desc_address = 0x2698991, desc_length = 28 }, # SHELL_G_5
+	{ stats_address = 0x50F6A8, name_address = 0x26982EE, name_length = 8, desc_address = 0x26989AE, desc_length = 28 }, # SHELL_G_6
+	{ stats_address = 0x50F6C4, name_address = 0x26982F7, name_length = 8, desc_address = 0x26989CB, desc_length = 28 }, # SHELL_G_7
+	{ stats_address = 0x50F6E0, name_address = 0x2698300, name_length = 8, desc_address = 0x26989E8, desc_length = 28 }, # SHELL_G_8
+	{ stats_address = 0x50F6FC, name_address = 0x2698309, name_length = 9, desc_address = 0x2698A05, desc_length = 37 }, # DISPEL_G_1
+	{ stats_address = 0x50F718, name_address = 0x2698313, name_length = 9, desc_address = 0x2698A2B, desc_length = 37 }, # DISPEL_G_2
+	{ stats_address = 0x50F734, name_address = 0x269831D, name_length = 9, desc_address = 0x2698A51, desc_length = 37 }, # DISPEL_G_3
+	{ stats_address = 0x50F750, name_address = 0x2698327, name_length = 9, desc_address = 0x2698A77, desc_length = 37 }, # DISPEL_G_4
+	{ stats_address = 0x50F76C, name_address = 0x2698331, name_length = 9, desc_address = 0x2698A9D, desc_length = 37 }, # DISPEL_G_5
+	{ stats_address = 0x50F788, name_address = 0x269833B, name_length = 9, desc_address = 0x2698AC3, desc_length = 37 }, # DISPEL_G_6
+	{ stats_address = 0x50F7A4, name_address = 0x2698345, name_length = 9, desc_address = 0x2698AE9, desc_length = 37 }, # DISPEL_G_7
+	{ stats_address = 0x50F7C0, name_address = 0x269834F, name_length = 9, desc_address = 0x2698B0F, desc_length = 37 }, # DISPEL_G_8
+	{ stats_address = 0x50F7DC, name_address = 0x2698359, name_length = 9, desc_address = 0x2698B35, desc_length = 34 }, # AERORA_G_1
+	{ stats_address = 0x50F7F8, name_address = 0x2698363, name_length = 9, desc_address = 0x2698B58, desc_length = 34 }, # AERORA_G_2
+	{ stats_address = 0x50F814, name_address = 0x269836D, name_length = 9, desc_address = 0x2698B7B, desc_length = 25 }, # AERORA_G_3
+	{ stats_address = 0x50F830, name_address = 0x2698377, name_length = 9, desc_address = 0x2698B95, desc_length = 25 }, # AERORA_G_4
+	{ stats_address = 0x50F84C, name_address = 0x2698381, name_length = 10, desc_address = 0x2698BAF, desc_length = 33 }, # TORNADO_G_1
+	{ stats_address = 0x50F868, name_address = 0x269838C, name_length = 10, desc_address = 0x2698BD1, desc_length = 33 }, # TORNADO_G_2
+	{ stats_address = 0x50F884, name_address = 0x2698397, name_length = 8, desc_address = 0x2698BF3, desc_length = 25 }, # FLOAT_G_1
+	{ stats_address = 0x50F8A0, name_address = 0x26983A0, name_length = 8, desc_address = 0x2698C0D, desc_length = 25 }, # AERO_G_1
+	{ stats_address = 0x50F8BC, name_address = 0x26983A9, name_length = 7, desc_address = 0x2698C27, desc_length = 28 }, # AERO_G_2
+	{ stats_address = 0x50F8D8, name_address = 0x26983B1, name_length = 7, desc_address = 0x2698C44, desc_length = 28 }, # AERO_G_3
+	{ stats_address = 0x50F8F4, name_address = 0x26983B9, name_length = 7, desc_address = 0x2698C61, desc_length = 28 }, # AERO_G_4
+	{ stats_address = 0x50F910, name_address = 0x26983C1, name_length = 8, desc_address = 0x2698C7E, desc_length = 29 }, # DRAIN_G_1
+	{ stats_address = 0x50F92C, name_address = 0x26983CA, name_length = 8, desc_address = 0x2698C9C, desc_length = 29 }, # DRAIN_G_2
+	{ stats_address = 0x50F948, name_address = 0x26983D3, name_length = 9, desc_address = 0x2698CBA, desc_length = 35 }, # OSMOSE_G_1
+	{ stats_address = 0x50F964, name_address = 0x26983DD, name_length = 9, desc_address = 0x2698CDE, desc_length = 35 }, # OSMOSE_G_2
+	{ stats_address = 0x50F980, name_address = 0x26983E7, name_length = 11, desc_address = 0x2698D02, desc_length = 30 }, # TRANSFORM_G
+	{ stats_address = 0x50F99C, name_address = 0x26983F3, name_length = 6, desc_address = 0x2698D21, desc_length = 13 }, # WARP_G
+	{ stats_address = 0x50F9B8, name_address = 0x26983FA, name_length = 7, desc_address = 0x2698D2F, desc_length = 23 }, # SCAN_G_1
+	{ stats_address = 0x50F9D4, name_address = 0x2698402, name_length = 7, desc_address = 0x2698D47, desc_length = 33 }, # SCAN_G_2
+	{ stats_address = 0x50F9F0, name_address = 0x269840A, name_length = 7, desc_address = 0x2698D69, desc_length = 38 }, # HASTE_G
+	{ stats_address = 0x50FA0C, name_address = 0x2698412, name_length = 8, desc_address = 0x2698D90, desc_length = 38 }, # HASTE2_G
+	{ stats_address = 0x50FA28, name_address = 0x269841B, name_length = 8, desc_address = 0x2698DB7, desc_length = 33 }, # SHIELD_G
+	{ stats_address = 0x50FA44, name_address = 0x2698424, name_length = 9, desc_address = 0x2698DD9, desc_length = 37 }, # SHIELD2_G
+	{ stats_address = 0x50FA60, name_address = 0x269842E, name_length = 8, desc_address = 0x2698DFF, desc_length = 31 }, # ESUNA_G_1
+	{ stats_address = 0x50FA7C, name_address = 0x2698437, name_length = 8, desc_address = 0x2698E1F, desc_length = 31 }, # ESUNA_G_2
+	{ stats_address = 0x50FA98, name_address = 0x2698440, name_length = 9, desc_address = 0x2698E3F, desc_length = 13 }, # THUNDER_G
+	{ stats_address = 0x50FAB4, name_address = 0x269844A, name_length = 10, desc_address = 0x2698E4D, desc_length = 16 }, # THUNDARA_G
+	{ stats_address = 0x50FAD0, name_address = 0x2698455, name_length = 10, desc_address = 0x2698E5E, desc_length = 13 }, # THUNDAGA_G
+	{ stats_address = 0x50FAEC, name_address = 0x2698460, name_length = 7, desc_address = 0x2698E6C, desc_length = 12 }, # COMET_G
+	{ stats_address = 0x50FB08, name_address = 0x2698468, name_length = 8, desc_address = 0x2698E79, desc_length = 15 }, # METEOR_G
+	{ stats_address = 0x50FB24, name_address = 0x2698471, name_length = 8, desc_address = 0x2698E89, desc_length = 12 }, # ULTIMA_G
+	{ stats_address = 0x50FB40, name_address = 0x269847A, name_length = 5, desc_address = 0x2698E96, desc_length = 27 }, # SPRAY
+	{ stats_address = 0x50FB5C, name_address = 0x2698480, name_length = 7, desc_address = 0x2698EB2, desc_length = 35 }, # PALETTE
+	{ stats_address = 0x50FB78, name_address = 0x2698488, name_length = 8, desc_address = 0x2698ED6, desc_length = 18 }, # SYS_UP1
+	{ stats_address = 0x50FB94, name_address = 0x2698491, name_length = 8, desc_address = 0x2698EE9, desc_length = 19 }, # SYS_UP2
+	{ stats_address = 0x50FBB0, name_address = 0x269849A, name_length = 8, desc_address = 0x2698EFD, desc_length = 39 }, # COM_LV1
+	{ stats_address = 0x50FBCC, name_address = 0x26984A3, name_length = 8, desc_address = 0x2698F25, desc_length = 40 }, # COM_LV2
+	{ stats_address = 0x50FBE8, name_address = 0x26984AC, name_length = 8, desc_address = 0x2698F4E, desc_length = 41 }, # COM_LV3
+	{ stats_address = 0x50FC04, name_address = 0x26984B5, name_length = 7, desc_address = 0x2698F78, desc_length = 14 }, # KINGDOM
+	{ stats_address = 0x50FC20, name_address = 0x26984BD, name_length = 8, desc_address = 0x2698F87, desc_length = 15 }, # HYPERION
+	{ stats_address = 0x50FC3C, name_address = 0x26984C6, name_length = 8, desc_address = 0x2698F97, desc_length = 15 }, # GEPETTO
+	{ stats_address = 0x50FC58, name_address = 0x26984CF, name_length = 3, desc_address = 0x2698FA7, desc_length = 10 }, # CID
+	{ stats_address = 0x50FC74, name_address = 0x26984D3, name_length = 4, desc_address = 0x2698FB2, desc_length = 11 }, # LEON
+	{ stats_address = 0x50FC90, name_address = 0x26984D8, name_length = 6, desc_address = 0x2698FBE, desc_length = 13 }, # YUFFIE
+	{ stats_address = 0x50FCAC, name_address = 0x26984DF, name_length = 6, desc_address = 0x2698FCC, desc_length = 13 }, # AERITH
+	{ stats_address = 0x50FCC8, name_address = 0x26984E6, name_length = 7, desc_address = 0x2698FDA, desc_length = 14 }, # CACTUAR
+	{ stats_address = 0x50FCE4, name_address = 0x26984EE, name_length = 7, desc_address = 0x2698FE9, desc_length = 14 }, # CHOCOBO
+	{ stats_address = 0x50FD00, name_address = 0x26984F6, name_length = 5, desc_address = 0x2698FF8, desc_length = 12 }, # CINDY
+	{ stats_address = 0x50FD1C, name_address = 0x26984FC, name_length = 5, desc_address = 0x2699005, desc_length = 12 }, # SHIVA
+	{ stats_address = 0x50FD38, name_address = 0x2698502, name_length = 5, desc_address = 0x2699012, desc_length = 12 }, # LAMIA
+	{ stats_address = 0x50FD54, name_address = 0x2698508, name_length = 5, desc_address = 0x269901F, desc_length = 12 }, # SANDY
+	{ stats_address = 0x50FD70, name_address = 0x269850E, name_length = 5, desc_address = 0x269902C, desc_length = 12 }, # SYLPH
+	{ stats_address = 0x50FD8C, name_address = 0x2698514, name_length = 9, desc_address = 0x2699039, desc_length = 16 }, # CARBUNCLE
+	{ stats_address = 0x50FDA8, name_address = 0x269851E, name_length = 5, desc_address = 0x269904A, desc_length = 12 }, # MINDY
+	{ stats_address = 0x50FDC4, name_address = 0x2698524, name_length = 6, desc_address = 0x2699057, desc_length = 13 }, # GOBLIN
+	{ stats_address = 0x50FDE0, name_address = 0x269852B, name_length = 4, desc_address = 0x2699065, desc_length = 11 }, # BOMB
+	{ stats_address = 0x50FDFC, name_address = 0x2698530, name_length = 6, desc_address = 0x2699071, desc_length = 13 }, # REMORA
+	{ stats_address = 0x50FE18, name_address = 0x2698537, name_length = 7, desc_address = 0x269907F, desc_length = 14 }, # AHRIMAN
+	{ stats_address = 0x50FE34, name_address = 0x269853F, name_length = 3, desc_address = 0x269908E, desc_length = 10 }, # IMP
+	{ stats_address = 0x50FE50, name_address = 0x2698543, name_length = 5, desc_address = 0x2699099, desc_length = 12 }, # SIREN
+	{ stats_address = 0x50FE6C, name_address = 0x2698549, name_length = 8, desc_address = 0x26990A6, desc_length = 15 }, # STINGRAY
+	{ stats_address = 0x50FE88, name_address = 0x2698552, name_length = 10, desc_address = 0x26990B6, desc_length = 17 }, # CATOBLEPAS
+	{ stats_address = 0x50FEA4, name_address = 0x269855D, name_length = 7, desc_address = 0x26990C8, desc_length = 14 }, # ADAMANT
+	{ stats_address = 0x50FEC0, name_address = 0x2698565, name_length = 7, desc_address = 0x26990D7, desc_length = 14 }, # SERPENT
+	{ stats_address = 0x50FEDC, name_address = 0x269856D, name_length = 5, desc_address = 0x26990E6, desc_length = 12 }, # IFRIT
+	{ stats_address = 0x50FEF8, name_address = 0x2698573, name_length = 4, desc_address = 0x26990F3, desc_length = 11 }, # ODIN
+	{ stats_address = 0x50FF14, name_address = 0x2698578, name_length = 6, desc_address = 0x26990FF, desc_length = 13 }, # ATOMOS
+	{ stats_address = 0x50FF30, name_address = 0x269857F, name_length = 5, desc_address = 0x269910D, desc_length = 12 }, # GOLEM
+	{ stats_address = 0x50FF4C, name_address = 0x2698585, name_length = 7, desc_address = 0x269911A, desc_length = 14 }, # DIABLOS
+	{ stats_address = 0x50FF68, name_address = 0x269858D, name_length = 10, desc_address = 0x2699129, desc_length = 17 }, # DEATHGUISE
+	{ stats_address = 0x50FF84, name_address = 0x2698598, name_length = 7, desc_address = 0x269913B, desc_length = 14 }, # TYPHOON
+	{ stats_address = 0x50FFA0, name_address = 0x26985A0, name_length = 9, desc_address = 0x269914A, desc_length = 16 }, # ALEXANDER
+	{ stats_address = 0x50FFBC, name_address = 0x26985AA, name_length = 9, desc_address = 0x269915B, desc_length = 16 }, # LEVIATHAN
+	{ stats_address = 0x50FFD8, name_address = 0x26985B4, name_length = 5, desc_address = 0x269916C, desc_length = 12 }, # RAMUH
+	{ stats_address = 0x50FFF4, name_address = 0x26985BA, name_length = 5, desc_address = 0x2699179, desc_length = 12 }, # OMEGA
+	{ stats_address = 0x510010, name_address = 0x26985C0, name_length = 7, desc_address = 0x2699186, desc_length = 26 }, # MOOGLES
+	{ stats_address = 0x51002C, name_address = 0x26985C8, name_length = 7, desc_address = 0x26991A1, desc_length = 27 }, # VALEFOR
+	{ stats_address = 0x510048, name_address = 0x26985D0, name_length = 4, desc_address = 0x26991BD, desc_length = 24 }, # PUPU
+	{ stats_address = 0x510064, name_address = 0x26985D5, name_length = 8, desc_address = 0x26991D6, desc_length = 28 }, # CERBERUS
+	{ stats_address = 0x510080, name_address = 0x26985DE, name_length = 8, desc_address = 0x26991F3, desc_length = 28 }, # TONBERRY
+	{ stats_address = 0x51009C, name_address = 0x26985E7, name_length = 12, desc_address = 0x2699210, desc_length = 32 }, # PANDAEMONIUM
+	{ stats_address = 0x5100B8, name_address = 0x26985F4, name_length = 5, desc_address = 0x2699231, desc_length = 26 }, # IXION
+	{ stats_address = 0x5100D4, name_address = 0x26985FA, name_length = 9, desc_address = 0x269924C, desc_length = 29 }, # GILGAMESH
+	{ stats_address = 0x5100F0, name_address = 0x2698604, name_length = 7, desc_address = 0x269926A, desc_length = 27 }, # PHOENIX
+	{ stats_address = 0x51010C, name_address = 0x269860C, name_length = 4, desc_address = 0x2699286, desc_length = 25 }, # EDEN
+	{ stats_address = 0x510128, name_address = 0x2698611, name_length = 7, desc_address = 0x26992A0, desc_length = 27 }, # BAHAMUT
+
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+
+	{ stats_address = 0x510240, name_address = 0x2698622, name_length = 7, desc_addresses = 0x26992C5, desc_length = 19 }, # WHEEL_G
+	{ stats_address = 0x51025C, name_address = 0x269862A, name_length = 6, desc_address = 0x26992D9, desc_length = 18 }, # FANG_G
+	{ stats_address = 0x510278, name_address = 0x2698631, name_length = 6, desc_address = 0x26992EC, desc_length = 18 }, # HORN_G
+	{ stats_address = 0x510294, name_address = 0x2698638, name_length = 7, desc_address = 0x26992FF, desc_length = 18 }, # ANGEL_G
+	{ stats_address = 0x5102B0, name_address = 0x2698640, name_length = 6, desc_address = 0x2699312, desc_length = 18 }, # DARK_G
+	{ stats_address = 0x5102CC, name_address = 0x2698647, name_length = 7, desc_address = 0x2699325, desc_length = 27 }, # SHOES_G
+	{ stats_address = 0x5102E8, name_address = 0x269864F, name_length = 7, desc_address = 0x2699341, desc_length = 28 }, # ROCK_G_1
+	{ stats_address = 0x510304, name_address = 0x2698657, name_length = 7, desc_address = 0x269935E, desc_length = 28 }, # ROCK_G_2
+	{ stats_address = 0x510320, name_address = 0x269865F, name_length = 11, desc_address = 0x269937B, desc_length = 28 }, # SCISSORS_G_1
+	{ stats_address = 0x51033C, name_address = 0x269866B, name_length = 11, desc_address = 0x2699398, desc_length = 28 }, # SCISSORS_G_2
+	{ stats_address = 0x510358, name_address = 0x2698677, name_length = 8, desc_address = 0x26993B5, desc_length = 28 }, # PAPER_G_1
+	{ stats_address = 0x510374, name_address = 0x2698680, name_length = 8, desc_address = 0x26993D2, desc_length = 28 }, # PAPER_G_2
+	{ stats_address = 0x510390, name_address = 0x2698689, name_length = 7, desc_address = 0x26993EF, desc_length = 19 }, # CROWN_G
+	{ stats_address = 0x5103AC, name_address = 0x2698691, name_length = 7, desc_address = 0x2699403, desc_length = 19 }, # DRILL_G
+	{ stats_address = 0x5103C8, name_address = 0x2698699, name_length = 14, desc_address = 0x2699417, desc_length = 25 }, # CATERPILLAR_G_1
+	{ stats_address = 0x5103E4, name_address = 0x26986A8, name_length = 14, desc_address = 0x2699431, desc_length = 25 }, # CATERPILLAR_G_2
+
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 }, # unused
+	{ stats_address = 0x0, name_address = 0x0, name_length = 0, desc_addresses = 0x0, desc_length = 0 } # unused
+]
 
 [scene]
 loaded_gameobjects = 0x2D59D30
@@ -40,6 +206,7 @@ loaded_gameobjects = 0x2D59D30
 on_attack = { address = 0x2B2DC0, size = 5 } # rbx = command_stats_pointer, rcx = gameobject_address
 on_get_hit = { address = 0x2A49C5, size = 3 } # rbx = new current_hp, rsi = gameobject_address, rax = party_stat_page_address, rdi = stat_page_address, 255 - r14 = damage, rdx = 4to8Base
 on_get_reward = { address = 0x2B55E6, size = 3 } # rcx = reward_id
+on_get_char = { address = 0x2EBF10, size = 3 } # rsi = char_address
 
 [memory]
 base_4to8 = 0x2EE3980

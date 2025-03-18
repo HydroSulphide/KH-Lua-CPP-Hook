@@ -50,7 +50,7 @@ LONG WINAPI custom_code_handler(EXCEPTION_POINTERS *pExceptionInfo) {
 		auto it = hook_map.find(exception_address);
 		if (it != hook_map.end()) {
 			HookInfo &hook = it->second;
-			print_message_line(std::format("Breakpoint hit at address: 0x{:X}", exception_address), MESSAGE_NONE);
+			//print_message_line(std::format("Breakpoint hit at address: 0x{:X}", exception_address), MESSAGE_NONE);
 
 			// Execute the custom logic
 			if (hook.custom_logic) {

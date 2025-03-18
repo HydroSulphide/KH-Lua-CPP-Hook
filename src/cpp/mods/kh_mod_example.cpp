@@ -10,7 +10,121 @@ KH_MOD on_init() {
 	print_line("on_init()");
 }
 
+//std::string gummis[] = {"CURE_G", "CURAGA_G", "LIFE_G", "FULL_LIFE_G", "FIRE_G", "FIRA_G",	  "FIRAGA_G", "FLARE_G", "HOLY_G", "PROTECT_G_1", "PROTECT_G_2", "PROTECT_G_3", "PROTECT_G_4", "PROTECT_G_5", "PROTECT_G_6", "PROTECT_G_7", "PROTECT_G_8", "SHELL_G_1", "SHELL_G_2", "SHELL_G_3", "SHELL_G_4", "SHELL_G_5", "SHELL_G_6",  "SHELL_G_7", "SHELL_G_8", "DISPEL_G_1", "DISPEL_G_2", "DISPEL_G_3", "DISPEL_G_4", "DISPEL_G_5", "DISPEL_G_6", "DISPEL_G_7", "DISPEL_G_8", "AERORA_G_1",	"AERORA_G_2", "AERORA_G_3", "AERORA_G_4", "TORNADO_G_1", "TORNADO_G_2", "FLOAT_G_1", "AERO_G_1", "AERO_G_2", "AERO_G_3", "AERO_G_4", "DRAIN_G_1", "DRAIN_G_2", "OSMOSE_G_1", "OSMOSE_G_2", "TRANSFORM_G", "WARP_G", "SCAN_G_1", "SCAN_G_2", "HASTE_G", "HASTE2_G_", "SHIELD_G", "SHIELD2_G", "ESUNA_G_1",	 "ESUNA_G_2",	 "THUNDER_G", "THUNDARA_G", "THUNDAGA_G", "COMET_G", "METEOR_G",		"ULTIMA_G",		   "SPRAY",		"PALETTE",	 "SYS_UP1",	  "SYS_UP2",   "COM_LV1",	"COM_LV2",	 "COM_LV3",	  "KINGDOM",   "HYPERION",	"GEPETTO",	 "CID",		  "LEON",	   "YUFFIE",	"AERITH",	 "CACTUAR",	  "CHOCOBO",
+//						"CINDY",  "SHIVA",	  "LAMIA",	"SANDY",	   "SYLPH",	 "CARBUNCLE", "MINDY",	  "GOBLIN",	 "BOMB",   "REMORA",	  "AHRIMAN",	 "IMP",			"SIREN",	   "STINGRAY",	  "CATOBLEPAS",	 "ADAMANT",		"SERPENT",	   "IFRIT",		"ODIN",		 "ATOMOS",	  "GOLEM",	   "DIABLOS",	"DEATHGUISE", "TYPHOON",   "ALEXANDER", "LEVIATHAN",  "RAMUH",		"OMEGA",	  "MOOGLES",	"VALEFOR",	  "PUPU",		"CERBERUS",	  "TONBERRY",	"PANDAEMONIUM", "IXION",	  "GILGAMESH",	"PHOENIX",	  "EDEN",		 "BAHAMUT",		"unused_1",	 "unused_2", "unused_3", "unused_4", "unused_5", "unused_6",  "unused_7",  "unused_8",	 "unused_9",   "WHEEL_G",	  "FANG_G", "HORN_G",	"ANGEL_G",	"DARK_G",  "SHOES_G",	"ROCK_G_1", "ROCK_G_2",	 "SCISSORS_G_1", "SCISSORS_G_2", "PAPER_G_1", "PAPER_G_2",	"CROWN_G",	  "DRILL_G", "CATERPILLAR_G_1", "CATERPILLAR_G_2", "unused_10", "unused_11", "unused_12", "unused_13", "unused_14", "unused_15", "unused_16", "unused_17", "unused_18", "unused_19", "unused_20", "unused_21", "unused_22", "unused_23", "unused_24", "unused_25"};
+
 KH_MOD on_frame() {
+	// TEST GUMMIS:
+
+	KHGummi *gummis = get_gummis();
+
+	// Test without special character and without repointing
+	set_gummi_name(&gummis[CURE_G], L"Nice-G");
+	set_gummi_description(&gummis[CURE_G], L"Short Description.");
+
+	// Test with special character and repointing
+	std::wstring new_fire_g_name = L"LONG» " KH_SYMBOL_ACCESSORY L" «NAME";
+	set_gummi_name(&gummis[FIRE_G], new_fire_g_name.c_str());
+
+	std::wstring new_fire_g_desc = L"This is a " KH_SYMBOL_ABILITY_STARS L"long" KH_SYMBOL_ABILITY_STARS L" sentence to test\nSpecial Characters and Repointing!";
+	set_gummi_description(&gummis[FIRE_G], new_fire_g_desc.c_str());
+
+	//KHGummiStats *fire_g_stats = gummis[FIRE_G].stats;
+	//print_line(format("\nFIRE_G:\n\tLimit: {:d}", fire_g_stats->limit));
+	//fire_g_stats->price_buy = 1;
+	//fire_g_stats->limit = 35;
+
+	// Print GUMMI NAMES:
+	//uint64_t base_addr = 0x7ff7C0400000;
+	//uint64_t start_addr = 0x7FF7C2A98622;
+	//uint64_t stats_addr = 0x510240;
+	//vector<uint64_t> stats_addresses;
+	//vector<uint64_t> name_addresses;
+	//vector<int> name_lengths;
+	//vector<uint64_t> desc_addresses;
+	//vector<int> desc_lengths;
+	//uint64_t name_addr = start_addr;
+	//uint64_t curr_pointer = name_addr;
+	//int curr_char_count = 0;
+	//int count = 0x80;
+	//int length = 0;
+	//bool found_zero_byte = false;
+	//while (true) {
+	//	if (*(reinterpret_cast<uint8_t *>(curr_pointer)) != 0x0) {
+	//		length++;
+	//		curr_pointer++;
+	//		found_zero_byte = false;
+	//	} else {
+	//		//print_line(format("{{ stats_address = 0x{:X}, name_address = 0x{:X}, name_length = {:d} }} # {}", stats_addr, name_addr - base_addr, length, gummis[count]));
+	//		stats_addresses.push_back(stats_addr);
+	//		name_addresses.push_back(name_addr - base_addr);
+	//		name_lengths.push_back(length);
+	//		
+	//		stats_addr += 0x1C;
+	//		//stingray_name = { address = 0x7FF7C2A98549, length = 8 }
+	//		length = 0,
+	//		curr_pointer++;
+	//		count++;
+	//		name_addr = curr_pointer;
+	//		if (found_zero_byte) {
+	//			break;
+	//		}
+	//		found_zero_byte = true;
+	//	}
+	//}
+
+	//start_addr = 0x7FF7C2A992C5;
+	//uint64_t desc_addr = start_addr;
+	//curr_pointer = desc_addr;
+	//curr_char_count = 0;
+	//count = 0x80;
+	//length = 0;
+	//found_zero_byte = false;
+	//while (true) {
+	//	if (*(reinterpret_cast<uint8_t *>(curr_pointer)) != 0x0) {
+	//		length++;
+	//		curr_pointer++;
+	//		found_zero_byte = false;
+	//	} else {
+	//		// print_line(format("{{ stats_address = 0x{:X}, name_address = 0x{:X}, name_length = {:d} }} # {}", stats_addr, name_addr - base_addr, length, gummis[count]));
+	//		desc_addresses.push_back(desc_addr - base_addr);
+	//		desc_lengths.push_back(length);
+
+	//		stats_addr += 0x1C;
+	//		// stingray_name = { address = 0x7FF7C2A98549, length = 8 }
+	//		length = 0, curr_pointer++;
+	//		count++;
+	//		desc_addr = curr_pointer;
+	//		if (found_zero_byte) {
+	//			break;
+	//		}
+	//		found_zero_byte = true;
+	//	}
+	//}
+
+	//for (int i = 0; i < stats_addresses.size(); i++) {
+	//	print_line(format("{{ stats_address = 0x{:X}, name_address = 0x{:X}, name_length = {:d}, desc_addresses = 0x{:X}, desc_length = {:d} }} # {}", stats_addresses[i], name_addresses[i], name_lengths[i], desc_addresses[i], desc_lengths[i], gummis[i+0x80]));
+	//}
+
+
+
+	// Print GUMMI STATS:
+	//uint64_t start_addr = 0x7FF74247F440;
+	//for (int i = 0; i < 0x90; i++) {
+	//	uint64_t gummi_addr = start_addr + i * 0x1C;
+	//	 Start with the first 4 bytes as characters
+	//	std::string output = std::format("{:.4s}: ", reinterpret_cast<const char *>(gummi_addr));
+
+	//	 Append the next 0x18 (24) bytes as hex values
+	//	for (size_t i = 0; i < 0x18; ++i) {
+	//		output += std::format("{:02X} ", *(reinterpret_cast<uint8_t *>(gummi_addr + 4 + i)));
+	//	}
+
+	//	 Print everything in one call (avoiding multiple new lines)
+	//	print_line(output);
+	//}
+
+
 	// TEST INVENTORY:
 	//KHInventory *inventory = get_inventory();
 	//print_line(std::format("Inventory:\n\tMunny: {:d}\n\tPotion: {:d}\n\tCure G: {:d}", *(inventory->munny), inventory->item_stock->potion, inventory->gummi_stock->cure_g));
