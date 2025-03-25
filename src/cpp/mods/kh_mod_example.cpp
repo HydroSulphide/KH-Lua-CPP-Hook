@@ -8,41 +8,62 @@ string mod_version = "1.0.0";
 
 KH_MOD on_init() {
 	print_line("on_init()");
+	skip_splash_screen(true);
+
+	// TEST ITEMS:
+	 KHItem *items = get_items();
+	 set_item_name(&items[POTION], L"New Potion Name");
+	 set_item_description(&items[1], L"New Potion Description.");
+
+	 items[ONE_WINGED_ANGEL].weapon_stats->strength = 15;
+	 items[ONE_WINGED_ANGEL].weapon_stats->mp = 5;
+	 set_weapon_model(&items[SPELLBINDER], KH_WEAPON_MODEL_DREAM_SWORD_SORA);
+
+	 items[SEVEN_ELEMENTS].weapon_stats->strength = 20;
+	 items[SEVEN_ELEMENTS].weapon_stats->mp = 10;
+	 set_item_description(&items[SEVEN_ELEMENTS], L"A shield that focuses solely on\nmagic. Raises max MP by " KH_SYMBOL_MICKEY_MOUSE L"10" KH_SYMBOL_MICKEY_MOUSE L".");
+
+	 items[POTION].item_stats->strength = 10;
+
+	 items[OBSIDIAN_RING].accessory_stats->hp = 10;
+	 items[OBSIDIAN_RING].accessory_stats->mp = 5;
+	 items[OBSIDIAN_RING].accessory_stats->strength = 10;
+	 items[OBSIDIAN_RING].accessory_stats->defense = 7;
+	 items[OBSIDIAN_RING].accessory_stats->ap = 10;
+	 items[OBSIDIAN_RING].accessory_stats->dark_resistance = 50;
+
+	  //TEST GUMMIS:
+	  KHGummi *gummis = get_gummis();
+	  // Test without special character and without repointing
+	  set_gummi_name(&gummis[CURE_G], L"Nice-G");
+	  set_gummi_description(&gummis[CURE_G], L"Short Description.");
+
+	  // Test with special character and repointing
+	  std::wstring new_fire_g_name = L"LONG» " KH_SYMBOL_ACCESSORY L" «NAME";
+	  set_gummi_name(&gummis[FIRE_G], new_fire_g_name.c_str());
+
+	  std::wstring new_fire_g_desc = L"This is a " KH_SYMBOL_ABILITY_STARS L"long" KH_SYMBOL_ABILITY_STARS L" sentence to test\nSpecial Characters and Repointing!";
+	  set_gummi_description(&gummis[FIRE_G], new_fire_g_desc.c_str());
+
+	  print_line(format("Cure-G size: {:x}", gummis[CURE_G].stats->size)); // x {:d} x {:d}", gummis[CURE_G].stats->gummi_size.width, gummis[CURE_G].stats->gummi_size.height, gummis[CURE_G].stats->gummi_size.length));
+	  gummis[CURE_G].stats->gummi_size.width = 3;
+	  gummis[CURE_G].stats->gummi_size.height = 2;
+	  gummis[CURE_G].stats->gummi_size.length = 0;
+
+	  KHGummiStats *fire_g_stats = gummis[FIRE_G].stats;
+	  print_line(format("\nFIRE_G:\n\tLimit: {:d}", fire_g_stats->limit));
+	  fire_g_stats->price_buy = 1;
+	  fire_g_stats->limit = 35;
 }
 
 //std::string gummis[] = {"CURE_G", "CURAGA_G", "LIFE_G", "FULL_LIFE_G", "FIRE_G", "FIRA_G",	  "FIRAGA_G", "FLARE_G", "HOLY_G", "PROTECT_G_1", "PROTECT_G_2", "PROTECT_G_3", "PROTECT_G_4", "PROTECT_G_5", "PROTECT_G_6", "PROTECT_G_7", "PROTECT_G_8", "SHELL_G_1", "SHELL_G_2", "SHELL_G_3", "SHELL_G_4", "SHELL_G_5", "SHELL_G_6",  "SHELL_G_7", "SHELL_G_8", "DISPEL_G_1", "DISPEL_G_2", "DISPEL_G_3", "DISPEL_G_4", "DISPEL_G_5", "DISPEL_G_6", "DISPEL_G_7", "DISPEL_G_8", "AERORA_G_1",	"AERORA_G_2", "AERORA_G_3", "AERORA_G_4", "TORNADO_G_1", "TORNADO_G_2", "FLOAT_G_1", "AERO_G_1", "AERO_G_2", "AERO_G_3", "AERO_G_4", "DRAIN_G_1", "DRAIN_G_2", "OSMOSE_G_1", "OSMOSE_G_2", "TRANSFORM_G", "WARP_G", "SCAN_G_1", "SCAN_G_2", "HASTE_G", "HASTE2_G_", "SHIELD_G", "SHIELD2_G", "ESUNA_G_1",	 "ESUNA_G_2",	 "THUNDER_G", "THUNDARA_G", "THUNDAGA_G", "COMET_G", "METEOR_G",		"ULTIMA_G",		   "SPRAY",		"PALETTE",	 "SYS_UP1",	  "SYS_UP2",   "COM_LV1",	"COM_LV2",	 "COM_LV3",	  "KINGDOM",   "HYPERION",	"GEPETTO",	 "CID",		  "LEON",	   "YUFFIE",	"AERITH",	 "CACTUAR",	  "CHOCOBO",
 //						"CINDY",  "SHIVA",	  "LAMIA",	"SANDY",	   "SYLPH",	 "CARBUNCLE", "MINDY",	  "GOBLIN",	 "BOMB",   "REMORA",	  "AHRIMAN",	 "IMP",			"SIREN",	   "STINGRAY",	  "CATOBLEPAS",	 "ADAMANT",		"SERPENT",	   "IFRIT",		"ODIN",		 "ATOMOS",	  "GOLEM",	   "DIABLOS",	"DEATHGUISE", "TYPHOON",   "ALEXANDER", "LEVIATHAN",  "RAMUH",		"OMEGA",	  "MOOGLES",	"VALEFOR",	  "PUPU",		"CERBERUS",	  "TONBERRY",	"PANDAEMONIUM", "IXION",	  "GILGAMESH",	"PHOENIX",	  "EDEN",		 "BAHAMUT",		"unused_1",	 "unused_2", "unused_3", "unused_4", "unused_5", "unused_6",  "unused_7",  "unused_8",	 "unused_9",   "WHEEL_G",	  "FANG_G", "HORN_G",	"ANGEL_G",	"DARK_G",  "SHOES_G",	"ROCK_G_1", "ROCK_G_2",	 "SCISSORS_G_1", "SCISSORS_G_2", "PAPER_G_1", "PAPER_G_2",	"CROWN_G",	  "DRILL_G", "CATERPILLAR_G_1", "CATERPILLAR_G_2", "unused_10", "unused_11", "unused_12", "unused_13", "unused_14", "unused_15", "unused_16", "unused_17", "unused_18", "unused_19", "unused_20", "unused_21", "unused_22", "unused_23", "unused_24", "unused_25"};
 
 KH_MOD on_frame() {
-	// TEST ITEMS:
-	KHItem *items = get_items();
-	print_line(format("Potion Strength: {:d}", items[1].item_stats->strength));
-	print_line(format("POTION NAME ADDRESS: 0x{:X}", reinterpret_cast<uint64_t>(items[1].name)));
-	set_item_name(&items[POTION], L"New Potion Name");
-	set_item_description(&items[1], L"New Potion Description.");
+	print_line("on_frame()");
 
-	// TEST GUMMIS:
-	//KHGummi *gummis = get_gummis();
-	//// Test without special character and without repointing
-	//set_gummi_name(&gummis[CURE_G], L"Nice-G");
-	//set_gummi_description(&gummis[CURE_G], L"Short Description.");
 
-	//// Test with special character and repointing
-	//std::wstring new_fire_g_name = L"LONG» " KH_SYMBOL_ACCESSORY L" «NAME";
-	//set_gummi_name(&gummis[FIRE_G], new_fire_g_name.c_str());
 
-	//std::wstring new_fire_g_desc = L"This is a " KH_SYMBOL_ABILITY_STARS L"long" KH_SYMBOL_ABILITY_STARS L" sentence to test\nSpecial Characters and Repointing!";
-	//set_gummi_description(&gummis[FIRE_G], new_fire_g_desc.c_str());
-
-	//print_line(format("Cure-G size: {:x}", gummis[CURE_G].stats->size)); // x {:d} x {:d}", gummis[CURE_G].stats->gummi_size.width, gummis[CURE_G].stats->gummi_size.height, gummis[CURE_G].stats->gummi_size.length));
-	//gummis[CURE_G].stats->gummi_size.width = 3;
-	//gummis[CURE_G].stats->gummi_size.height = 2;
-	//gummis[CURE_G].stats->gummi_size.length = 0;
-
-	//KHGummiStats *fire_g_stats = gummis[FIRE_G].stats;
-	//print_line(format("\nFIRE_G:\n\tLimit: {:d}", fire_g_stats->limit));
-	//fire_g_stats->price_buy = 1;
-	//fire_g_stats->limit = 35;
 
 	// Print GUMMI NAMES:
 	//uint64_t base_addr = 0x7ff7C0400000;

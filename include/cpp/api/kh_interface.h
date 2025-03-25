@@ -36,4 +36,8 @@ void init_kh_attributes(uint64_t sora_attr_addr, uint64_t donald_attr_addr, uint
 void init_kh_gummis(std::vector<TOMLKHGummi> gummis_toml_data);
 void init_kh_items(std::vector<TOMLKHItem> items_toml_data);
 
-void init_kh_item_name(size_t index, uint64_t name_address, size_t name_length);
+void init_kh_item_names_offset_address(uint64_t item_names_offset_addr);
+void init_kh_item_names();
+
+void init_kh_splash_screen_done_flag(uint64_t splash_screen_done_flag_address);
+void on_splash_screen();

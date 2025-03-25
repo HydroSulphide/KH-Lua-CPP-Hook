@@ -68,12 +68,17 @@ __declspec(dllimport) KHAttributes *get_peter_pan_attributes();
 __declspec(dllimport) KHAttributes *get_beast_attributes();
 
 __declspec(dllimport) KHInventory *get_inventory();
+
 __declspec(dllimport) KHGummi *get_gummis();
 __declspec(dllimport) void set_gummi_name(KHGummi *gummi, const wchar_t *new_name);
 __declspec(dllimport) void set_gummi_description(KHGummi *gummi, const wchar_t *new_desc);
+
 __declspec(dllimport) KHItem *get_items();
-__declspec(dllexport) void set_item_name(KHItem *item, const wchar_t *new_name);
-__declspec(dllexport) void set_item_description(KHItem *item, const wchar_t *new_desc);
+__declspec(dllimport) void set_item_name(KHItem *item, const wchar_t *new_name);
+__declspec(dllimport) void set_item_description(KHItem *item, const wchar_t *new_desc);
+__declspec(dllimport) void set_weapon_model(KHItem *item, const char *new_model_string);
+
+__declspec(dllimport) void skip_splash_screen(bool skip);
 }
 
 inline void print(const string &text, MessageType message_type = MESSAGE_NONE) {

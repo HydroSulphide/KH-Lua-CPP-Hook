@@ -7,5 +7,5 @@ string mod_description = "This is a setup mod, that is loaded and executed befor
 string mod_version = "0.1";
 
 KH_MOD on_init() {
-	print_line("Initializing Mod Setup ...");
+	print_line("on_init()");
 }

@@ -27,6 +27,7 @@ const std::string loaded_mods_path = "KHMemoryHook/loaded_mods";
 
 struct KHMod {
 	HMODULE module;
+	OnInitFunc on_init;
 	OnFrameFunc on_frame;
 	OnGetHitFunc on_get_hit;
 	OnAttackFunc on_attack;
@@ -77,31 +78,17 @@ void on_get_char_cpp(CONTEXT *ctx) {
 	}
 }
 
-void check_item_names_loaded(uint64_t item_names_offset_address) {
-	uint32_t item_names_offset = *reinterpret_cast<uint32_t *>(item_names_offset_address);
-	while (item_names_offset == 0) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		item_names_offset = *reinterpret_cast<uint32_t *>(item_names_offset_address);
+void on_splash_screen_cpp([[maybe_unused]] CONTEXT *ctx) {
+	init_kh_item_names();
+
+	// Initialize mods
+	for (const auto &mod : loaded_mods) {
+		if (mod.on_init) {
+			mod.on_init();
+		}
 	}
-	uint8_t *item_names = reinterpret_cast<uint8_t *>(MemoryLib::get_4to8_pointer(item_names_offset));
-	print_message_line("Item Names loaded!");
 
-	// TODO: Init KHItem names (maybe call on_item_names_loaded on all mods?)
-	for (size_t i = 0; i < 255; i++) {
-		std::wstring item_name = kh_to_c_string(item_names);
-		uint64_t item_name_address = reinterpret_cast<uint64_t>(item_names);
-		print_message_line(std::format("ITEM {:X}: {:X}", i + 1, item_name_address));//reinterpret_cast<uint64_t>(item_names)));
-		print_message("\"");
-		print_message_w(item_name);
-		print_message("\"");
-		print_message_line(",");
-
-		init_kh_item_name(i+1, item_name_address, item_name.length());
-		//items[i].name = reinterpret_cast<uint8_t *>(item_name_address);
-		//items[i].name_length = item_name.length();
-
-		item_names += item_name.length() + 1;
-	}
+	on_splash_screen();
 }
 
 bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
@@ -118,9 +105,10 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		init_kh_inventory(base_address + offsets["inventory"]["item_stock"].value_or(0), base_address + offsets["inventory"]["gummi_stock"].value_or(0), base_address + offsets["inventory"]["munny"].value_or(0));
 		init_kh_party(base_address + offsets["party"]["shared_abilities"].value_or(0), base_address + offsets["party"]["magic_tiers"].value_or(0), base_address + offsets["party"]["exp_multiplier"].value_or(0), base_address + offsets["party"]["lvlup_tables"].value_or(0));
 		init_kh_attributes(base_address + offsets["attributes"]["sora"].value_or(0), base_address + offsets["attributes"]["donald"].value_or(0), base_address + offsets["attributes"]["goofy"].value_or(0), base_address + offsets["attributes"]["tarzan"].value_or(0), base_address + offsets["attributes"]["aladdin"].value_or(0), base_address + offsets["attributes"]["ariel"].value_or(0), base_address + offsets["attributes"]["jack"].value_or(0), base_address + offsets["attributes"]["peter_pan"].value_or(0), base_address + offsets["attributes"]["beast"].value_or(0));
-
+		
 		std::vector<TOMLKHGummi> gummis_toml_data;
 		if (auto gummi_entries = offsets["items"]["gummis"].as_array()) {
+
 			for (const auto &value : *gummi_entries) {
 				const toml::table &entry_table = *value.as_table();
 
@@ -137,10 +125,6 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		}
 		init_kh_gummis(gummis_toml_data);
 
-		// TODO: load item stats addresses and init_kh_items
-		std::thread item_names_checker(check_item_names_loaded, base_address + offsets["items"]["names"].value_or(0));
-		item_names_checker.detach();
-
 		std::vector<TOMLKHItem> items_toml_data;
 		if (auto item_entries = offsets["items"]["item_stats"].as_array()) {
 			for (const auto &value : *item_entries) {
@@ -152,7 +136,11 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 			}
 		}
 		init_kh_items(items_toml_data);
-		
+		init_kh_item_names_offset_address(base_address + offsets["items"]["names"].value_or(0));
+
+		init_kh_splash_screen_done_flag(base_address + offsets["splash_screen"]["done_flag"].value_or(0));
+		install_event_hook(base_address, offsets["events"]["on_splash_screen"]["address"].value_or(0), offsets["events"]["on_splash_screen"]["size"].value_or(0), on_splash_screen_cpp);
+
 
 		install_event_hook(base_address, offsets["events"]["on_get_string"]["address"].value_or(0), offsets["events"]["on_get_string"]["size"].value_or(0), on_get_char_cpp);
 		
@@ -191,8 +179,7 @@ void load_mod_setup_cpp() {
 		// Get the address of the on_init function
 		OnInitFunc on_init = (OnInitFunc)GetProcAddress(h_mod, "on_init");
 		if (on_init) {
-			on_init();
-			print_message_line("Mod Setup (on_init) successful!\n", MESSAGE_SUCCESS);
+			print_message_line(std::format("{} implemented event: on_init()", file_name), MESSAGE_SUCCESS);
 		} else {
 			print_message_line(std::format("{} has not implemented event: on_init()\n", file_name), MESSAGE_WARNING);
 		}
@@ -207,7 +194,7 @@ void load_mod_setup_cpp() {
 		//}
 
 		// Store the handle of the loaded module if you want to use it later
-		KHMod mod{h_mod, nullptr, nullptr, nullptr};
+		KHMod mod{h_mod, on_init, nullptr, nullptr, nullptr};
 		loaded_mods.push_back(mod);
 	} else {
 		print_message_line(std::format("Failed to load {}\n", file_name), MESSAGE_ERROR);
@@ -239,8 +226,7 @@ void load_mods_cpp() {
 				// Get the address of the on_init function
 				OnInitFunc on_init = (OnInitFunc)GetProcAddress(h_mod, "on_init");
 				if (on_init) {
-					on_init();
-					print_message_line(std::format("{} initialized", file_name), MESSAGE_SUCCESS);
+					print_message_line(std::format("{} implemented event: on_init()", file_name), MESSAGE_SUCCESS);
 				} else {
 					print_message_line(std::format("{} has not implemented event: on_init()", file_name), MESSAGE_WARNING);
 				}
@@ -275,7 +261,7 @@ void load_mods_cpp() {
 
 				print_message_line("", MESSAGE_NONE);
 				// Store the handle of the loaded module if you want to use it later
-				KHMod mod{h_mod, on_frame, on_get_hit, on_attack, on_get_reward};
+				KHMod mod{h_mod, on_init, on_frame, on_get_hit, on_attack, on_get_reward};
 				loaded_mods.push_back(mod);
 			} else {
 				print_message_line(std::format("Failed to load {}\n", mod_path), MESSAGE_ERROR);

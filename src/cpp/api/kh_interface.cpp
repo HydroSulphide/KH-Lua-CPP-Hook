@@ -40,8 +40,12 @@ KHInventory *inventory;
 
 std::vector<KHGummi> gummis;
 std::vector<KHItem> items;
+uint64_t item_names_offset_address;
 
 std::vector<KHStringRepoint> string_repoints;
+
+bool is_skip_splash_screen = false;
+uint8_t *splash_screen_done_flag;
 
 void update_loaded_gameobject_addresses() {
 	for (KHGameObject *obj : loaded_gameobjects)
@@ -228,24 +232,42 @@ void init_kh_items(std::vector<TOMLKHItem> items_toml_data) {
 	}
 }
 
-void init_kh_item_name(size_t index, uint64_t name_address, size_t name_length) {
-	items[index].name = reinterpret_cast<uint8_t *>(name_address);
-	items[index].name_length = name_length;
+void init_kh_item_names_offset_address(uint64_t item_names_offset_addr) {
+	item_names_offset_address = item_names_offset_addr;
+}
 
-	print_message_line(std::format("ITEM DESCRIPTION OFFSET: 0x{:X}", items[index].item_stats->description_pointer));
+void init_kh_item_names() {
+	uint32_t *item_names_offset = reinterpret_cast<uint32_t *>(item_names_offset_address);
+	uint8_t *item_names = reinterpret_cast<uint8_t *>(MemoryLib::get_4to8_pointer(*item_names_offset));
 
-	uint64_t description_address = MemoryLib::get_4to8_pointer(items[index].item_stats->description_pointer);
-	items[index].description = reinterpret_cast<uint8_t *>(description_address);
-	print_message_line(std::format("DESC ADDRESS: 0x{:X}", description_address));
+	for (size_t i = 1; i <= 0xFF; i++) {
+		std::wstring item_name = kh_to_c_string(item_names);
+		uint64_t item_name_address = reinterpret_cast<uint64_t>(item_names);
 
-	uint8_t *description_pointer = reinterpret_cast<uint8_t *>(description_address);
-	size_t description_length = 0;
-	while (*description_pointer) {
-		description_length++;
-		description_pointer++;
+		items[i].name = reinterpret_cast<uint8_t *>(item_name_address);
+		items[i].name_length = item_name.length();
+
+		uint64_t description_address = MemoryLib::get_4to8_pointer(items[i].item_stats->description_pointer);
+		items[i].description = reinterpret_cast<uint8_t *>(description_address);
+
+		uint8_t *description_pointer = reinterpret_cast<uint8_t *>(description_address);
+		size_t description_length = 0;
+		while (*description_pointer) {
+			description_length++;
+			description_pointer++;
+		}
+		items[i].description_length = description_length;
+		
+		item_names += item_name.length() + 1;
 	}
-	items[index].description_length = description_length;
-	print_message_line(std::format("DESC LENGTH: {:d}", description_length));
+}
+
+void init_kh_splash_screen_done_flag(uint64_t splash_screen_done_flag_address) {
+	splash_screen_done_flag = reinterpret_cast<uint8_t *>(splash_screen_done_flag_address);
+}
+
+void on_splash_screen() {
+	*(splash_screen_done_flag) = is_skip_splash_screen ? 1 : 0;
 }
 
 extern "C" __declspec(dllexport) KHGameObject **get_loaded_gameobjects(size_t *count) {
@@ -383,4 +405,14 @@ extern "C" __declspec(dllexport) void set_item_name(KHItem *item, const wchar_t 
 
 extern "C" __declspec(dllexport) void set_item_description(KHItem *item, const wchar_t *new_desc) {
 	set_new_string(new_desc, item->description_length, item->description);
+}
+
+extern "C" __declspec(dllexport) void set_weapon_model(KHItem *item, const char *new_model_string) {
+	if (item && item->weapon_stats) {
+		strcpy_s(item->weapon_stats->model_name, new_model_string);
+	}
+}
+
+extern "C" __declspec(dllexport) void skip_splash_screen(bool skip) {
+	is_skip_splash_screen = skip;
 }
