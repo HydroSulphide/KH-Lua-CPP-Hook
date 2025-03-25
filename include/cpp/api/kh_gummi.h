@@ -163,7 +163,15 @@ struct KHGummiStats {
 
 	uint8_t unknown_1;			// Seems to always be gummi_id + 0xA0, but it is unknown why.
 
-	uint8_t size;				// 0x07
+	union {
+		uint8_t size;			// 0x07
+		struct {
+			uint8_t width : 2;
+			uint8_t height : 2;
+			uint8_t length : 2;
+			uint8_t unused : 2;
+		} gummi_size;
+	};
 	uint8_t garage_id;			// 0x08: Like the gummi_id, but skips gummi blocks which are not used for building (KHGummiType = NONE -> gummi_garage_id = 0xFF)
 	uint8_t special_id;			// 0x09: Unknown id only used by drain, osmose, warp and scan gummi blocks, others are 0xFF
 
@@ -184,8 +192,8 @@ struct KHGummiStats {
 
 struct KHGummi {
 	KHGummiStats *stats;
-	uint8_t *name_address;
-	int name_length;
-	uint8_t *description_address;
-	int description_length;
+	uint8_t *name;
+	size_t name_length;
+	uint8_t *description;
+	size_t description_length;
 };

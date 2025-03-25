@@ -83,7 +83,8 @@ set(SOURCE
     "include/cpp/api/kh_party.h"
     "include/cpp/api/kh_gummi.h"
     "include/cpp/api/kh_font.h"
- )
+    "include/cpp/api/kh_item.h"
+)
 
 add_custom_target(clang-format
     COMMAND clang-format -i -style=file ${SOURCE}

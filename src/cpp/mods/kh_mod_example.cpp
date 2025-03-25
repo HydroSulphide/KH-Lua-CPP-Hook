@@ -1,4 +1,4 @@
-#include "kh_mod.h"
+ï»¿#include "kh_mod.h"
 
 // Define metadata variables
 string mod_name = "Example Mod";
@@ -14,20 +14,30 @@ KH_MOD on_init() {
 //						"CINDY",  "SHIVA",	  "LAMIA",	"SANDY",	   "SYLPH",	 "CARBUNCLE", "MINDY",	  "GOBLIN",	 "BOMB",   "REMORA",	  "AHRIMAN",	 "IMP",			"SIREN",	   "STINGRAY",	  "CATOBLEPAS",	 "ADAMANT",		"SERPENT",	   "IFRIT",		"ODIN",		 "ATOMOS",	  "GOLEM",	   "DIABLOS",	"DEATHGUISE", "TYPHOON",   "ALEXANDER", "LEVIATHAN",  "RAMUH",		"OMEGA",	  "MOOGLES",	"VALEFOR",	  "PUPU",		"CERBERUS",	  "TONBERRY",	"PANDAEMONIUM", "IXION",	  "GILGAMESH",	"PHOENIX",	  "EDEN",		 "BAHAMUT",		"unused_1",	 "unused_2", "unused_3", "unused_4", "unused_5", "unused_6",  "unused_7",  "unused_8",	 "unused_9",   "WHEEL_G",	  "FANG_G", "HORN_G",	"ANGEL_G",	"DARK_G",  "SHOES_G",	"ROCK_G_1", "ROCK_G_2",	 "SCISSORS_G_1", "SCISSORS_G_2", "PAPER_G_1", "PAPER_G_2",	"CROWN_G",	  "DRILL_G", "CATERPILLAR_G_1", "CATERPILLAR_G_2", "unused_10", "unused_11", "unused_12", "unused_13", "unused_14", "unused_15", "unused_16", "unused_17", "unused_18", "unused_19", "unused_20", "unused_21", "unused_22", "unused_23", "unused_24", "unused_25"};
 
 KH_MOD on_frame() {
+	// TEST ITEMS:
+	KHItem *items = get_items();
+	print_line(format("Potion Strength: {:d}", items[1].item_stats->strength));
+	print_line(format("POTION NAME ADDRESS: 0x{:X}", reinterpret_cast<uint64_t>(items[1].name)));
+	set_item_name(&items[POTION], L"New Potion Name");
+	set_item_description(&items[1], L"New Potion Description.");
+
 	// TEST GUMMIS:
+	//KHGummi *gummis = get_gummis();
+	//// Test without special character and without repointing
+	//set_gummi_name(&gummis[CURE_G], L"Nice-G");
+	//set_gummi_description(&gummis[CURE_G], L"Short Description.");
 
-	KHGummi *gummis = get_gummis();
+	//// Test with special character and repointing
+	//std::wstring new_fire_g_name = L"LONGÂ» " KH_SYMBOL_ACCESSORY L" Â«NAME";
+	//set_gummi_name(&gummis[FIRE_G], new_fire_g_name.c_str());
 
-	// Test without special character and without repointing
-	set_gummi_name(&gummis[CURE_G], L"Nice-G");
-	set_gummi_description(&gummis[CURE_G], L"Short Description.");
+	//std::wstring new_fire_g_desc = L"This is a " KH_SYMBOL_ABILITY_STARS L"long" KH_SYMBOL_ABILITY_STARS L" sentence to test\nSpecial Characters and Repointing!";
+	//set_gummi_description(&gummis[FIRE_G], new_fire_g_desc.c_str());
 
-	// Test with special character and repointing
-	std::wstring new_fire_g_name = L"LONG» " KH_SYMBOL_ACCESSORY L" «NAME";
-	set_gummi_name(&gummis[FIRE_G], new_fire_g_name.c_str());
-
-	std::wstring new_fire_g_desc = L"This is a " KH_SYMBOL_ABILITY_STARS L"long" KH_SYMBOL_ABILITY_STARS L" sentence to test\nSpecial Characters and Repointing!";
-	set_gummi_description(&gummis[FIRE_G], new_fire_g_desc.c_str());
+	//print_line(format("Cure-G size: {:x}", gummis[CURE_G].stats->size)); // x {:d} x {:d}", gummis[CURE_G].stats->gummi_size.width, gummis[CURE_G].stats->gummi_size.height, gummis[CURE_G].stats->gummi_size.length));
+	//gummis[CURE_G].stats->gummi_size.width = 3;
+	//gummis[CURE_G].stats->gummi_size.height = 2;
+	//gummis[CURE_G].stats->gummi_size.length = 0;
 
 	//KHGummiStats *fire_g_stats = gummis[FIRE_G].stats;
 	//print_line(format("\nFIRE_G:\n\tLimit: {:d}", fire_g_stats->limit));

@@ -37,4 +37,5 @@
 #define KH_SYMBOL_BIG_DIGIT_9 L"\uE020"
 #define KH_SYMBOL_NEW_PAGE L"\uE021"
 
-std::string to_kh_string(const std::wstring &input);
+std::string c_to_kh_string(const std::wstring &input);
+std::wstring kh_to_c_string(uint8_t *input);

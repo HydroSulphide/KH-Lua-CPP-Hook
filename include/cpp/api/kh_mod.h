@@ -12,6 +12,7 @@
 #include "kh_inventory.h"
 #include "kh_party.h"
 #include "kh_gummi.h"
+#include "kh_item.h"
 #include "kh_font.h"
 
 using namespace std;
@@ -39,6 +40,8 @@ __declspec(dllexport) void __cdecl on_attack(KHGameObject *gameobject);
 
 __declspec(dllimport) void print_mod_message(const char *text, MessageType message_type, const char *mod_name);
 __declspec(dllimport) void print_mod_message_line(const char *text, MessageType message_type, const char *mod_name);
+__declspec(dllimport) void print_mod_message_w(const wchar_t *text, MessageType message_type, const char *mod_name);
+__declspec(dllimport) void print_mod_message_line_w(const wchar_t *text, MessageType message_type, const char *mod_name);
 
 __declspec(dllimport) KHGameObject **get_loaded_gameobjects(size_t *count);
 
@@ -68,6 +71,9 @@ __declspec(dllimport) KHInventory *get_inventory();
 __declspec(dllimport) KHGummi *get_gummis();
 __declspec(dllimport) void set_gummi_name(KHGummi *gummi, const wchar_t *new_name);
 __declspec(dllimport) void set_gummi_description(KHGummi *gummi, const wchar_t *new_desc);
+__declspec(dllimport) KHItem *get_items();
+__declspec(dllexport) void set_item_name(KHItem *item, const wchar_t *new_name);
+__declspec(dllexport) void set_item_description(KHItem *item, const wchar_t *new_desc);
 }
 
 inline void print(const string &text, MessageType message_type = MESSAGE_NONE) {
@@ -76,6 +82,14 @@ inline void print(const string &text, MessageType message_type = MESSAGE_NONE) {
 
 inline void print_line(const string &text, MessageType message_type = MESSAGE_NONE) {
 	print_mod_message_line(text.c_str(), message_type, mod_name.c_str());
+}
+
+inline void print_w(const wstring &text, MessageType message_type = MESSAGE_NONE) {
+	print_mod_message_w(text.c_str(), message_type, mod_name.c_str());
+}
+
+inline void print_line_w(const wstring &text, MessageType message_type = MESSAGE_NONE) {
+	print_mod_message_line_w(text.c_str(), message_type, mod_name.c_str());
 }
 
 inline string get_metadata() {

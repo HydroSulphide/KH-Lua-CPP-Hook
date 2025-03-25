@@ -1,4 +1,4 @@
-#[static_party_stat_page]
+﻿#[static_party_stat_page]
 #sora = 0x2DE9360
 #[static_stat_page]
 #sora = 0x2D5CC10
@@ -32,7 +32,264 @@ munny = 0x2DFF77C
 [items]
 stats = 0x2D24798
 names = 0x2D23014 # 4to8 Pointer
-curaga_g_name = 0x2698227
+item_stats = [
+	{ item_stats_address = 0x0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_1
+	{ item_stats_address = 0x2D24798, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Potion
+	{ item_stats_address = 0x2D247AC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Hi−Potion
+	{ item_stats_address = 0x2D247C0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ether
+	{ item_stats_address = 0x2D247D4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Elixir
+	{ item_stats_address = 0x2D247E8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_2
+	{ item_stats_address = 0x2D247FC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mega−Potion
+	{ item_stats_address = 0x2D24810, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mega−Ether
+	{ item_stats_address = 0x2D24824, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Megalixir
+	{ item_stats_address = 0x2D24838, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Fury Stone
+	{ item_stats_address = 0x2D2484C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Power Stone
+	{ item_stats_address = 0x2D24860, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Energy Stone
+	{ item_stats_address = 0x2D24874, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Blazing Stone
+	{ item_stats_address = 0x2D24888, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Frost Stone
+	{ item_stats_address = 0x2D2489C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Lightning Stone
+	{ item_stats_address = 0x2D248B0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Dazzling Stone
+	{ item_stats_address = 0x2D248C4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Stormy Stone
+	{ item_stats_address = 0x2D248D8, accessory_stats_address = 0x2D25B98, weapon_stats_address = 0x0 }, # Protect Chain
+	{ item_stats_address = 0x2D248EC, accessory_stats_address = 0x2D25BAE, weapon_stats_address = 0x0 }, # Protera Chain
+	{ item_stats_address = 0x2D24900, accessory_stats_address = 0x2D25BC4, weapon_stats_address = 0x0 }, # Protega Chain
+	{ item_stats_address = 0x2D24914, accessory_stats_address = 0x2D25BDA, weapon_stats_address = 0x0 }, # Fire Ring
+	{ item_stats_address = 0x2D24928, accessory_stats_address = 0x2D25BF0, weapon_stats_address = 0x0 }, # Fira Ring
+	{ item_stats_address = 0x2D2493C, accessory_stats_address = 0x2D25C06, weapon_stats_address = 0x0 }, # Firaga Ring
+	{ item_stats_address = 0x2D24950, accessory_stats_address = 0x2D25C1C, weapon_stats_address = 0x0 }, # Blizzard  Ring
+	{ item_stats_address = 0x2D24964, accessory_stats_address = 0x2D25C32, weapon_stats_address = 0x0 }, # Blizzara Ring
+	{ item_stats_address = 0x2D24978, accessory_stats_address = 0x2D25C48, weapon_stats_address = 0x0 }, # Blizzaga Ring
+	{ item_stats_address = 0x2D2498C, accessory_stats_address = 0x2D25C5E, weapon_stats_address = 0x0 }, # Thunder Ring
+	{ item_stats_address = 0x2D249A0, accessory_stats_address = 0x2D25C74, weapon_stats_address = 0x0 }, # Thundara Ring
+	{ item_stats_address = 0x2D249B4, accessory_stats_address = 0x2D25C8A, weapon_stats_address = 0x0 }, # Thundaga Ring
+	{ item_stats_address = 0x2D249C8, accessory_stats_address = 0x2D25CA0, weapon_stats_address = 0x0 }, # Ability Stud
+	{ item_stats_address = 0x2D249DC, accessory_stats_address = 0x2D25CB6, weapon_stats_address = 0x0 }, # Guard Earring
+	{ item_stats_address = 0x2D249F0, accessory_stats_address = 0x2D25CCC, weapon_stats_address = 0x0 }, # Master Earring
+	{ item_stats_address = 0x2D24A04, accessory_stats_address = 0x2D25CE2, weapon_stats_address = 0x0 }, # Chaos Ring
+	{ item_stats_address = 0x2D24A18, accessory_stats_address = 0x2D25CF8, weapon_stats_address = 0x0 }, # Dark Ring
+	{ item_stats_address = 0x2D24A2C, accessory_stats_address = 0x2D25D0E, weapon_stats_address = 0x0 }, # Element Ring
+	{ item_stats_address = 0x2D24A40, accessory_stats_address = 0x2D25D24, weapon_stats_address = 0x0 }, # Three Stars
+	{ item_stats_address = 0x2D24A54, accessory_stats_address = 0x2D25D3A, weapon_stats_address = 0x0 }, # Power Chain
+	{ item_stats_address = 0x2D24A68, accessory_stats_address = 0x2D25D50, weapon_stats_address = 0x0 }, # Golem Chain
+	{ item_stats_address = 0x2D24A7C, accessory_stats_address = 0x2D25D66, weapon_stats_address = 0x0 }, # Titan Chain
+	{ item_stats_address = 0x2D24A90, accessory_stats_address = 0x2D25D7C, weapon_stats_address = 0x0 }, # Energy Bangle
+	{ item_stats_address = 0x2D24AA4, accessory_stats_address = 0x2D25D92, weapon_stats_address = 0x0 }, # Angel Bangle
+	{ item_stats_address = 0x2D24AB8, accessory_stats_address = 0x2D25DA8, weapon_stats_address = 0x0 }, # Gaia Bangle
+	{ item_stats_address = 0x2D24ACC, accessory_stats_address = 0x2D25DBE, weapon_stats_address = 0x0 }, # Magic Armlet
+	{ item_stats_address = 0x2D24AE0, accessory_stats_address = 0x2D25DD4, weapon_stats_address = 0x0 }, # Rune Armlet
+	{ item_stats_address = 0x2D24AF4, accessory_stats_address = 0x2D25DEA, weapon_stats_address = 0x0 }, # Atlas Armlet
+	{ item_stats_address = 0x2D24B08, accessory_stats_address = 0x2D25E00, weapon_stats_address = 0x0 }, # Heartguard
+	{ item_stats_address = 0x2D24B1C, accessory_stats_address = 0x2D25E16, weapon_stats_address = 0x0 }, # Ribbon
+	{ item_stats_address = 0x2D24B30, accessory_stats_address = 0x2D25E2C, weapon_stats_address = 0x0 }, # Crystal Crown
+	{ item_stats_address = 0x2D24B44, accessory_stats_address = 0x2D25E42, weapon_stats_address = 0x0 }, # Brave Warrior
+	{ item_stats_address = 0x2D24B58, accessory_stats_address = 0x2D25E58, weapon_stats_address = 0x0 }, # Ifrit's Horn
+	{ item_stats_address = 0x2D24B6C, accessory_stats_address = 0x2D25E6E, weapon_stats_address = 0x0 }, # Inferno Band
+	{ item_stats_address = 0x2D24B80, accessory_stats_address = 0x2D25E84, weapon_stats_address = 0x0 }, # White Fang
+	{ item_stats_address = 0x2D24B94, accessory_stats_address = 0x2D25E9A, weapon_stats_address = 0x0 }, # Ray of Light
+	{ item_stats_address = 0x2D24BA8, accessory_stats_address = 0x2D25EB0, weapon_stats_address = 0x0 }, # Holy Circlet
+	{ item_stats_address = 0x2D24BBC, accessory_stats_address = 0x2D25EC6, weapon_stats_address = 0x0 }, # Raven's Claw
+	{ item_stats_address = 0x2D24BD0, accessory_stats_address = 0x2D25EDC, weapon_stats_address = 0x0 }, # Omega Arts
+	{ item_stats_address = 0x2D24BE4, accessory_stats_address = 0x2D25EF2, weapon_stats_address = 0x0 }, # EXP Earring
+	{ item_stats_address = 0x2D24BF8, accessory_stats_address = 0x2D25F08, weapon_stats_address = 0x0 }, # unused_3
+	{ item_stats_address = 0x2D24C0C, accessory_stats_address = 0x2D25F1E, weapon_stats_address = 0x0 }, # EXP Ring
+	{ item_stats_address = 0x2D24C20, accessory_stats_address = 0x2D25F34, weapon_stats_address = 0x0 }, # EXP Bracelet
+	{ item_stats_address = 0x2D24C34, accessory_stats_address = 0x2D25F4A, weapon_stats_address = 0x0 }, # EXP Necklace
+	{ item_stats_address = 0x2D24C48, accessory_stats_address = 0x2D25F60, weapon_stats_address = 0x0 }, # Firagun Band
+	{ item_stats_address = 0x2D24C5C, accessory_stats_address = 0x2D25F76, weapon_stats_address = 0x0 }, # Blizzagun Band
+	{ item_stats_address = 0x2D24C70, accessory_stats_address = 0x2D25F8C, weapon_stats_address = 0x0 }, # Thundagun Band
+	{ item_stats_address = 0x2D24C84, accessory_stats_address = 0x2D25FA2, weapon_stats_address = 0x0 }, # Ifrit Belt
+	{ item_stats_address = 0x2D24C98, accessory_stats_address = 0x2D25FB8, weapon_stats_address = 0x0 }, # Shiva Belt
+	{ item_stats_address = 0x2D24CAC, accessory_stats_address = 0x2D25FCE, weapon_stats_address = 0x0 }, # Ramuh Belt
+	{ item_stats_address = 0x2D24CC0, accessory_stats_address = 0x2D25FE4, weapon_stats_address = 0x0 }, # Moogle Badge
+	{ item_stats_address = 0x2D24CD4, accessory_stats_address = 0x2D25FFA, weapon_stats_address = 0x0 }, # Cosmic Arts
+	{ item_stats_address = 0x2D24CE8, accessory_stats_address = 0x2D26010, weapon_stats_address = 0x0 }, # Royal Crown
+	{ item_stats_address = 0x2D24CFC, accessory_stats_address = 0x2D26026, weapon_stats_address = 0x0 }, # Prime Cap
+	{ item_stats_address = 0x2D24D10, accessory_stats_address = 0x2D2603C, weapon_stats_address = 0x0 }, # Obsidian Ring
+	{ item_stats_address = 0x2D24D24, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_4
+	{ item_stats_address = 0x2D24D38, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_5
+	{ item_stats_address = 0x2D24D4C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_6
+	{ item_stats_address = 0x2D24D60, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_7
+	{ item_stats_address = 0x2D24D74, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_8
+	{ item_stats_address = 0x2D24D88, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_9
+	{ item_stats_address = 0x2D24D9C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_10
+	{ item_stats_address = 0x2D24DB0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_11
+	{ item_stats_address = 0x2D24DC4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_12
+	{ item_stats_address = 0x2D24DD8, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C238 }, # Kingdom Key
+	{ item_stats_address = 0x2D24DEC, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C290 }, # Dream Sword
+	{ item_stats_address = 0x2D24E00, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C2E8 }, # Dream Shield
+	{ item_stats_address = 0x2D24E14, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C340 }, # Dream Rod
+	{ item_stats_address = 0x2D24E28, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C398 }, # Wooden Sword
+	{ item_stats_address = 0x2D24E3C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C3F0 }, # Jungle King
+	{ item_stats_address = 0x2D24E50, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C448 }, # Three Wishes
+	{ item_stats_address = 0x2D24E64, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C4A0 }, # Fairy Harp
+	{ item_stats_address = 0x2D24E78, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C4F8 }, # Pumpkinhead
+	{ item_stats_address = 0x2D24E8C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C550 }, # Crabclaw
+	{ item_stats_address = 0x2D24EA0, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C5A8 }, # Divine Rose
+	{ item_stats_address = 0x2D24EB4, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C600 }, # Spellbinder
+	{ item_stats_address = 0x2D24EC8, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C658 }, # Olympia
+	{ item_stats_address = 0x2D24EDC, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C6B0 }, # Lionheart
+	{ item_stats_address = 0x2D24EF0, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C708 }, # Metal Chocobo
+	{ item_stats_address = 0x2D24F04, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C760 }, # Oathkeeper
+	{ item_stats_address = 0x2D24F18, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C7B8 }, # Oblivion
+	{ item_stats_address = 0x2D24F2C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C810 }, # Lady Luck
+	{ item_stats_address = 0x2D24F40, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C868 }, # Wishing Star
+	{ item_stats_address = 0x2D24F54, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C8C0 }, # Ultima Weapon
+	{ item_stats_address = 0x2D24F68, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C918 }, # Diamond Dust
+	{ item_stats_address = 0x2D24F7C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C970 }, # One-Winged Angel
+	{ item_stats_address = 0x2D24F90, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2C9C8 }, # Mage's Staff
+	{ item_stats_address = 0x2D24FA4, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CA20 }, # Morning Star
+	{ item_stats_address = 0x2D24FB8, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CA78 }, # Shooting Star
+	{ item_stats_address = 0x2D24FCC, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CAD0 }, # Magus Staff
+	{ item_stats_address = 0x2D24FE0, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CB28 }, # Wisdom Staff
+	{ item_stats_address = 0x2D24FF4, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CB80 }, # Warhammer
+	{ item_stats_address = 0x2D25008, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CBD8 }, # Silver Mallet
+	{ item_stats_address = 0x2D2501C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CC30 }, # Grand Mallet
+	{ item_stats_address = 0x2D25030, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CC88 }, # Lord Fortune
+	{ item_stats_address = 0x2D25044, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CCE0 }, # Violetta
+	{ item_stats_address = 0x2D25058, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CD38 }, # Dream Rod
+	{ item_stats_address = 0x2D2506C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CD90 }, # Save the Queen
+	{ item_stats_address = 0x2D25080, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CDE8 }, # Wizard's Relic
+	{ item_stats_address = 0x2D25094, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CE40 }, # Meteor Strike
+	{ item_stats_address = 0x2D250A8, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CE98 }, # Fantasista
+	{ item_stats_address = 0x2D250BC, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CEF0 }, # unused_13
+	{ item_stats_address = 0x2D250D0, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CF48 }, # Knight's Shield
+	{ item_stats_address = 0x2D250E4, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CFA0 }, # Mythril Shield
+	{ item_stats_address = 0x2D250F8, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2CFF8 }, # Onyx  Shield
+	{ item_stats_address = 0x2D2510C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D050 }, # Stout Shield
+	{ item_stats_address = 0x2D25120, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D0A8 }, # Golem Shield
+	{ item_stats_address = 0x2D25134, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D100 }, # Adamant Shield
+	{ item_stats_address = 0x2D25148, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D158 }, # Smasher
+	{ item_stats_address = 0x2D2515C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D1B0 }, # Gigas Fist
+	{ item_stats_address = 0x2D25170, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D208 }, # Genji Shield
+	{ item_stats_address = 0x2D25184, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D260 }, # Herc's Shield
+	{ item_stats_address = 0x2D25198, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D2B8 }, # Dream Shield
+	{ item_stats_address = 0x2D251AC, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D310 }, # Save the King
+	{ item_stats_address = 0x2D251C0, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D368 }, # Defender
+	{ item_stats_address = 0x2D251D4, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D3C0 }, # Mighty Shield
+	{ item_stats_address = 0x2D251E8, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D418 }, # Seven Elements
+	{ item_stats_address = 0x2D251FC, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D470 }, # unused_14
+	{ item_stats_address = 0x2D25210, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D4C8 }, # Spear
+	{ item_stats_address = 0x2D25224, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # No Weapon
+	{ item_stats_address = 0x2D25238, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D520 }, # Sword
+	{ item_stats_address = 0x2D2524C, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D570 }, # No Weapon (Ariel)
+	{ item_stats_address = 0x2D25260, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D5D0 }, # No Weapon (Jack)
+	{ item_stats_address = 0x2D25274, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D628 }, # Dagger
+	{ item_stats_address = 0x2D25288, accessory_stats_address = 0x0, weapon_stats_address = 0x2D2D680 }, # Claws
+	{ item_stats_address = 0x2D2529C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Tent
+	{ item_stats_address = 0x2D252B0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Camping Set
+	{ item_stats_address = 0x2D252C4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Cottage
+	{ item_stats_address = 0x2D252D8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_15
+	{ item_stats_address = 0x2D252EC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_16
+	{ item_stats_address = 0x2D25300, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_17
+	{ item_stats_address = 0x2D25314, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_18
+	{ item_stats_address = 0x2D25328, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 11
+	{ item_stats_address = 0x2D2533C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 12
+	{ item_stats_address = 0x2D25350, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 13
+	{ item_stats_address = 0x2D25364, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Power Up
+	{ item_stats_address = 0x2D25378, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Defense Up
+	{ item_stats_address = 0x2D2538C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # AP Up
+	{ item_stats_address = 0x2D253A0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Serenity Power
+	{ item_stats_address = 0x2D253B4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Dark Matter
+	{ item_stats_address = 0x2D253C8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mythril Stone
+	{ item_stats_address = 0x2D253DC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Fire Arts
+	{ item_stats_address = 0x2D253F0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Blizzard Arts
+	{ item_stats_address = 0x2D25404, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Thunder Arts
+	{ item_stats_address = 0x2D25418, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Cure Arts
+	{ item_stats_address = 0x2D2542C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Gravity Arts
+	{ item_stats_address = 0x2D25440, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Stop Arts
+	{ item_stats_address = 0x2D25454, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Aero Arts
+	{ item_stats_address = 0x2D25468, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Shiitake Rank
+	{ item_stats_address = 0x2D2547C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Matsutake Rank
+	{ item_stats_address = 0x2D25490, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mystery Mold
+	{ item_stats_address = 0x2D254A4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 1
+	{ item_stats_address = 0x2D254B8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 2
+	{ item_stats_address = 0x2D254CC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 3
+	{ item_stats_address = 0x2D254E0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 4
+	{ item_stats_address = 0x2D254F4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 5
+	{ item_stats_address = 0x2D25508, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 6
+	{ item_stats_address = 0x2D2551C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 7
+	{ item_stats_address = 0x2D25530, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 8
+	{ item_stats_address = 0x2D25544, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 9
+	{ item_stats_address = 0x2D25558, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Ansem's Report 10
+	{ item_stats_address = 0x2D2556C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Khama vol. 8
+	{ item_stats_address = 0x2D25580, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Salegg vol. 6
+	{ item_stats_address = 0x2D25594, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Azal vol. 3
+	{ item_stats_address = 0x2D255A8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mava vol. 3
+	{ item_stats_address = 0x2D255BC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mava vol. 6
+	{ item_stats_address = 0x2D255D0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Theon vol. 6
+	{ item_stats_address = 0x2D255E4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Nahara vol. 5
+	{ item_stats_address = 0x2D255F8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Hafet vol. 4
+	{ item_stats_address = 0x2D2560C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Empty Bottle
+	{ item_stats_address = 0x2D25620, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Old Book
+	{ item_stats_address = 0x2D25634, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Emblem Piece
+	{ item_stats_address = 0x2D25648, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Emblem Piece
+	{ item_stats_address = 0x2D2565C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Emblem Piece
+	{ item_stats_address = 0x2D25670, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Emblem Piece
+	{ item_stats_address = 0x2D25684, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Log
+	{ item_stats_address = 0x2D25698, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Cloth
+	{ item_stats_address = 0x2D256AC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Rope
+	{ item_stats_address = 0x2D256C0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Seagull Egg
+	{ item_stats_address = 0x2D256D4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Fish
+	{ item_stats_address = 0x2D256E8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mushroom
+	{ item_stats_address = 0x2D256FC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Coconut
+	{ item_stats_address = 0x2D25710, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Drinking Water
+	{ item_stats_address = 0x2D25724, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Navi−G Piece
+	{ item_stats_address = 0x2D25738, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Navi−G Piece
+	{ item_stats_address = 0x2D2574C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Navi−Gummi
+	{ item_stats_address = 0x2D25760, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Navi−G Piece
+	{ item_stats_address = 0x2D25774, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Navi−G Piece
+	{ item_stats_address = 0x2D25788, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Navi−Gummi
+	{ item_stats_address = 0x2D2579C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Watergleam
+	{ item_stats_address = 0x2D257B0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Naturespark
+	{ item_stats_address = 0x2D257C4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Fireglow
+	{ item_stats_address = 0x2D257D8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Earthshine
+	{ item_stats_address = 0x2D257EC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Crystal Trident
+	{ item_stats_address = 0x2D25800, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Postcard
+	{ item_stats_address = 0x2D25814, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Torn Page
+	{ item_stats_address = 0x2D25828, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Torn Page
+	{ item_stats_address = 0x2D2583C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Torn Page
+	{ item_stats_address = 0x2D25850, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Torn Page
+	{ item_stats_address = 0x2D25864, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Torn Page
+	{ item_stats_address = 0x2D25878, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Slide 1
+	{ item_stats_address = 0x2D2588C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Slide 2
+	{ item_stats_address = 0x2D258A0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Slide 3
+	{ item_stats_address = 0x2D258B4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Slide 4
+	{ item_stats_address = 0x2D258C8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Slide 5
+	{ item_stats_address = 0x2D258DC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Slide 6
+	{ item_stats_address = 0x2D258F0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Footprints
+	{ item_stats_address = 0x2D25904, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Claw Marks
+	{ item_stats_address = 0x2D25918, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Stench
+	{ item_stats_address = 0x2D2592C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Antenna
+	{ item_stats_address = 0x2D25940, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Forget−Me−Not
+	{ item_stats_address = 0x2D25954, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Jack−in−the−Box
+	{ item_stats_address = 0x2D25968, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Entry Pass
+	{ item_stats_address = 0x2D2597C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Hero License
+	{ item_stats_address = 0x2D25990, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Pretty Stone
+	{ item_stats_address = 0x2D259A4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # unused_19
+	{ item_stats_address = 0x2D259B8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Lucid Shard
+	{ item_stats_address = 0x2D259CC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Lucid Gem
+	{ item_stats_address = 0x2D259E0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Lucid Crystal
+	{ item_stats_address = 0x2D259F4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Spirit Shard
+	{ item_stats_address = 0x2D25A08, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Spirit Gem
+	{ item_stats_address = 0x2D25A1C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Power Shard
+	{ item_stats_address = 0x2D25A30, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Power Gem
+	{ item_stats_address = 0x2D25A44, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Power Crystal
+	{ item_stats_address = 0x2D25A58, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Blaze Shard
+	{ item_stats_address = 0x2D25A6C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Blaze Gem
+	{ item_stats_address = 0x2D25A80, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Frost Shard
+	{ item_stats_address = 0x2D25A94, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Frost Gem
+	{ item_stats_address = 0x2D25AA8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Thunder Shard
+	{ item_stats_address = 0x2D25ABC, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Thunder Gem
+	{ item_stats_address = 0x2D25AD0, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Shiny Crystal
+	{ item_stats_address = 0x2D25AE4, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Bright Shard
+	{ item_stats_address = 0x2D25AF8, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Bright Gem
+	{ item_stats_address = 0x2D25B0C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Bright Crystal
+	{ item_stats_address = 0x2D25B20, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mystery Goo
+	{ item_stats_address = 0x2D25B34, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Gale
+	{ item_stats_address = 0x2D25B48, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mythril Shard
+	{ item_stats_address = 0x2D25B5C, accessory_stats_address = 0x0, weapon_stats_address = 0x0 }, # Mythril
+	{ item_stats_address = 0x2D25B70, accessory_stats_address = 0x0, weapon_stats_address = 0x0 } # Orichalcum
+]
 gummis = [
 	{ stats_address = 0x50F440, name_address = 0x2698220, name_length = 6, desc_address = 0x26986C7, desc_length = 38 }, # CURE_G
 	{ stats_address = 0x50F45C, name_address = 0x2698227, name_length = 8, desc_address = 0x26986EE, desc_length = 32 }, # CURAGA_G

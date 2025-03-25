@@ -1,4 +1,4 @@
-#include "cpp_handler.h"
+﻿#include "cpp_handler.h"
 #include "console_lib.h"
 #include "event_hook.h"
 #include "memory_lib.h"
@@ -10,6 +10,8 @@
 #include <format>
 #include <toml++/toml.h>
 #include <unordered_map>
+#include <thread>
+#include <chrono>
 
 namespace fs = std::filesystem;
 
@@ -75,6 +77,33 @@ void on_get_char_cpp(CONTEXT *ctx) {
 	}
 }
 
+void check_item_names_loaded(uint64_t item_names_offset_address) {
+	uint32_t item_names_offset = *reinterpret_cast<uint32_t *>(item_names_offset_address);
+	while (item_names_offset == 0) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		item_names_offset = *reinterpret_cast<uint32_t *>(item_names_offset_address);
+	}
+	uint8_t *item_names = reinterpret_cast<uint8_t *>(MemoryLib::get_4to8_pointer(item_names_offset));
+	print_message_line("Item Names loaded!");
+
+	// TODO: Init KHItem names (maybe call on_item_names_loaded on all mods?)
+	for (size_t i = 0; i < 255; i++) {
+		std::wstring item_name = kh_to_c_string(item_names);
+		uint64_t item_name_address = reinterpret_cast<uint64_t>(item_names);
+		print_message_line(std::format("ITEM {:X}: {:X}", i + 1, item_name_address));//reinterpret_cast<uint64_t>(item_names)));
+		print_message("\"");
+		print_message_w(item_name);
+		print_message("\"");
+		print_message_line(",");
+
+		init_kh_item_name(i+1, item_name_address, item_name.length());
+		//items[i].name = reinterpret_cast<uint8_t *>(item_name_address);
+		//items[i].name_length = item_name.length();
+
+		item_names += item_name.length() + 1;
+	}
+}
+
 bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 	try {
 		auto offsets = toml::parse_file(path.u8string());
@@ -98,9 +127,9 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 				TOMLKHGummi gummi_toml_data = {
 					base_address + entry_table["stats_address"].value_or(0),
 					base_address + entry_table["name_address"].value_or(0),
-					entry_table["name_length"].value_or(0),
-					base_address + entry_table["desc_address"].value_or(0),
-					entry_table["desc_length"].value_or(0)
+					(size_t)entry_table["name_length"].value_or(0),
+					base_address + entry_table["desc_address"].value_or(0), 
+					(size_t)entry_table["desc_length"].value_or(0)
 				};
 
 				gummis_toml_data.push_back(gummi_toml_data);
@@ -108,6 +137,21 @@ bool api_init_cpp(uint64_t base_address, const std::filesystem::path &path) {
 		}
 		init_kh_gummis(gummis_toml_data);
 
+		// TODO: load item stats addresses and init_kh_items
+		std::thread item_names_checker(check_item_names_loaded, base_address + offsets["items"]["names"].value_or(0));
+		item_names_checker.detach();
+
+		std::vector<TOMLKHItem> items_toml_data;
+		if (auto item_entries = offsets["items"]["item_stats"].as_array()) {
+			for (const auto &value : *item_entries) {
+				const toml::table &entry_table = *value.as_table();
+
+				TOMLKHItem item_toml_data = {base_address + entry_table["item_stats_address"].value_or(0), base_address + entry_table["accessory_stats_address"].value_or(0), base_address + entry_table["weapon_stats_address"].value_or(0)};
+
+				items_toml_data.push_back(item_toml_data);
+			}
+		}
+		init_kh_items(items_toml_data);
 		
 
 		install_event_hook(base_address, offsets["events"]["on_get_string"]["address"].value_or(0), offsets["events"]["on_get_string"]["size"].value_or(0), on_get_char_cpp);

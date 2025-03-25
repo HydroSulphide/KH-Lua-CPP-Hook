@@ -153,18 +153,24 @@ struct KHBattleStats {
 
 	uint32_t exp_to_next_level;			// 0x68
 
-	uint8_t unknown_6[0x14];
+	uint8_t unknown_6[0x0C];
+
+	float unknown_resistance_1;			// 0x78
+	float unknown_resistance_2;			// 0x7C
 
 	float fire_resistance;				// 0x80
 	float ice_resistance;				// 0x84
 	float thunder_resistance;			// 0x88
 	float dark_resistance;				// 0x8C
 
-	uint8_t unknown_7[0x10];
+	float unknown_resistance_3;			// 0x90
+	float unknown_resistance_4;			// 0x94
+	float unknown_resistance_5;			// 0x98
+	float unknown_resistance_6;			// 0x9C
+	float unknown_resistance_7;			// 0xA0
+	float unknown_resistance_8;			// 0xA4
 
-	float unknown_resistance;			// 0xA0
-
-	uint8_t unknown_8[0x1A];
+	uint8_t unknown_8[0x16];
 
 	uint16_t mp_charge;					// 0xBE
 

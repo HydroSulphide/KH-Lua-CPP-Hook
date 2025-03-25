@@ -4,7 +4,9 @@
 #include "kh_inventory.h"
 #include "kh_gummi.h"
 #include "kh_font.h"
+#include "kh_item.h"
 #include "console_lib.h"
+#include "memory_lib.h"
 
 #include <format>
 
@@ -37,6 +39,7 @@ KHAttributes *beast_attributes;
 KHInventory *inventory;
 
 std::vector<KHGummi> gummis;
+std::vector<KHItem> items;
 
 std::vector<KHStringRepoint> string_repoints;
 
@@ -214,6 +217,37 @@ void init_kh_gummis(std::vector<TOMLKHGummi> gummis_toml_data) {
 	}
 }
 
+void init_kh_items(std::vector<TOMLKHItem> items_toml_data) {
+	items.clear();
+	for (const auto &item_toml_data : items_toml_data) {
+		KHItem item {reinterpret_cast<KHItemStats *>(item_toml_data.item_stats_address), 
+			reinterpret_cast<KHAccessoryStats *>(item_toml_data.accessory_stats_address), 
+			reinterpret_cast<KHWeaponStats *>(item_toml_data.weapon_stats_address)
+		};
+		items.push_back(item);
+	}
+}
+
+void init_kh_item_name(size_t index, uint64_t name_address, size_t name_length) {
+	items[index].name = reinterpret_cast<uint8_t *>(name_address);
+	items[index].name_length = name_length;
+
+	print_message_line(std::format("ITEM DESCRIPTION OFFSET: 0x{:X}", items[index].item_stats->description_pointer));
+
+	uint64_t description_address = MemoryLib::get_4to8_pointer(items[index].item_stats->description_pointer);
+	items[index].description = reinterpret_cast<uint8_t *>(description_address);
+	print_message_line(std::format("DESC ADDRESS: 0x{:X}", description_address));
+
+	uint8_t *description_pointer = reinterpret_cast<uint8_t *>(description_address);
+	size_t description_length = 0;
+	while (*description_pointer) {
+		description_length++;
+		description_pointer++;
+	}
+	items[index].description_length = description_length;
+	print_message_line(std::format("DESC LENGTH: {:d}", description_length));
+}
+
 extern "C" __declspec(dllexport) KHGameObject **get_loaded_gameobjects(size_t *count) {
 	*count = loaded_gameobjects.size();
 	return loaded_gameobjects.data();
@@ -303,9 +337,13 @@ extern "C" __declspec(dllexport) KHGummi *__cdecl get_gummis() {
 	return gummis.data();
 }
 
-void set_new_string(const wchar_t *new_string, int old_string_length, uint8_t *string_address) {
+extern "C" __declspec(dllexport) KHItem *__cdecl get_items() {
+	return items.data();
+}
+
+void set_new_string(const wchar_t *new_string, size_t old_string_length, uint8_t *string_address) {
 	std::wstring new_wstring = new_string ? new_string : L"";
-	std::string new_kh_string = to_kh_string(new_wstring);
+	std::string new_kh_string = c_to_kh_string(new_wstring);
 
 	auto it = std::find_if(string_repoints.begin(), string_repoints.end(), [string_address](const KHStringRepoint &repoint) { return repoint.old_address == reinterpret_cast<uint64_t>(string_address); });
 
@@ -332,9 +370,17 @@ void set_new_string(const wchar_t *new_string, int old_string_length, uint8_t *s
 }
 
 extern "C" __declspec(dllexport) void set_gummi_name(KHGummi *gummi, const wchar_t *new_name) {
-	set_new_string(new_name, gummi->name_length, gummi->name_address);
+	set_new_string(new_name, gummi->name_length, gummi->name);
 }
 
 extern "C" __declspec(dllexport) void set_gummi_description(KHGummi *gummi, const wchar_t *new_desc) {
-	set_new_string(new_desc, gummi->description_length, gummi->description_address);
+	set_new_string(new_desc, gummi->description_length, gummi->description);
+}
+
+extern "C" __declspec(dllexport) void set_item_name(KHItem *item, const wchar_t *new_name) {
+	set_new_string(new_name, item->name_length, item->name);
+}
+
+extern "C" __declspec(dllexport) void set_item_description(KHItem *item, const wchar_t *new_desc) {
+	set_new_string(new_desc, item->description_length, item->description);
 }
